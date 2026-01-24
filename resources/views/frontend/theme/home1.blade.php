@@ -311,7 +311,7 @@
         <div class="row mb-60 justify-content-center">
             <div class="col-lg-7">
                 <div class="gs-title-box text-center">
-                    <h2 class="title wow-replaced">@lang('Our Partners') </h2>
+                    <h2 class="title wow-replaced">@lang('Our Brands') </h2>
                     <p class="des mb-0 wow-replaced" data-wow-delay=".1s">@lang('Cillum eu id enim aliquip aute ullamco
                         anim. Culpa
                         deserunt
@@ -321,10 +321,10 @@
         </div>
         <div class="gs-partnerss gy-4 row justify-content-center">
 
-            @foreach (DB::table('partners')->get() as $data)
+            @foreach (DB::table('brands')->get() as $data)
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 wow-replaced" data-wow-delay=".1s">
                 <div class="single-partner">
-                    <img src="{{ asset('assets/images/partner/' . $data->photo) }}" alt="partner">
+                    <img src="{{ asset($data->image) }}" alt="partner">
                 </div>
             </div>
             @endforeach

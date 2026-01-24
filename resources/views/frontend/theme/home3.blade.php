@@ -370,7 +370,7 @@
                 <div class="row justify-content-center align-items-center h-100">
                     <div class="col-12">
                         <div class="gs-title-box">
-                            <h2 class="title wow-replaced">@lang('Our Partners') </h2>
+                            <h2 class="title wow-replaced">@lang('Our Brands') </h2>
                             <p class="des mb-0 wow-replaced" data-wow-delay=".1s">@lang('Cillum eu id enim aliquip aute
                                                         ullamco anim. Culpa deserunt nostrud excepteur voluptate velit ipsum esse enim Cillum eu id
                                                         enim aliquip aute ullamco.')
@@ -383,12 +383,12 @@
                 <div
                     class="row gy-4 row-cols-xxl-4 row-cols-xl-3 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 justify-content-center">
 
-                    @foreach (DB::table('partners')->get() as $data)
+                    @foreach (DB::table('brands')->get() as $data)
                         <div class="col">
                             <div class="wow-replaced " data-wow-delay=".1s">
                                 <a href="javascript:;">
                                     <div class="single-partner">
-                                        <img src="{{ asset('assets/images/partner/' . $data->photo) }}" alt="partner">
+                                        <img src="{{ asset($data->image) }}" alt="partner">
                                     </div>
                                 </a>
                             </div>

@@ -81,7 +81,7 @@
     <!--==================== Top Collection Section End ====================-->
 @endif
 
-xzcvzxvz
+
 
 @if($ps->category == 1)
     <div class="full-row">
