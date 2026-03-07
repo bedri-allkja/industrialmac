@@ -575,18 +575,18 @@ class ProductController extends AdminBaseController
                         $input['name'] = $line[4];
                         $input['details'] = $line[6];
                         $input['color'] = $line[13];
-                        $input['price'] = $line[7];
-                        $input['previous_price'] = $line[8] != "" ? $line[8] : null;
-                        $input['stock'] = $line[9];
-                        $input['size'] = $line[10];
-                        $input['size_qty'] = $line[11];
+                        $input['price'] = is_numeric($line[7]) ? (float) $line[7] : 0;
+                        $input['previous_price'] = is_numeric($line[8]) ? (float) $line[8] : null;
+                        $input['stock'] = is_numeric($line[9]) ? (int) $line[9] : 0;
+                        $input['size_qty'] = is_numeric($line[11]) ? (int) $line[11] : 0;
+                        $input['size_price'] = is_numeric($line[12]) ? (float) $line[12] : 0;
                         $input['size_price'] = $line[12];
                         $input['youtube'] = $line[15];
                         $input['policy'] = $line[16];
                         $input['meta_tag'] = $line[17];
                         $input['meta_description'] = $line[18];
                         $input['tags'] = $line[14];
-                        $input['product_type'] = $line[19];
+                        $input['product_type'] = 'normal';
                         $input['affiliate_link'] = $line[20];
                         $input['latest'] = true;
                         $input['slug'] = Str::slug($input['name'], '-') . '-' . strtolower($input['sku']);
@@ -635,8 +635,11 @@ class ProductController extends AdminBaseController
                         }                        
 
                         // Conert Price According to Currency
-                        $input['price'] = ($input['price'] / $sign->value);
-                        $input['previous_price'] = ($input['previous_price'] / $sign->value);
+                        $price = is_numeric($input['price']) ? (float) $input['price'] : 0;
+                        $prevPrice = is_numeric($input['previous_price']) ? (float) $input['previous_price'] : null;
+
+                        $input['price'] = $price / (float) $sign->value;
+                        $input['previous_price'] = $prevPrice !== null ? $prevPrice / (float) $sign->value : null;
 
                         // Save Data
                         $data->fill($input)->save();

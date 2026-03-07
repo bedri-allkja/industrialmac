@@ -211,7 +211,7 @@ class DashboardController extends AdminBaseController
 
     public function movescript()
     {
-        ini_set('max_execution_time', 3000);
+        ini_set('max_execution_time', 0);
 
         $destination = public_path() . '/install';
         $chk = file_get_contents('backup.txt');
