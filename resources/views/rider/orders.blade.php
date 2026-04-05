@@ -132,6 +132,6 @@
     <!-- user dashboard wrapper end -->
 @endsection
 @section('script')
-    <script src="{{ asset('assets/front/js/dataTables.min.js') }}" defer></script>
+    <script src="{{ asset('assets/front/js/datatables.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/user.js') }}" defer></script>
 @endsection
