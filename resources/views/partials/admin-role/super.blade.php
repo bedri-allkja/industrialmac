@@ -71,6 +71,8 @@
         @elseif(request()->is('admin/attribute/*/manage') && request()->input('type') == 'subcategory')
           show
         @elseif(request()->is('admin/attribute/*/manage') && request()->input('type') == 'childcategory')
+          show
+        @elseif(request()->is('admin/brand*'))
           show @endif"
         id="menu5" data-parent="#accordion">
         <li class="@if (request()->is('admin/attribute/*/manage') && request()->input('type') == 'category') active @endif">
@@ -81,6 +83,9 @@
         </li>
         <li class="@if (request()->is('admin/attribute/*/manage') && request()->input('type') == 'childcategory') active @endif">
             <a href="{{ route('admin-childcat-index') }}"><span>{{ __('Child Category') }}</span></a>
+        </li>
+        <li class="@if (request()->is('admin/brand*')) active @endif">
+            <a href="{{ route('admin-brand-index') }}"><span>{{ __('Brands') }}</span></a>
         </li>
     </ul>
 </li>

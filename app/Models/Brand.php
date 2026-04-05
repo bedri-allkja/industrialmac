@@ -28,9 +28,4 @@ class Brand extends Model
     public function attributes() {
         return $this->morphMany('App\Models\Attribute', 'attributable');
     }
-
-    public function brand()
-   {
-      return $this->belongsTo(Brand::class);
-   }
 }

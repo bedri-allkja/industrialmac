@@ -169,12 +169,14 @@ Route::prefix('admin')->group(function () {
 
 
     Route::group(['middleware' => 'permissions:categories'], function () {
-
-        // -------------------------- Admin Total Income Route --------------------------//
-        Route::get('/brands', 'Admin\BrandsController@taxCalculate')->name('admin-tax-calculate-income');
-        Route::get('/load/brand/{id}/', 'Admin\BrandsController@load')->name('admin-brand-load'); //JSON REQUEST
-
-        // -------------------------- Admin Total Income Route --------------------------//
+        Route::get('/brand/datatables', 'Admin\BrandsController@datatables')->name('admin-brand-datatables');
+        Route::get('/brand', 'Admin\BrandsController@index')->name('admin-brand-index');
+        Route::get('/brand/create', 'Admin\BrandsController@create')->name('admin-brand-create');
+        Route::post('/brand/create', 'Admin\BrandsController@store')->name('admin-brand-store');
+        Route::get('/brand/edit/{id}', 'Admin\BrandsController@edit')->name('admin-brand-edit');
+        Route::post('/brand/edit/{id}', 'Admin\BrandsController@update')->name('admin-brand-update');
+        Route::delete('/brand/delete/{id}', 'Admin\BrandsController@destroy')->name('admin-brand-delete');
+        Route::get('/brand/featured/{id1}/{id2}', 'Admin\BrandsController@featured')->name('admin-brand-featured');
     });
 
     /////////////////////////////// ////////////////////////////////////////////

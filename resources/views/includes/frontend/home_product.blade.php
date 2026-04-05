@@ -113,7 +113,7 @@
         <div class="content-wrapper">
 
             @if ($product->brand?->image)
-                <img class="product-brand-logo" src="{{ $product->brand->image }}" alt="">
+                <img class="product-brand-logo" src="{{ filter_var($product->brand->image, FILTER_VALIDATE_URL) ? $product->brand->image : asset('assets/images/brands/' . $product->brand->image) }}" alt="{{ $product->brand->name }}">
             @elseif ($product->brand)
                 <div class="product-brand-name">{{ $product->brand->name }}</div>
             @endif
