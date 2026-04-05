@@ -24,7 +24,11 @@
 
         <div class="row footer-row gy-3">
             <div class="col-lg-3 col-md-6 col-12 left-info">
-                <img class="logo" src="{{ asset('assets/images/' . $gs->footer_logo) }}" alt="">
+                @if (!empty($gs->footer_logo) && file_exists(public_path('assets/images/' . $gs->footer_logo)))
+                    <img class="logo" src="{{ asset('assets/images/' . $gs->footer_logo) }}" alt="{{ $gs->title }}">
+                @else
+                    <div class="fw-bold text-white mb-2">{{ $gs->title }}</div>
+                @endif
                 <a class="wow-replaced" data-wow-delay=".1s" href="tel:+11234567890">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
                         fill="none">

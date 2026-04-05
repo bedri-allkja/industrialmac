@@ -2,14 +2,15 @@
 
     <div class="single-product">
         <div class="img-wrapper">
-            <!-- @if ($product->offPercentage() && round($product->offPercentage()) > 0)
+            {{--
+            @if ($product->offPercentage() && round($product->offPercentage()) > 0)
                 <span class="product-badge">-{{ round($product->offPercentage()) }}%</span>
             @endif
 
             @if (Auth::check())
                 @if (isset($wishlist))
                     <a href="javascript:;" class="removewishlist"
-                        data-href="{{ route('user-wishlist-remove',App\Models\Wishlist::where('user_id', '=', $user->id)->where('product_id', '=', $product->id)->first()->id) }}">
+                        data-href="{{ route('user-wishlist-remove', optional(App\Models\Wishlist::where('user_id', '=', $user->id)->where('product_id', '=', $product->id)->first())->id) }}">
                         <div class="add-to-wishlist-btn bg-danger">
                             <i class="fas fa-trash  text-white"></i>
                         </div>
@@ -37,17 +38,19 @@
                         </svg>
                     </div>
                 </a>
-            @endif -->
+            @endif
+            --}}
 
 
 
             <img class="product-img"
                 src="{{ $product->thumbnail ? asset('assets/images/thumbnails/' . $product->thumbnail) : asset('assets/images/noimage.png') }}"
-                alt="product img">
+                alt="{{ $product->showName() }}"
+                onerror="this.onerror=null;this.src={{ json_encode(asset('assets/images/noimage.png')) }};">
 
             <div class="add-to-cart">
 
-                <!-- @if ($product->type != 'Listing')
+                {{-- @if ($product->type != 'Listing')
                     <a data-href="{{ route('product.compare.add', $product->id) }}" class="compare_product"
                         href="javascrit:;">
                         <div class="compare">
@@ -59,7 +62,7 @@
                             </svg>
                         </div>
                     </a>
-                @endif -->
+                @endif --}}
 
 
                 @if ($product->product_type == 'affiliate')
@@ -109,9 +112,9 @@
         </div>
         <div class="content-wrapper">
 
-            @if ($product->brand->image)
+            @if ($product->brand?->image)
                 <img class="product-brand-logo" src="{{ $product->brand->image }}" alt="">
-            @else
+            @elseif ($product->brand)
                 <div class="product-brand-name">{{ $product->brand->name }}</div>
             @endif
 

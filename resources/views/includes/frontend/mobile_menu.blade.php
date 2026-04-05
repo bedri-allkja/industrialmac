@@ -1,7 +1,11 @@
 <!-- mobile menu -->
 <div class="mobile-menu">
     <div class="mobile-menu-top">
-        <img src="{{ asset('assets/images/' . $gs->footer_logo) }}" alt="">
+        @if (!empty($gs->footer_logo) && file_exists(public_path('assets/images/' . $gs->footer_logo)))
+            <img src="{{ asset('assets/images/' . $gs->footer_logo) }}" alt="{{ $gs->title }}">
+        @else
+            <span class="text-white fw-bold">{{ $gs->title }}</span>
+        @endif
         <svg class="close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
             fill="none">
             <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"
@@ -9,7 +13,7 @@
         </svg>
     </div>
     <nav>
-        <div class="nav justify-content-between pt-24" id="nav-tab" role="tablist">
+        <div class="nav justify-content-between pt-3" id="mobile-menu-tabs" role="tablist">
             <button class="flex-grow-1 state-left-btn active active-tab-btn" id="main-menu-tab" data-bs-toggle="tab"
                 data-bs-target="#main-menu" type="button" role="tab" aria-controls="main-menu"
                 aria-selected="true">@lang('MAIN MENU')</button>
@@ -20,13 +24,12 @@
         </div>
     </nav>
 
-    <div class="tab-content " id="nav-tabContent1">
+    <div class="tab-content" id="mobile-menu-tab-content">
         <div class="tab-pane fade show active table-responsive tb-tb" id="main-menu" role="tabpanel"
             aria-labelledby="main-menu-tab" style="color: white;">
 
             <div class="mobile-menu-widget">
                 <div class="single-product-widget">
-                    <!-- <h5 class="widget-title">Product categories</h5> -->
                     <div class="product-cat-widget">
                         <ul class="accordion">
                             <!-- main list -->
@@ -53,7 +56,7 @@
 
                         </ul>
 
-                        <div class="auth-actions-btn gap-4 d-flex flex-column">
+                        <div class="auth-actions-btn gap-3 d-flex flex-column">
 
                             {{-- Vendor Panel or Vendor Login --}}
                             @if (Auth::guard('web')->check() && Auth::guard('web')->user()->is_vendor == 2)
@@ -78,22 +81,17 @@
 
                         </div>
 
-
-
                     </div>
                 </div>
             </div>
 
         </div>
-    </div>
 
-    <div class="tab-content " id="nav-tabContent3">
         <div class="tab-pane fade table-responsive tb-tb" id="categories" role="tabpanel"
             aria-labelledby="categories-tab" style="color: white;">
 
             <div class="mobile-menu-widget">
                 <div class="single-product-widget">
-                    <!-- <h5 class="widget-title">Product categories</h5> -->
                     <div class="product-cat-widget">
                         <ul class="accordion">
                             @foreach ($categories as $category)
@@ -108,7 +106,7 @@
                                                 {{ $category->name }}
                                             </a>
 
-                                            <button data-bs-toggle="collapse"
+                                            <button type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#{{ $category->slug }}_level_2"
                                                 aria-controls="{{ $category->slug }}_level_2"
                                                 aria-expanded="{{ $isCategoryActive ? 'true' : 'false' }}"
@@ -138,7 +136,7 @@
                                                         </a>
 
                                                         @if ($subcategory->childs->count() > 0)
-                                                            <button data-bs-toggle="collapse"
+                                                            <button type="button" data-bs-toggle="collapse"
                                                                 data-bs-target="#inner{{ $subcategory->slug }}_level_2_1"
                                                                 aria-controls="inner{{ $subcategory->slug }}_level_2_1"
                                                                 aria-expanded="{{ $isSubcategoryActive ? 'true' : 'false' }}"
@@ -210,13 +208,12 @@
                     <div class="input-group input__group">
                         <input type="text" class="form-control form__control" name="search"
                             placeholder="@lang('Search Any Product Here')">
-                        <div class="input-group-append">
-                            <span class="search-separator"></span>
-                            <button class="dropdown-toggle btn btn-secondary search-category-dropdown" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle search-category-dropdown" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                                 @lang('All Categories')
                             </button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 @foreach ($categories as $category)
                                     <li>
                                         <a class="dropdown-item dropdown__item"
@@ -225,19 +222,15 @@
                                 @endforeach
                             </ul>
                         </div>
-
-
-                        <div class="input-group-append">
-                            <button class="btn btn-primary search-icn" type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none">
-                                    <path
-                                        d="M21 21L17.5001 17.5M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
-                                        stroke="white" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
+                        <button class="btn btn-primary search-icn" type="submit" aria-label="@lang('Search')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M21 21L17.5001 17.5M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
+                                    stroke="white" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
                     </div>
                 </form>
             </div>

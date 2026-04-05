@@ -1,5 +1,4 @@
 <?php
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +36,5 @@ $app->singleton(
 | Return The Application
 |--------------------------------------------------------------------------
 */
-
-$path = base_path();
-$modifiedPath = Str::finish(dirname($path), DIRECTORY_SEPARATOR);
-$app->usePublicPath($modifiedPath);
 
 return $app;

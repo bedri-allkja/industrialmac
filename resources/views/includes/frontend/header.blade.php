@@ -53,10 +53,10 @@
 
                             <div class="dropdown">
                                 <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                    data-bs-auto-close="true" aria-expanded="false">
                                     @lang('English')
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu dropdown-menu-end">
                                     @foreach ($languges as $language)
                                         <li>
                                             <a class="dropdown-item dropdown__item {{ Session::has('language')
@@ -97,12 +97,12 @@
 
                                 <div class="dropdown">
                                     <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
+                                        data-bs-auto-close="true" aria-expanded="false">
                                         {{ Session::has('currency')
                                             ? $currencies->where('id', '=', Session::get('currency'))->first()->name
                                             : DB::table('currencies')->where('is_default', '=', 1)->first()->name }}
                                     </button>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu dropdown-menu-end">
                                         @foreach ($currencies as $currency)
                                             <li>
 
@@ -168,10 +168,14 @@
 
 
                     <a class="header-logo-wrapper" href="{{ route('front.index') }}">
-                        <img class="logo" src="{{ asset('assets/images/' . $gs->logo) }}" alt="logo" style="height: 100px;">
+                        @if (!empty($gs->logo) && file_exists(public_path('assets/images/' . $gs->logo)))
+                            <img class="logo" src="{{ asset('assets/images/' . $gs->logo) }}" alt="{{ $gs->title }}" style="height: 100px;">
+                        @else
+                            <span class="logo-text fw-bold fs-4 text-dark">{{ $gs->title }}</span>
+                        @endif
                     </a>
                 </div>
-                <div class="nav-center">
+                <div class="nav-center d-none d-xl-flex justify-content-center">
                     <ul class="d-flex align-items-center nav-menus">
                         <li class=""><a href="{{ route('front.index') }}"
                                 class="nav-link {{ request()->path() == '/' ? 'active' : '' }}">@lang('Home')</a>
@@ -200,13 +204,13 @@
                                                         href="{{ route('front.category', [$category->slug]) }}">{{ $category->name }}</a>
                                                 </h5>
                                                 @if ($category->subs->count() > 0)
-                                                    @foreach ($category->subs as $subcategory)
-                                                        <ul>
+                                                    <ul>
+                                                        @foreach ($category->subs as $subcategory)
                                                             <li><a
                                                                     href="{{ route('front.category', [$category->slug, $subcategory->slug]) }}{{ !empty(request()->input('search')) ? '?search=' . request()->input('search') : '' }}">{{ $subcategory->name }}</a>
                                                             </li>
-                                                        </ul>
-                                                    @endforeach
+                                                        @endforeach
+                                                    </ul>
                                                 @endif
                                             </div>
                                         </div>

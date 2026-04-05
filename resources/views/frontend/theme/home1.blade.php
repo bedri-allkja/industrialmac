@@ -321,13 +321,16 @@
         </div>
         <div class="gs-partnerss gy-4 row justify-content-center">
 
-            @foreach (DB::table('brands')->get() as $data)
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 wow-replaced" data-wow-delay=".1s">
-                <div class="single-partner">
-                    <img src="{{ asset($data->image) }}" alt="partner">
-                </div>
-            </div>
-            @endforeach
+            @if (\Illuminate\Support\Facades\Schema::hasTable('brands'))
+                @foreach (\App\Models\Brand::all() as $data)
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 wow-replaced" data-wow-delay=".1s">
+                        <div class="single-partner">
+                            <img src="{{ $data->image ? asset($data->image) : asset('assets/images/noimage.png') }}"
+                                alt="partner">
+                        </div>
+                    </div>
+                @endforeach
+            @endif
 
 
         </div>
@@ -365,19 +368,21 @@
 <section class="gs-service-section">
     <div class="container">
         <div class="row service-row">
-            @foreach (DB::table('services')->get() as $service)
-            <div class="col-lg-3 col-md-6 col-sm-12 services-area wow-removed">
-                <div class="single-service d-flex flex-lg-column flex-xl-row text-lg-center text-xl-start">
-                    <div class="icon-wrapper">
-                        <img src="{{ asset('assets/images/services/' . $service->photo) }}" alt="service">
+            @if (\Illuminate\Support\Facades\Schema::hasTable('services'))
+                @foreach (\App\Models\Service::all() as $service)
+                    <div class="col-lg-3 col-md-6 col-sm-12 services-area wow-removed">
+                        <div class="single-service d-flex flex-lg-column flex-xl-row text-lg-center text-xl-start">
+                            <div class="icon-wrapper">
+                                <img src="{{ asset('assets/images/services/' . $service->photo) }}" alt="service">
+                            </div>
+                            <div class="service-content">
+                                <h6 class="service-title">{{ $service->title }}</h6>
+                                <p class="service-desc">{{ $service->details }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="service-content">
-                        <h6 class="service-title">{{ $service->title }}</h6>
-                        <p class="service-desc">{{ $service->details }}</p>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
 </section>

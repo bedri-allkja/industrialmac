@@ -164,14 +164,15 @@
                 </div>
             </div>
             <div class="row g-3">
-                @foreach (DB::table('partners')->get() as $data)
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="simple-service">
-                            <img src="{{ asset('assets/images/partner/' . $data->photo) }}" alt="">
-
+                @if (\Illuminate\Support\Facades\Schema::hasTable('partners'))
+                    @foreach (\App\Models\Partner::all() as $data)
+                        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                            <div class="simple-service">
+                                <img src="{{ asset('assets/images/partner/' . $data->photo) }}" alt="">
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>
@@ -233,23 +234,26 @@
                     </div>
                 </div>
             </div> --}}
-            @foreach (DB::table('services')->get() as $service)
-                <div class="col">
-                    <div class="simple-service px-3 md-my-10 d-flex align-items-center">
-                        <div class="box-80px rounded-pill position-relative bg-white">
-                            <img class="flat-medium text-secondary xy-center position-absolute"
-                                src="{{asset('assets/images/services/' . $service->photo)}}" alt="">
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="mb-1 font-500"><a href="service.html"
-                                    class="text-dark hover-text-primary transation-this">{{$service->title}}</a></h5>
-                            <div class="font-small text-secondary">
-                                <span>{{$service->details}}</span>
+            @if (\Illuminate\Support\Facades\Schema::hasTable('services'))
+                @foreach (\App\Models\Service::all() as $service)
+                    <div class="col">
+                        <div class="simple-service px-3 md-my-10 d-flex align-items-center">
+                            <div class="box-80px rounded-pill position-relative bg-white">
+                                <img class="flat-medium text-secondary xy-center position-absolute"
+                                    src="{{ asset('assets/images/services/' . $service->photo) }}" alt="">
+                            </div>
+                            <div class="ms-3">
+                                <h5 class="mb-1 font-500"><a href="service.html"
+                                        class="text-dark hover-text-primary transation-this">{{ $service->title }}</a>
+                                </h5>
+                                <div class="font-small text-secondary">
+                                    <span>{{ $service->details }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            @endif
 
 
         </div>

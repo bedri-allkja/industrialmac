@@ -4,21 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $gs->title }}</title>
-    <!--Essential css files-->
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/all.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/slick.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/nice-select.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/jquery-ui.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/animate.css">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/all.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/datatables.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/style.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/custom.css">
-    <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+    @php
+        $__localTheme = file_exists(public_path('assets/front/css/bootstrap.min.css'));
+    @endphp
+    @if ($__localTheme)
+        @include('includes.frontend.head_assets_local')
+        @if (!empty($gs->favicon) && file_exists(public_path('assets/images/' . $gs->favicon)))
+            <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+        @endif
+    @else
+        @include('includes.frontend.head_assets_cdn')
+    @endif
     @include('includes.frontend.extra_head')
+    @if (! file_exists(public_path('assets/front/css/styles.php')))
+        @include('includes.frontend.theme_fallback_critical')
+    @endif
     @yield('css')
 
 </head>
@@ -63,18 +65,11 @@
     @include('includes.frontend.footer')
     <!-- footer section -->
 
-    <!--Esential Js Files-->
-    <script src="{{ asset('assets/front') }}/js/jquery.min.js"></script>
-        <script src="{{ asset('assets/front') }}/js/slick.js"></script>
-    <script src="{{ asset('assets/front') }}/js/jquery-ui.js"></script>
-    <script src="{{ asset('assets/front') }}/js/nice-select.js"></script>
- 
-    <script src="{{ asset('assets/front') }}/js/wow.js"></script>
-    <script src="{{ asset('assets/front') }}/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('assets/front/js/toastr.min.js') }}"></script>
-    
-    <script src="{{ asset('assets/front') }}/js/script.js"></script>
-    <script src="{{ asset('assets/front/js/myscript.js') }}"></script>
+    @if ($__localTheme)
+        @include('includes.frontend.script_assets_local')
+    @else
+        @include('includes.frontend.script_assets_cdn')
+    @endif
 
 
     <script>

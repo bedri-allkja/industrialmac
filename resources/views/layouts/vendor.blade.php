@@ -5,23 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@lang('Vendor Dashboard')</title>
-    <!--Essential css files-->
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/all.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/slick.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/nice-select.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/jquery-ui.css">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/animate.css">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/all.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/datatables.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/style.css">
-    <link href="{{ asset('assets/admin/css/jquery.tagit.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('assets/front') }}/css/custom.css">
-    <link rel="stylesheet" href="{{ asset('assets/vendor') }}/css/custom.css">
-    <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+    @php
+        $__localTheme = file_exists(public_path('assets/front/css/bootstrap.min.css'));
+    @endphp
+    @if ($__localTheme)
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/all.css">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/slick.css">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/nice-select.css">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/jquery-ui.css">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/animate.css">
+        <link rel="stylesheet" href="{{ asset('assets/front/css/all.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/datatables.min.css">
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/style.css">
+        <link href="{{ asset('assets/admin/css/jquery.tagit.css') }}" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('assets/front') }}/css/custom.css">
+        <link rel="stylesheet" href="{{ asset('assets/vendor') }}/css/custom.css">
+        @if (!empty($gs->favicon) && file_exists(public_path('assets/images/' . $gs->favicon)))
+            <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+        @endif
+    @else
+        @include('includes.frontend.head_assets_cdn')
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" crossorigin="anonymous">
+    @endif
     @include('includes.frontend.extra_head')
+    @if (! file_exists(public_path('assets/front/css/styles.php')))
+        @include('includes.frontend.theme_fallback_critical')
+    @endif
     @yield('css')
     <!--favicon-->
 
@@ -87,20 +98,26 @@
         </form>
     </div>
 
-    <!--Esential Js Files-->
-    <script src="{{ asset('assets/front') }}/js/jquery.min.js"></script>
-    <script src="{{ asset('assets/front') }}/js/jquery-ui.js"></script>
-    <script src="{{ asset('assets/front') }}/js/nice-select.js"></script>
-    <script src="{{ asset('assets/front') }}/js/slick.js"></script>
-    <script src="{{ asset('assets/front') }}/js/wow.js"></script>
-    <script src="{{ asset('assets/front') }}/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('assets/front') }}/js/datatables.min.js"></script>
-    <script src="{{ asset('assets/front') }}/js/jquery.waypoints.min.js"></script>
-    <script src="{{ asset('assets/front') }}/js/apexcharts.js"></script>
-    <script src="{{ asset('assets/admin/js/tag-it.js') }}"></script>
-    <script src="{{ asset('assets/front/js/toastr.min.js') }}"></script>
-    <script src="{{ asset('assets/front') }}/js/jquery.counterup.js"></script>
-    <script src="{{ asset('assets/front') }}/js/script.js"></script>
+    @if ($__localTheme)
+        <script src="{{ asset('assets/front') }}/js/jquery.min.js"></script>
+        <script src="{{ asset('assets/front') }}/js/jquery-ui.js"></script>
+        <script src="{{ asset('assets/front') }}/js/nice-select.js"></script>
+        <script src="{{ asset('assets/front') }}/js/slick.js"></script>
+        <script src="{{ asset('assets/front') }}/js/wow.js"></script>
+        <script src="{{ asset('assets/front') }}/js/bootstrap.bundle.min.js"></script>
+        <script src="{{ asset('assets/front') }}/js/datatables.min.js"></script>
+        <script src="{{ asset('assets/front') }}/js/jquery.waypoints.min.js"></script>
+        <script src="{{ asset('assets/front') }}/js/apexcharts.js"></script>
+        <script src="{{ asset('assets/admin/js/tag-it.js') }}"></script>
+        <script src="{{ asset('assets/front/js/toastr.min.js') }}"></script>
+        <script src="{{ asset('assets/front') }}/js/jquery.counterup.js"></script>
+        <script src="{{ asset('assets/front') }}/js/script.js"></script>
+    @else
+        @include('includes.frontend.script_assets_cdn')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.2/dist/apexcharts.min.js" crossorigin="anonymous"></script>
+    @endif
 
     <script type="text/javascript">
         var mainurl = "{{ url('/') }}";
@@ -115,7 +132,9 @@
 
     @yield('script')
 
-    <script src="{{ asset('assets/vendor') }}/js/myscript.js"></script>
+    @if (file_exists(public_path('assets/vendor/js/myscript.js')))
+        <script src="{{ asset('assets/vendor/js/myscript.js') }}"></script>
+    @endif
 
 
     @php

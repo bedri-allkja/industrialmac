@@ -46,7 +46,11 @@ class FrontBaseController extends Controller
             }
 
             view()->share('langg', $this->language);
-            App::setlocale($this->language->name);
+            if ($this->language) {
+                App::setLocale($this->language->name);
+            } else {
+                App::setLocale(config('app.locale'));
+            }
 
             // Set Popup
             if (!Session::has('popup')) {
@@ -105,7 +109,7 @@ class FrontBaseController extends Controller
 
     function getOS()
     {
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
         $os_platform = "Unknown OS Platform";
 

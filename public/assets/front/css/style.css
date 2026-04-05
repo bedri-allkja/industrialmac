@@ -1,0 +1,886 @@
+/* Genius-style storefront scaffold — complements Bootstrap; replace with original theme style.css when you have it. */
+:root {
+    --gs-primary: var(--theme-primary, #2563eb);
+    --gs-header: var(--theme-header-bg, #0f172a);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: #1f2937;
+    line-height: 1.5;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+a {
+    color: var(--gs-primary);
+}
+
+.custom-containerr {
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* Typo utility classes used in Blade */
+.d-nonee {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    .d-md-blockk {
+        display: block !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .d-lg-blockk {
+        display: block !important;
+    }
+}
+
+/* Header: top strip + main bar */
+.header-section {
+    position: relative;
+    z-index: 100;
+}
+
+.header-section .info-bar {
+    background: var(--gs-header);
+    color: #fff;
+}
+
+.info-bar {
+    font-size: 0.875rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.info-bar a,
+.info-bar .info-bar-btn {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.info-bar-btn {
+    display: inline-block;
+    padding: 0.2rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0.25rem;
+}
+
+/* Only the top strip nav lists — do NOT use `.info-bar ul` or `.dropdown-menu` becomes a flex row */
+.info-bar ul.wows,
+.header-section ul.wows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.info-row {
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.header-top {
+    background: #fff;
+    color: #111827;
+    padding: 0.75rem 0;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+}
+
+.create-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.header-logo-wrapper .logo {
+    max-height: 56px;
+    width: auto;
+    display: block;
+}
+
+.nav-center {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.nav-menus {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+}
+
+.nav-menus > li {
+    position: relative;
+}
+
+.nav-menus > li > a,
+.nav-menus > li > a.nav-link {
+    color: #111827 !important;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.nav-menus > li > a:hover,
+.nav-menus > li > a.active {
+    color: var(--gs-primary) !important;
+}
+
+.has-megamenu .megamenu,
+.has-submenu > .dropdown-menu {
+    display: none !important;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    padding: 0.75rem 0;
+    z-index: 1050;
+}
+
+.has-megamenu .megamenu {
+    min-width: min(100vw - 2rem, 960px);
+    padding: 1rem;
+}
+
+.has-megamenu:hover .megamenu,
+.has-submenu:hover > .dropdown-menu {
+    display: block !important;
+}
+
+.info-bar .dropdown-menu {
+    --bs-dropdown-min-width: 11rem;
+    z-index: 1060;
+    /* Reset any stray flex from other rules; Bootstrap shows with .show */
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    gap: 0 !important;
+    min-width: 11rem;
+    padding: 0.35rem 0;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+}
+
+.info-bar .dropdown-menu > li {
+    list-style: none;
+}
+
+.info-bar .dropdown-menu .dropdown-item {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.megamenu .single-menu ul {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+}
+
+.megamenu .single-menu ul li a {
+    display: block;
+    padding: 0.25rem 0;
+    color: #4b5563 !important;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.megamenu .single-menu h5 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+}
+
+.megamenu .single-menu h5 a {
+    color: #111827 !important;
+    text-decoration: none;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #374151 !important;
+    padding: 0.4rem 1rem;
+}
+
+/* Hero / slick */
+.hero-slider-wrapper .gs-hero-section {
+    outline: none;
+}
+
+.gs-hero-section {
+    min-height: 340px;
+    padding: 3rem 0;
+    background-color: #e2e8f0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.hero-content .subtitle {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.hero-content .title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 1rem;
+    line-height: 1.2;
+}
+
+.hero-content .des {
+    margin-bottom: 1.25rem;
+    max-width: 36rem;
+}
+
+.template-btn,
+.hero-shop-now-btn {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: var(--gs-primary);
+    color: #fff !important;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.template-btn:hover,
+.hero-shop-now-btn:hover {
+    filter: brightness(0.95);
+    color: #fff !important;
+}
+
+/* Section titles */
+.gs-title-box .title {
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.gs-title-box .des {
+    color: #64748b;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.py-120 {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+}
+
+.mb-60 {
+    margin-bottom: 2rem;
+}
+
+.mb-36 {
+    margin-bottom: 1.5rem;
+}
+
+.bg-light-white {
+    background-color: #f8fafc;
+}
+
+/* Promo / arrival blocks */
+.single-offer-product {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.single-offer-product .promo-img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    min-height: 200px;
+    max-height: 420px;
+}
+
+/* Categories strip */
+.gs-cate-section {
+    padding: 2rem 0;
+}
+
+.gs-single-cat {
+    text-align: center;
+    padding: 0.75rem;
+}
+
+/* Product card */
+.single-product {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.single-product .img-wrapper {
+    position: relative;
+    background: #f1f5f9;
+}
+
+.single-product .product-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+}
+
+.single-product .add-to-cart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.5rem;
+    justify-content: center;
+    border-top: 1px solid #f1f5f9;
+}
+
+.single-product .add-cart,
+.single-product .details {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.25rem;
+    background: #f8fafc;
+    text-decoration: none;
+    color: #374151 !important;
+    border: 1px solid #e5e7eb;
+}
+
+.single-product .add-cart:hover,
+.single-product .details:hover {
+    background: var(--gs-primary);
+    color: #fff !important;
+    border-color: var(--gs-primary);
+}
+
+.single-product .content-wrapper {
+    padding: 0.85rem 1rem 1rem;
+    flex: 1;
+}
+
+.single-product .product-title {
+    font-size: 0.95rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.single-product .product-title a {
+    color: #111827 !important;
+    text-decoration: none;
+}
+
+.single-product .product-title a:hover {
+    color: var(--gs-primary) !important;
+}
+
+.product-brand-logo {
+    max-height: 28px;
+    margin-bottom: 0.35rem;
+}
+
+.product-brand-name {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.35rem;
+}
+
+/* Partners */
+.gs-partner-section .single-partner,
+.gs-partnerss .single-partner {
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+/* Services row */
+.gs-service-section .single-service {
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+    height: 100%;
+}
+
+.gs-service-section .service-title {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+}
+
+.gs-service-section .service-desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Breadcrumb */
+.gs-breadcrumb-section {
+    padding: 2.5rem 0;
+    background-color: #e2e8f0;
+    background-position: center;
+    background-size: cover;
+}
+
+.breadcrumb-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.bread-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.bread-menu a {
+    text-decoration: none;
+}
+
+/* Blog cards */
+.single-post {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+    height: 100%;
+}
+
+.single-post .post-img img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+}
+
+.single-post .post-content {
+    padding: 1rem 1.25rem 1.25rem;
+}
+
+/* Footer */
+.gs-footer-section {
+    background: #0f172a;
+    color: #e5e7eb;
+    margin-top: 3rem;
+}
+
+.gs-footer-section a {
+    color: #cbd5e1 !important;
+    text-decoration: none;
+}
+
+.gs-footer-section a:hover {
+    color: #fff !important;
+}
+
+.newslatter {
+    background: var(--gs-primary);
+    color: #fff;
+    padding: 2rem 0;
+}
+
+.newslatter h2 {
+    margin: 0;
+    font-size: 1.35rem;
+}
+
+.newslatter-form form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.news-latter-input {
+    flex: 1 1 200px;
+    padding: 0.6rem 0.85rem;
+    border: none;
+    border-radius: 0.25rem;
+}
+
+.newsletter-btn {
+    padding: 0.6rem 1.25rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: #0f172a;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.footer-row {
+    padding: 2.5rem 0;
+}
+
+.footer-row .logo {
+    max-height: 48px;
+    margin-bottom: 1rem;
+}
+
+.footer-row ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-row ul li {
+    margin-bottom: 0.35rem;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 1080;
+}
+
+.overlay.active {
+    display: block;
+}
+
+body.menu-open,
+body.search-open {
+    overflow: hidden;
+}
+
+/* ---- Off-canvas mobile menu + slide-down search (was in original theme CSS) ---- */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: min(400px, 100vw);
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background: #0f172a;
+    color: #e2e8f0;
+    z-index: 1090;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(-100%);
+    transition: transform 0.28s ease;
+    box-shadow: 6px 0 32px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-menu.active {
+    transform: translateX(0);
+}
+
+@media (min-width: 1200px) {
+    .mobile-menu {
+        display: none !important;
+    }
+}
+
+.mobile-menu-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.mobile-menu-top img {
+    max-height: 40px;
+    width: auto;
+}
+
+.mobile-menu-top .close {
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0.25rem;
+}
+
+.mobile-menu nav .nav {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu .state-left-btn,
+.mobile-menu .state-right-btn {
+    flex: 1;
+    border: none;
+    border-radius: 0;
+    padding: 0.85rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    background: #1e293b;
+    color: rgba(255, 255, 255, 0.65);
+    transition: background 0.2s, color 0.2s;
+}
+
+.mobile-menu .state-left-btn.active,
+.mobile-menu .state-right-btn.active,
+.mobile-menu .active-tab-btn.active {
+    background: var(--gs-primary);
+    color: #fff;
+}
+
+.mobile-menu-widget {
+    padding: 1rem 1.25rem 2rem;
+}
+
+.mobile-menu .product-cat-widget .accordion {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile-menu .product-cat-widget .accordion > li {
+    margin-bottom: 0.35rem;
+}
+
+.mobile-menu .product-cat-widget a:not(.template-btn) {
+    color: #e2e8f0 !important;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.35rem 0;
+}
+
+.mobile-menu .product-cat-widget a:not(.template-btn):hover {
+    color: #fff !important;
+}
+
+.mobile-menu .sidebar-active-color {
+    color: var(--gs-primary) !important;
+    font-weight: 600;
+}
+
+.mobile-menu .auth-actions-btn {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu .auth-actions-btn .template-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 0.375rem;
+}
+
+.mobile-menu .bottom-12 {
+    bottom: auto;
+}
+
+.mobile-menu button.position-relative {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 0.25rem 0.5rem;
+}
+
+.mobile-menu .fa-plus,
+.mobile-menu .fa-minus {
+    color: #cbd5e1;
+}
+
+.mobile-menu button.collapsed .fa-minus {
+    display: none;
+}
+
+.mobile-menu button.collapsed .fa-plus {
+    display: inline;
+}
+
+.mobile-menu button:not(.collapsed) .fa-plus {
+    display: none;
+}
+
+.mobile-menu button:not(.collapsed) .fa-minus {
+    display: inline;
+}
+
+/* Search bar under header — hidden until toggled */
+.search-bar {
+    display: none;
+    position: relative;
+    z-index: 90;
+    background: #fff;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.search-bar.active {
+    display: block;
+}
+
+.search-bar .input__group {
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: stretch;
+}
+
+.search-bar .input__group > .dropdown {
+    position: static;
+    display: flex;
+    align-items: stretch;
+}
+
+.search-bar .input__group > .dropdown > .dropdown-toggle {
+    height: 100%;
+    border-radius: 0;
+}
+
+@media (min-width: 576px) {
+    .search-bar .input__group {
+        flex-wrap: nowrap;
+    }
+}
+
+.search-bar .form__control {
+    min-height: 46px;
+}
+
+.search-bar .search-icn {
+    min-height: 46px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.search-bar .search-category-dropdown {
+    min-height: 46px;
+    border-radius: 0;
+}
+
+/* Info bar: language / currency Bootstrap dropdowns on dark strip */
+.info-bar .dropdown {
+    position: relative;
+}
+
+.info-bar .dropdown-toggle {
+    background: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    padding: 0.15rem 0.35rem !important;
+    font-size: inherit;
+    box-shadow: none !important;
+}
+
+.info-bar .dropdown-toggle::after {
+    margin-left: 0.35rem;
+    vertical-align: 0.15em;
+}
+
+.info-bar .dropdown-item.active {
+    background-color: var(--gs-primary);
+    color: #fff !important;
+}
+
+/* Slick tweaks */
+.slick-dots {
+    bottom: 16px;
+}
+
+.slick-prev,
+.slick-next {
+    z-index: 5;
+}
+
+/* Explore products tab bar (Bootstrap tabs + custom class) */
+.explore-tab-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 0.5rem;
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+}
+
+.explore-tab-navbar .nav-item {
+    margin: 0;
+}
+
+.explore-tab-navbar .nav-link {
+    border-radius: 0.375rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #374151 !important;
+}
+
+.explore-tab-navbar .nav-link:hover,
+.explore-tab-navbar .nav-link.active {
+    border-color: var(--gs-primary);
+    color: var(--gs-primary) !important;
+    background: rgba(37, 99, 235, 0.06);
+}
+
+/* Category + product carousels */
+.home-cate-slider .slick-slide,
+.home3-cate-slider .slick-slide,
+.product-cards-slider .slick-slide {
+    padding: 0 8px;
+}
+
+.home-cate-slider .slick-list,
+.home3-cate-slider .slick-list,
+.product-cards-slider .slick-list {
+    margin: 0 -8px;
+}
+
+.product-cards-slider .single-product {
+    margin-bottom: 0;
+}
+
+/* Desktop nav is hidden below xl (see header); no “expanded megamenu list” on tablet */

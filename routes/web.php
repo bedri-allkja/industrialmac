@@ -1702,8 +1702,8 @@ Route::group(['middleware' => 'maintenance'], function () {
 
     Route::get('/checkout/payment/{slug1}/{slug2}', 'Front\CheckoutController@loadpayment')->name('front.load.payment');
 
-    Route::post('/api/flutter/submit', 'Payment\FlutterWaveController@store')->name('api.flutter.submit');
-    Route::post('/flutter/notify', 'Payment\FlutterWaveController@notify')->name('api.flutter.notify');
+    Route::post('/api/flutter/submit', 'Payment\Checkout\FlutterwaveController@store')->name('api.flutter.submit');
+    Route::post('/flutter/notify', 'Payment\Checkout\FlutterwaveController@notify')->name('api.flutter.notify');
 
     Route::get('/payment/successfull/{get}', 'Front\FrontendController@success')->name('front.payment.success');
 

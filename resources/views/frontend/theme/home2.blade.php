@@ -285,19 +285,21 @@
 <section class="gs-service-section px-4 bg-light-white">
     <div class="container">
         <div class="row service-row">
-            @foreach (DB::table('services')->get() as $service)
-            <div class="col-lg-3 col-md-6 col-sm-12 services-area wow-removed">
-                <div class="single-service d-flex flex-lg-column flex-xl-row text-lg-center text-xl-start">
-                    <div class="icon-wrapper">
-                        <img src="{{ asset('assets/images/services/' . $service->photo) }}" alt="service">
+            @if (\Illuminate\Support\Facades\Schema::hasTable('services'))
+                @foreach (\App\Models\Service::all() as $service)
+                    <div class="col-lg-3 col-md-6 col-sm-12 services-area wow-removed">
+                        <div class="single-service d-flex flex-lg-column flex-xl-row text-lg-center text-xl-start">
+                            <div class="icon-wrapper">
+                                <img src="{{ asset('assets/images/services/' . $service->photo) }}" alt="service">
+                            </div>
+                            <div class="service-content">
+                                <h6 class="service-title">{{ $service->title }}</h6>
+                                <p class="service-desc">{{ $service->details }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="service-content">
-                        <h6 class="service-title">{{ $service->title }}</h6>
-                        <p class="service-desc">{{ $service->details }}</p>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
 </section>
@@ -389,15 +391,17 @@
             </div>
         </div>
         <div class="gs-partnerss row justify-content-center">
-            @foreach (DB::table('partners')->get() as $data)
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 wow-replaced p-0" data-wow-delay=".1s">
-                <a href="#">
-                    <div class="single-partner">
-                        <img src="{{ asset('assets/images/partner/' . $data->photo) }}" alt="partner">
+            @if (\Illuminate\Support\Facades\Schema::hasTable('partners'))
+                @foreach (\App\Models\Partner::all() as $data)
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 wow-replaced p-0" data-wow-delay=".1s">
+                        <a href="#">
+                            <div class="single-partner">
+                                <img src="{{ asset('assets/images/partner/' . $data->photo) }}" alt="partner">
+                            </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
 

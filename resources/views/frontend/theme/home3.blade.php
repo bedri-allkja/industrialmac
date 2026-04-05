@@ -265,7 +265,7 @@
                 </div>
             </div>
             <!--  content -->
-            <div class="row product-cards-slider gy-4 mt-4 mt-lg-0">
+            <div class="product-cards-slider gy-4 mt-4 mt-lg-0">
                 @foreach ($popular_products as $product)
                     @include('includes.frontend.home_product')
                 @endforeach
@@ -278,19 +278,21 @@
     <section class="gs-service-section px-4  bg-light-white">
         <div class="container">
             <div class="row service-row">
-                @foreach (DB::table('services')->get() as $service)
-                    <div class="col-lg-3 col-md-6 col-sm-12 services-area wow-removed">
-                        <div class="single-service d-flex flex-lg-column flex-xl-row text-lg-center text-xl-start">
-                            <div class="icon-wrapper">
-                                <img src="{{ asset('assets/images/services/' . $service->photo) }}" alt="service">
-                            </div>
-                            <div class="service-content">
-                                <h6 class="service-title">{{ $service->title }}</h6>
-                                <p class="service-desc">{{ $service->details }}</p>
+                @if (\Illuminate\Support\Facades\Schema::hasTable('services'))
+                    @foreach (\App\Models\Service::all() as $service)
+                        <div class="col-lg-3 col-md-6 col-sm-12 services-area wow-removed">
+                            <div class="single-service d-flex flex-lg-column flex-xl-row text-lg-center text-xl-start">
+                                <div class="icon-wrapper">
+                                    <img src="{{ asset('assets/images/services/' . $service->photo) }}" alt="service">
+                                </div>
+                                <div class="service-content">
+                                    <h6 class="service-title">{{ $service->title }}</h6>
+                                    <p class="service-desc">{{ $service->details }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                @endif
             </div>
         </div>
     </section>
@@ -383,17 +385,20 @@
                 <div
                     class="row gy-4 row-cols-xxl-4 row-cols-xl-3 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 justify-content-center">
 
-                    @foreach (DB::table('brands')->get() as $data)
-                        <div class="col">
-                            <div class="wow-replaced " data-wow-delay=".1s">
-                                <a href="javascript:;">
-                                    <div class="single-partner">
-                                        <img src="{{ asset($data->image) }}" alt="partner">
-                                    </div>
-                                </a>
+                    @if (\Illuminate\Support\Facades\Schema::hasTable('brands'))
+                        @foreach (\App\Models\Brand::all() as $data)
+                            <div class="col">
+                                <div class="wow-replaced " data-wow-delay=".1s">
+                                    <a href="javascript:;">
+                                        <div class="single-partner">
+                                            <img src="{{ $data->image ? asset($data->image) : asset('assets/images/noimage.png') }}"
+                                                alt="partner">
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
