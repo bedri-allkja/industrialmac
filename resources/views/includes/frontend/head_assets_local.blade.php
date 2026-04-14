@@ -8,4 +8,3 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/front/css/datatables.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/front/css/custom.css') }}">

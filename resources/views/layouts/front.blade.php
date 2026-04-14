@@ -21,6 +21,7 @@
     @if (! file_exists(public_path('assets/front/css/styles.php')))
         @include('includes.frontend.theme_fallback_critical')
     @endif
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css') }}">
     @yield('css')
 
 </head>
@@ -77,7 +78,31 @@
         var mainurl = "{{ url('/') }}";
         var gs      = {!! json_encode(DB::table('generalsettings')->where('id','=',1)->first(['is_loader','decimal_separator','thousand_separator','is_cookie','is_talkto','talkto'])) !!};
         var ps_category = {{ $ps->category }};
-    
+
+        // Fix sticky header content jump
+        (function(){
+            var headerTop = document.querySelector('.header-top');
+            if (!headerTop) return;
+            var spacer = document.createElement('div');
+            spacer.className = 'sticky-spacer';
+            spacer.style.display = 'none';
+            headerTop.parentNode.insertBefore(spacer, headerTop.nextSibling);
+
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(m) {
+                    if (m.attributeName === 'class') {
+                        if (headerTop.classList.contains('sticky')) {
+                            spacer.style.display = 'block';
+                            spacer.style.height = headerTop.offsetHeight + 'px';
+                        } else {
+                            spacer.style.display = 'none';
+                        }
+                    }
+                });
+            });
+            observer.observe(headerTop, { attributes: true });
+        })();
+
         var lang = {
             'days': '{{ __('Days') }}',
             'hrs': '{{ __('Hrs') }}',
