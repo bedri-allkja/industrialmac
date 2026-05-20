@@ -10,7 +10,7 @@
 	<!-- Title -->
 	<title>{{$gs->title}}</title>
 	<!-- favicon -->
-	<link rel="icon" type="image/x-icon" href="{{asset('assets/images/' . $gs->favicon)}}" />
+	<link rel="icon" type="image/png" href="{{ site_brand_logo() }}" />
 	<!-- Bootstrap -->
 	<link href="{{asset('assets/admin/css/bootstrap.min.css')}}" rel="stylesheet" />
 	<!-- Fontawesome -->
@@ -58,7 +58,7 @@
 				<div class="container-fluid">
 					<div class="d-flex mobile-menu-check justify-content-between">
 						<a class="admin-logo" href="{{ route('front.index') }}" target="_blank">
-							<img src="{{asset('assets/images/' . $gs->logo)}}" alt="">
+							<img src="{{ site_brand_logo() }}" alt="">
 						</a>
 						<div class="menu-toggle-button">
 							<a class="nav-link" href="javascript:;" id="sidebarCollapse">

@@ -1,7 +1,7 @@
 <div class="gs-vendor-sidebar-wrapper d-none d-xl-block">
     <div class="gs-vendor-sidebar-logo-wrapper">
         <a href="{{ route('front.index') }}">
-            <img src="{{ asset('assets/images/' . $gs->logo) }}" alt="logo">
+            <img src="{{ site_brand_logo() }}" alt="logo">
         </a>
     </div>
     <ul class="gs-dashboard-user-sidebar-wrapper">

@@ -8,7 +8,7 @@
 	<meta name="description" content="GeniusCart-New - Multivendor Ecommerce system">
 	<meta name="author" content="GeniusOcean">
 	<title>{{$gs->title}}-@lang('checkout')</title>
-	<link rel="icon" type="image/x-icon" href="{{asset('assets/images/' . $gs->favicon)}}" />
+	<link rel="icon" type="image/png" href="{{ site_brand_logo() }}" />
 	<!-- Google Font -->
 	@if ($default_font->font_value)
 		<link

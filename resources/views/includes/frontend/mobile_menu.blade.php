@@ -1,11 +1,7 @@
 <!-- Mobile Menu -->
 <div class="mobile-menu">
     <div class="mobile-menu-top">
-        @if (!empty($gs->footer_logo) && file_exists(public_path('assets/images/' . $gs->footer_logo)))
-            <img src="{{ asset('assets/images/' . $gs->footer_logo) }}" alt="{{ $gs->title }}" style="max-height:35px;">
-        @else
-            <span class="text-white fw-bold">{{ $gs->title }}</span>
-        @endif
+        <img src="{{ site_brand_logo() }}" alt="{{ $gs->title }}" class="mobile-menu-brand-logo">
         <svg class="close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>

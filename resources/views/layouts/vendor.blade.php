@@ -22,8 +22,8 @@
         <link href="{{ asset('assets/admin/css/jquery.tagit.css') }}" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('assets/front') }}/css/custom.css">
         <link rel="stylesheet" href="{{ asset('assets/vendor') }}/css/custom.css">
-        @if (!empty($gs->favicon) && file_exists(public_path('assets/images/' . $gs->favicon)))
-            <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+        @if (file_exists(public_path('assets/images/INDUSTRIALMAC.png')))
+            <link rel="icon" type="image/png" href="{{ site_brand_logo() }}">
         @endif
     @else
         @include('includes.frontend.head_assets_cdn')

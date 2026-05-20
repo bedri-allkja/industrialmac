@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/front') }}/css/style.css">
     <link rel="stylesheet" href="{{ asset('assets/front') }}/css/custom.css">
-    <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+    <link rel="icon" type="image/png" href="{{ site_brand_logo() }}">
     @include('includes.frontend.extra_head')
     @if (! file_exists(public_path('assets/front/css/styles.php')))
         @include('includes.frontend.theme_fallback_critical')

@@ -347,7 +347,6 @@ html { scroll-behavior: smooth; }
 
 /* ── Hero section ────────────────────────────────── */
 .hero-slider-wrapper { overflow: hidden; width: 100%; }
-.gs-hero-section { background-color: transparent !important; }
 .gs-hero-section::before { display: none !important; }
 
 /* ── Category sidebar sticky ────────────────────── */

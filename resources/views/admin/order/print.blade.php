@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="{{asset('assets/print/css/style.css')}}">
   <link href="{{asset('assets/print/css/print.css')}}" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        <link rel="icon" type="image/png" href="{{asset('assets/images/'.$gs->favicon)}}"> 
+        <link rel="icon" type="image/png" href="{{ site_brand_logo() }}"> 
   <style type="text/css">
 @page { size: auto;  margin: 0mm; }
 @page {
@@ -48,7 +48,7 @@ html {
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="invoice__logo text-left">
-                           <img src="{{ asset('assets/images/'.$gs->invoice_logo) }}" alt="woo commerce logo">
+                           <img src="{{ site_brand_logo() }}" alt="woo commerce logo">
                         </div>
                     </div>
                 </div>

@@ -9,7 +9,7 @@
     <!-- Title -->
     <title>{{$gs->title}}</title>
     <!-- favicon -->
-    <link rel="icon"  type="image/x-icon" href="{{asset('assets/images/'.$gs->favicon)}}"/>
+    <link rel="icon" type="image/png" href="{{ site_brand_logo() }}"/>
     <!-- Bootstrap -->
     <link href="{{asset('assets/admin/css/bootstrap.min.css')}}" rel="stylesheet" />
     <!-- Fontawesome -->

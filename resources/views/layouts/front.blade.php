@@ -11,8 +11,8 @@
     @endphp
     @if ($__localTheme)
         @include('includes.frontend.head_assets_local')
-        @if (!empty($gs->favicon) && file_exists(public_path('assets/images/' . $gs->favicon)))
-            <link rel="icon" href="{{ asset('assets/images/' . $gs->favicon) }}">
+        @if (file_exists(public_path('assets/images/INDUSTRIALMAC.png')))
+            <link rel="icon" type="image/png" href="{{ site_brand_logo() }}">
         @endif
     @else
         @include('includes.frontend.head_assets_cdn')

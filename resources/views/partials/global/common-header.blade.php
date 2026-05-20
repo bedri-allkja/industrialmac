@@ -109,7 +109,7 @@
                 <div class="col-xl-7 col-lg-9">
                     <nav class="navbar navbar-expand-lg nav-dark nav-primary-hover nav-line-active">
                         <a class="navbar-brand" href="{{ route('front.index') }}"><img class="nav-logo "
-                                src="{{ asset('assets/images/'.$gs->logo) }}" alt="Image not found !"></a>
+                                src="{{ site_brand_logo() }}" alt="Image not found !"></a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -363,7 +363,7 @@
                             </nav>
                         </div>
                         <a class="navbar-brand" href="{{route('front.index')}}"><img class="nav-logo"
-                                src="{{asset('assets/images/'.$gs->logo)}}" alt="Image not found !"></a>
+                                src="{{ site_brand_logo() }}" alt="Image not found !"></a>
                     </div>
                 </div>
                 <div class="col-xxl-3 col-xl-4 col-lg-3 col-6 order-lg-3">

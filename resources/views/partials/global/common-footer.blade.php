@@ -37,7 +37,7 @@
             <div class="col">
                 <div class="footer-widget my-5">
                     <div class="footer-logo mb-4">
-                        <a href="{{ route('front.index') }}"><img src="{{ asset('assets/images/' . $gs->footer_logo) }}"
+                        <a href="{{ route('front.index') }}"><img src="{{ site_brand_logo() }}"
                                 alt="Image not found!" /></a>
                     </div>
                     <div class="widget-ecommerce-contact">

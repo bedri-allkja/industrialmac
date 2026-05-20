@@ -127,7 +127,33 @@ body.sticky-active { padding-top: var(--sticky-header-h, 0px); }
 }
 .header-section .header-top .has-submenu-icon svg path,
 .header-section .header-top .has-megamenu .has-submenu-icon svg path { fill: #fff; }
-.header-logo-wrapper .logo { max-height: 48px !important; height: auto !important; }
+.header-logo-wrapper .logo {
+  max-height: 64px !important;
+  max-width: 300px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+.mobile-menu-brand-logo {
+  max-height: 48px !important;
+  max-width: 260px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+.gs-footer-section .left-info > a > img.logo {
+  max-height: 56px !important;
+  max-width: 280px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+.vendor-res-header-logo {
+  max-height: 56px !important;
+  max-width: 260px !important;
+  width: auto !important;
+  object-fit: contain;
+}
 .header-logo-wrapper .logo-text { color: #fff !important; }
 .header-section .header-top .nav-right .icon-circle button svg path,
 .header-section .header-top .nav-right .icon-circle a svg path { stroke: #fff; }
@@ -196,19 +222,46 @@ body.sticky-active { padding-top: var(--sticky-header-h, 0px); }
 }
 
 /* ── Hero Section ─────────────────────────────────── */
+/* Wallpaper on the Slick root: fade mode offsets slides with negative left; a per-slide bg would not cover the viewport. */
 .hero-slider-wrapper {
   width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+  position: relative;
+  background-color: #0f172a;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: inset 0 0 0 9999px rgba(15, 23, 42, 0.42);
+}
+.hero-slider-wrapper.slick-slider .slick-list {
+  margin: 0;
+  background: transparent;
 }
 .hero-slider-wrapper .slick-track {
-  background: linear-gradient(135deg, var(--primary-darker) 0%, var(--primary) 50%, var(--accent) 100%);
+  background: transparent;
+}
+.hero-slider-wrapper .slick-slide {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.hero-slider-wrapper .slick-slide .gs-hero-section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.hero-slider-wrapper .gs-hero-section {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none;
 }
 .gs-hero-section {
+  width: 100%;
+  max-width: 100%;
   min-height: 440px;
-  background-color: transparent;
-  background-size: contain;
-  background-position: center right;
-  background-repeat: no-repeat;
   position: relative;
   display: flex;
   align-items: center;
@@ -593,6 +646,7 @@ body.sticky-active { padding-top: var(--sticky-header-h, 0px); }
 }
 @media (max-width: 767px) {
   .gs-hero-section { min-height: 280px; }
+  .hero-slider-wrapper { background-position: center center !important; }
   .gs-hero-section .hero-content .title { font-size: 22px; }
   .gs-hero-section .hero-content { padding: 24px 0; }
   .esporim-feature-box { padding: 10px 8px; }

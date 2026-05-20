@@ -2,9 +2,9 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="hero-slider-wrapper">
+    <section class="hero-slider-wrapper" data-background="{{ asset('assets/images/container-ship.jpg') }}">
         @foreach ($sliders as $slider)
-            <div class="gs-hero-section" data-background="{{ asset('assets/images/sliders/' . $slider->photo) }}">
+            <div class="gs-hero-section">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-12 col-md-8 col-lg-7">

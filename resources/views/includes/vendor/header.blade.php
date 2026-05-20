@@ -12,7 +12,7 @@
 
 
         <div class="d-flex align-items-center gap-4">
-            <a href="{{route("front.index")}}"><img class="vendor-res-header-logo d-xl-none" src="{{asset("assets/images/".$gs->logo)}}" alt="logo"></a>
+            <a href="{{route("front.index")}}"><img class="vendor-res-header-logo d-xl-none" src="{{ site_brand_logo() }}" alt="logo"></a>
 
             <button class="gs-vendor-toggle-btn header-toggle mobile-menu-toggle d-xl-none " type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">

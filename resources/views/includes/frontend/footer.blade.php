@@ -2,11 +2,9 @@
     <div class="container">
         <div class="row footer-row gy-4">
             <div class="col-lg-3 col-md-6 col-12 left-info">
-                @if (!empty($gs->footer_logo) && file_exists(public_path('assets/images/' . $gs->footer_logo)))
-                    <img class="logo mb-3" src="{{ asset('assets/images/' . $gs->footer_logo) }}" alt="{{ $gs->title }}" style="max-height:45px;">
-                @else
-                    <div class="fw-bold text-white mb-3 fs-5">{{ $gs->title }}</div>
-                @endif
+                <a href="{{ route('front.index') }}">
+                    <img class="logo mb-3" src="{{ site_brand_logo() }}" alt="{{ $gs->title }}">
+                </a>
 
                 <div class="footer-contact-info">
                     <a href="tel:{{ $ps->phone }}">

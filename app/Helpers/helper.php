@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Primary site brand logo (INDUSTRIALMAC) — header, footer, invoices, favicon, etc.
+ */
+function site_brand_logo(): string
+{
+    return asset('assets/images/INDUSTRIALMAC.png');
+}
+
 function wishlistCheck($product_id)
 {
     $wishlist = \App\Models\Wishlist::where('product_id', $product_id)->where('user_id', auth()->id())->first();

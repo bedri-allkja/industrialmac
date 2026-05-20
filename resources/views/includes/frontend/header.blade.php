@@ -101,11 +101,7 @@
                     </button>
 
                     <a class="header-logo-wrapper" href="{{ route('front.index') }}">
-                        @if (!empty($gs->logo) && file_exists(public_path('assets/images/' . $gs->logo)))
-                            <img class="logo" src="{{ asset('assets/images/' . $gs->logo) }}" alt="{{ $gs->title }}">
-                        @else
-                            <span class="logo-text fw-bold fs-4">{{ $gs->title }}</span>
-                        @endif
+                        <img class="logo" src="{{ site_brand_logo() }}" alt="{{ $gs->title }}">
                     </a>
                 </div>
 

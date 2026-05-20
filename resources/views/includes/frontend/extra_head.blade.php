@@ -22,7 +22,7 @@
     <title>{{ substr($productt->name, 0, 11) . '-' }}{{ $gs->title }}</title>
 @else
     <meta property="og:title" content="{{ $gs->title }}" />
-    <meta property="og:image" content="{{ asset('assets/images/' . $gs->logo) }}" />
+    <meta property="og:image" content="{{ site_brand_logo() }}" />
     <meta name="keywords" content="{{ $seo->meta_keys ?? '' }}">
     <meta name="author" content="GeniusOcean">
     <title>{{ $gs->title }}</title>
