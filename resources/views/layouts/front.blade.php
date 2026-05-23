@@ -66,6 +66,8 @@
     @include('includes.frontend.footer')
     <!-- footer section -->
 
+    @include('includes.frontend.cookie-consent')
+
     @if ($__localTheme)
         @include('includes.frontend.script_assets_local')
     @else

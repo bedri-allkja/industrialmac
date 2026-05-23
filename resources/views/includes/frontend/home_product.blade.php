@@ -11,21 +11,12 @@
             <div class="add-to-cart">
                 @if ($product->product_type == 'affiliate')
                     <a href="{{ $product->affiliate_link }}" class="add_to_cart_button">
-                        <div class="add-cart">@lang('Add To Cart')</div>
+                        <div class="add-cart">@lang('Request Quote')</div>
                     </a>
                 @else
-                    @if ($product->emptyStock())
-                        <div class="add-cart" style="background:#dc3545;">{{ __('Out of Stock') }}</div>
-                    @else
-                        @if ($product->type != 'Listing')
-                            <a {{ $product->cross_products ? 'data-bs-target=#exampleModal' : '' }} href="javascript:;"
-                                data-href="{{ route('product.cart.add', $product->id) }}"
-                                data-cross-href="{{ route('front.show.cross.product', $product->id) }}"
-                                class="add_cart_click {{ $product->cross_products ? 'view_cross_product' : '' }}">
-                                <div class="add-cart">@lang('Add To Cart')</div>
-                            </a>
-                        @endif
-                    @endif
+                    <a href="{{ route('front.product', $product->slug) }}#quote-request">
+                        <div class="add-cart">@lang('Request Quote')</div>
+                    </a>
                 @endif
 
                 @if ($product->type != 'Listing')

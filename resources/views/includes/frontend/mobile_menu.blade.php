@@ -2,7 +2,7 @@
 <div class="mobile-menu">
     <div class="mobile-menu-top">
         <img src="{{ site_brand_logo() }}" alt="{{ $gs->title }}" class="mobile-menu-brand-logo">
-        <svg class="close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg class="close" role="button" tabindex="0" aria-label="@lang('Close menu')" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="cursor:pointer;">
             <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
     </div>
@@ -20,13 +20,15 @@
 
     <div class="tab-content" id="mobile-menu-tab-content">
         <div class="tab-pane fade show active table-responsive tb-tb" id="main-menu" role="tabpanel"
-            aria-labelledby="main-menu-tab" style="color: white;">
+            aria-labelledby="main-menu-tab">
             <div class="mobile-menu-widget">
                 <div class="single-product-widget">
                     <div class="product-cat-widget">
                         <ul class="accordion">
-                            <li><a href="{{ route('front.index') }}">@lang('Homepage')</a></li>
-                            <li><a href="{{ route('front.category') }}">@lang('Categories')</a></li>
+                            <li><a href="{{ route('front.index') }}">@lang('Home')</a></li>
+                            @if ($ps->faq == 1)
+                                <li><a href="{{ route('front.faq') }}">@lang('FAQ')</a></li>
+                            @endif
                             <li>
                                 <a href="#" data-bs-toggle="collapse" data-bs-target="#child_level_1"
                                     aria-controls="child_level_1" aria-expanded="false" class="collapsed">
@@ -40,7 +42,18 @@
                                     @endforeach
                                 </ul>
                             </li>
-                            <li><a href="{{ route('front.contact') }}">@lang('Contact Us')</a></li>
+                            @if ($ps->contact == 1)
+                                <li><a href="{{ route('front.contact') }}">@lang('Contact')</a></li>
+                            @endif
+                            <li>
+                                @if (Auth::guard('web')->check())
+                                    <a href="{{ route('user-order-track') }}">@lang('Order Tracking')</a>
+                                @else
+                                    <a href="{{ route('user.login') }}">@lang('Order Tracking')</a>
+                                @endif
+                            </li>
+                            <li><a href="{{ route('product.compare') }}">@lang('Compare')</a></li>
+                            <li><a href="{{ route('front.quote') }}">@lang('Request Quote')</a></li>
                         </ul>
 
                         <div class="auth-actions-btn gap-3 d-flex flex-column mt-3">
@@ -68,7 +81,7 @@
         </div>
 
         <div class="tab-pane fade table-responsive tb-tb" id="categories" role="tabpanel"
-            aria-labelledby="categories-tab" style="color: white;">
+            aria-labelledby="categories-tab">
             <div class="mobile-menu-widget">
                 <div class="single-product-widget">
                     <div class="product-cat-widget">

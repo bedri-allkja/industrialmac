@@ -113,23 +113,8 @@
                             </div>
                         </div>
 
-                        <!-- Price Range -->
-                        <div class="single-product-widget">
-                            <h5 class="widget-title">@lang('Fascia di prezzo')</h5>
-                            <div class="price-range">
-                                <div class="d-none">
-                                    <input id="start_value" type="number" name="min" value="{{ isset($_GET['min']) ? $_GET['min'] : $gs->min_price }}">
-                                    <input id="end_value" type="number" value="{{ isset($_GET['max']) ? $_GET['max'] : $gs->max_price }}">
-                                    <input id="max_value" type="number" name="max" value="{{ $gs->max_price }}">
-                                </div>
-                                <div id="slider-range"></div>
-                                <input type="text" id="amount" readonly class="range_output">
-                            </div>
-                            <button class="template-btn mt-3 w-100" id="price_filter">@lang('Applica filtro')</button>
-                            <a href="{{ route('front.category') }}" class="template-btn dark-btn w-100 mt-2">@lang('Cancella filtro')</a>
-                        </div>
 
-                        @if (
+                        <!-- Attributes / filters continue below -->
                             (!empty($cat) && !empty(json_decode($cat->attributes, true))) ||
                             (!empty($subcat) && !empty(json_decode($subcat->attributes, true))) ||
                             (!empty($childcat) && !empty(json_decode($childcat->attributes, true))))
@@ -240,8 +225,6 @@
                                 <select class="nice-select" id="sortby" name="sort">
                                     <option value="date_desc">{{ __('Più recente') }}</option>
                                     <option value="date_asc">{{ __('Meno recente') }}</option>
-                                    <option value="price_asc">{{ __('Price: Low to High') }}</option>
-                                    <option value="price_desc">{{ __('Price: High to Low') }}</option>
                                 </select>
                             </div>
                             <div class="btn-wrapper nav d-none d-lg-inline-block" role="tablist">

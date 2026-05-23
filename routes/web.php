@@ -109,6 +109,14 @@ Route::prefix('admin')->group(function () {
 
         // Order Tracking Ends
 
+        //------------ ADMIN QUOTE REQUEST SECTION ------------
+        Route::get('/quote-requests/datatables', 'Admin\QuoteRequestController@datatables')->name('admin-quote-datatables');
+        Route::get('/quote-requests', 'Admin\QuoteRequestController@index')->name('admin-quote-index');
+        Route::get('/quote-requests/{id}', 'Admin\QuoteRequestController@show')->name('admin-quote-show');
+        Route::post('/quote-requests/{id}/status', 'Admin\QuoteRequestController@updateStatus')->name('admin-quote-status');
+        Route::delete('/quote-requests/{id}', 'Admin\QuoteRequestController@destroy')->name('admin-quote-delete');
+        //------------ ADMIN QUOTE REQUEST SECTION ENDS ------------
+
     });
 
     //------------ ADMIN ORDER SECTION ENDS------------
@@ -1550,6 +1558,11 @@ Route::group(['middleware' => 'maintenance'], function () {
     Route::post('/contact', 'Front\FrontendController@contactemail')->name('front.contact.submit');
     Route::get('/contact/refresh_code', 'Front\FrontendController@refresh_code');
     // CONTACT SECTION  ENDS
+
+    // QUOTE REQUEST SECTION
+    Route::get('/request-quote', 'Front\QuoteRequestController@create')->name('front.quote');
+    Route::post('/request-quote', 'Front\QuoteRequestController@store')->name('front.quote.submit');
+    // QUOTE REQUEST SECTION ENDS
 
     // PRODCT AUTO SEARCH SECTION
     Route::get('/autosearch/product/{slug}', 'Front\FrontendController@autosearch');

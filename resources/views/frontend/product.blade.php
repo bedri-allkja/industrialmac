@@ -59,7 +59,7 @@
 
                 <!-- Product Info -->
                 <div class="col-lg-6">
-                    <form>
+                    <div>
                         <div class="product-info-wrapper {{ $productt->type != 'Physical' ? 'mb-3' : '' }}">
                             <h3>{{ $productt->name }}</h3>
                         </div>
@@ -145,9 +145,6 @@
                                                             </label>
                                                             <label for="{{ $attrKey }}{{ $optionKey }}">
                                                                 {{ $optionVal }}
-                                                                @if (!empty($attrVal['prices'][$optionKey]))
-                                                                    + {{ $curr->sign }}{{ $attrVal['prices'][$optionKey] * $curr->value }}
-                                                                @endif
                                                             </label>
                                                         </li>
                                                     @endforeach
@@ -200,54 +197,19 @@
                             @endif
                         @endif
 
-                        @if ($productt->type == 'Physical')
-                            @if (is_array($productt->size))
-                                <input type="hidden" id="stock" value="{{ $productt->size_qty[0] }}">
-                            @else
-                                @if (!$productt->emptyStock())
-                                    @if ($productt->stock_check == 1)
-                                        <input type="hidden" id="stock" value="{{ $productt->size_price[0] }}">
-                                    @else
-                                        <input type="hidden" id="stock" value="{{ $productt->stock }}">
-                                    @endif
-                                @elseif($productt->type != 'Physical')
-                                    <input type="hidden" id="stock" value="0">
-                                @else
-                                    <input type="hidden" id="stock" value="">
-                                @endif
-                            @endif
+                        <hr id="quote-request">
 
-                            <div class="add-qty-wrapper">
-                                <span class="varition-title">@lang('Quantity:')</span>
-                                <div class="product-input-wrapper">
-                                    <button class="action-btn qtminus" type="button">-</button>
-                                    <input class="qty-input qttotal" type="text" readonly id="order-qty"
-                                        value="{{ $productt->minimum_qty == null ? '1' : (int) $productt->minimum_qty }}">
-                                    <input class="qty-input" type="hidden" id="affilate_user"
-                                        value="{{ $productt->minimum_qty == null ? '1' : (int) $productt->minimum_qty }}">
-                                    <input class="qty-input" type="hidden" id="product_minimum_qty"
-                                        value="{{ $productt->minimum_qty == null ? '1' : (int) $productt->minimum_qty }}">
-                                    <button class="action-btn qtplus" type="button">+</button>
-                                </div>
-                            </div>
-                        @endif
+                        @include('alerts.form-success')
 
-                        <input type="hidden" id="product_price" value="{{ round($productt->vendorPrice() * $curr->value, 2) }}">
-                        <input type="hidden" id="product_id" value="{{ $productt->id }}">
-                        <input type="hidden" id="curr_pos" value="{{ $gs->currency_format }}">
-                        <input type="hidden" id="curr_sign" value="{{ $curr->sign }}">
-
-                        <div class="row row-cols-2 mt-3">
-                            <div class="col">
-                                <button type="button" class="template-btn dark-btn w-100" id="addtodetailscart">
-                                    @lang('Add To Cart')
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="template-btn w-100" id="addtobycard">
-                                    @lang('Buy Now')
-                                </button>
-                            </div>
+                        <div class="quote-request-section">
+                            <h4 class="mb-3">@lang('Request Quote')</h4>
+                            <p class="text-muted small mb-3">
+                                @lang('Prices are provided on request. Submit your details and we will contact you with a quote.')
+                            </p>
+                            @include('includes.frontend.quote-form', [
+                                'product' => $productt,
+                                'compact' => true,
+                            ])
                         </div>
 
                         <hr>
@@ -320,7 +282,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

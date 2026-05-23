@@ -44,13 +44,15 @@ $(document).ready(function () {
   const $overlay = $(".overlay");
   const $mobileMenu = $(".mobile-menu");
 
-  $(".header-toggle").on("click", function () {
+  $(".header-toggle, .mobile-menu-toggle").on("click", function () {
     $mobileMenu.toggleClass("active");
     $overlay.addClass("active");
+    $("body").toggleClass("menu-open", $mobileMenu.hasClass("active"));
   });
-  $(".close").on("click", function () {
+  $(".mobile-menu .close").on("click", function () {
     $mobileMenu.removeClass("active");
     $overlay.removeClass("active");
+    $("body").removeClass("menu-open");
   });
 
   //****** 3. STICKY HEADER ******//
@@ -154,11 +156,12 @@ $(document).ready(function () {
     $mobileMenu.removeClass("active");
     $overlay.removeClass("active");
     $searchBar.removeClass("show");
+    $("body").removeClass("menu-open");
   });
 
   //******  9. HERO SECTION SLIDER ******//
   $(".hero-slider-wrapper").slick({
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     autoplay: true,
@@ -359,7 +362,7 @@ $(document).ready(function () {
 
   //******  16. PRODUCT CARDS SLIDER ******//
   $(".product-cards-slider").slick({
-    dots: true,
+    dots: false,
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 4,
@@ -391,6 +394,46 @@ $(document).ready(function () {
         },
       },
     ],
+  });
+
+  //******  16b. BRANDS CAROUSEL (mobile) ******//
+  function initBrandsCarousel() {
+    var $carousel = $(".ignavo-brands-carousel");
+    if (!$carousel.length) {
+      return;
+    }
+
+    if ($(window).width() < 768) {
+      if (!$carousel.hasClass("slick-initialized")) {
+        $carousel.slick({
+          dots: false,
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          speed: 400,
+          autoplay: true,
+          autoplaySpeed: 2500,
+          arrows: false,
+          responsive: [
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 2,
+              },
+            },
+          ],
+        });
+      } else {
+        $carousel.slick("setPosition");
+      }
+    } else if ($carousel.hasClass("slick-initialized")) {
+      $carousel.slick("unslick");
+    }
+  }
+
+  initBrandsCarousel();
+  $(window).on("resize", function () {
+    initBrandsCarousel();
   });
 
   //******  17. COUNTER UP ******//
@@ -513,7 +556,123 @@ $(document).ready(function () {
   $(window).on('resize', function() {
     $(".nicEdit-panelContain").parent().width("100%");
     $(".nicEdit-panelContain").parent().next().width("99.6%");
-}); 
+});
+
+  //****** COOKIE CONSENT (GDPR) ******//
+  (function () {
+    var banner = document.getElementById("cookie-consent");
+    if (!banner) return;
+
+    var storageKey = "industrialmac_cookie_consent";
+    var cookieName = "industrialmac_cookie_consent";
+    var settingsPanel = document.getElementById("cookie-consent-settings");
+    var analyticsInput = document.getElementById("cookie-pref-analytics");
+    var marketingInput = document.getElementById("cookie-pref-marketing");
+
+    function readConsent() {
+      try {
+        var stored = localStorage.getItem(storageKey);
+        return stored ? JSON.parse(stored) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function writeConsent(consent) {
+      var payload = {
+        essential: true,
+        analytics: !!consent.analytics,
+        marketing: !!consent.marketing,
+        timestamp: new Date().toISOString(),
+        version: "1"
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(payload));
+
+      var expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie =
+        cookieName +
+        "=" +
+        encodeURIComponent(JSON.stringify(payload)) +
+        "; expires=" +
+        expires.toUTCString() +
+        "; path=/; SameSite=Lax";
+
+      document.dispatchEvent(
+        new CustomEvent("cookieConsentUpdated", { detail: payload })
+      );
+    }
+
+    function hideBanner() {
+      banner.classList.remove("is-visible");
+      window.setTimeout(function () {
+        banner.setAttribute("hidden", "hidden");
+      }, 350);
+    }
+
+    function showBanner() {
+      banner.removeAttribute("hidden");
+      window.requestAnimationFrame(function () {
+        banner.classList.add("is-visible");
+      });
+    }
+
+    function applyPreferences(consent) {
+      if (analyticsInput) analyticsInput.checked = !!consent.analytics;
+      if (marketingInput) marketingInput.checked = !!consent.marketing;
+    }
+
+    function saveFromPreferences() {
+      writeConsent({
+        analytics: analyticsInput ? analyticsInput.checked : false,
+        marketing: marketingInput ? marketingInput.checked : false
+      });
+      hideBanner();
+    }
+
+    if (readConsent()) {
+      banner.setAttribute("hidden", "hidden");
+      return;
+    }
+
+    showBanner();
+
+    banner.addEventListener("click", function (event) {
+      var action = event.target.closest("[data-cookie-action]");
+      if (!action) return;
+
+      var type = action.getAttribute("data-cookie-action");
+
+      if (type === "accept-all") {
+        writeConsent({ analytics: true, marketing: true });
+        hideBanner();
+        return;
+      }
+
+      if (type === "reject-all") {
+        writeConsent({ analytics: false, marketing: false });
+        hideBanner();
+        return;
+      }
+
+      if (type === "toggle-settings" && settingsPanel) {
+        var isOpen = !settingsPanel.hasAttribute("hidden");
+        if (isOpen) {
+          settingsPanel.setAttribute("hidden", "hidden");
+          action.setAttribute("aria-expanded", "false");
+        } else {
+          settingsPanel.removeAttribute("hidden");
+          action.setAttribute("aria-expanded", "true");
+        }
+        return;
+      }
+
+      if (type === "save-preferences") {
+        saveFromPreferences();
+      }
+    });
+  })();
 
 
 });

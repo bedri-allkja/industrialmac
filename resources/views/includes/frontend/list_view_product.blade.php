@@ -29,22 +29,13 @@
 
                 @if ($product->product_type == 'affiliate')
                     <a href="{{ $product->affiliate_link }}" class="add_to_cart_button">
-                        <div class="add-cart">@lang('Aggiungi')</div>
+                        <div class="add-cart">@lang('Request Quote')</div>
                     </a>
                 @else
-                    @if ($product->emptyStock())
-                        <div class="add-cart" style="background:#dc3545;color:#fff;padding:6px 12px;border-radius:4px;font-size:12px;">
-                            {{ __('Esaurito') }}
-                        </div>
-                    @else
-                        @if ($product->type != 'Listing')
-                            <a {{ $product->cross_products ? 'data-bs-target=#exampleModal' : '' }} href="javascript:;"
-                                data-href="{{ route('product.cart.add', $product->id) }}"
-                                data-cross-href="{{ route('front.show.cross.product', $product->id) }}"
-                                class="add_cart_click {{ $product->cross_products ? 'view_cross_product' : '' }}">
-                                <div class="add-cart">@lang('Aggiungi al carrello')</div>
-                            </a>
-                        @endif
+                    @if ($product->type != 'Listing')
+                        <a href="{{ route('front.product', $product->slug) }}#quote-request">
+                            <div class="add-cart">@lang('Request Quote')</div>
+                        </a>
                     @endif
                 @endif
             </div>

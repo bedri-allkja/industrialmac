@@ -248,7 +248,8 @@ class FrontendController extends FrontBaseController
             })
             ->latest()->first();
 
-        $data['blogs'] = Blog::latest()->take(2)->get();
+        $data['blogs'] = Blog::latest()->take(3)->get();
+        $data['faqs'] = DB::table('faqs')->latest('id')->take(4)->get();
 
         return view('frontend.index', $data);
     }

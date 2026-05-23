@@ -20,6 +20,9 @@
         <li>
             <a href="{{ route('admin-order-create') }}"> {{ __('Pos') }}</a>
         </li>
+        <li>
+            <a href="{{ route('admin-quote-index') }}"> {{ __('Quote Requests') }}</a>
+        </li>
 
     </ul>
 </li>

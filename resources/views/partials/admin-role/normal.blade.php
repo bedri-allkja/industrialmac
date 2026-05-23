@@ -21,6 +21,9 @@
         <li>
             <a href="{{ route('admin-orders-all') }}?status=declined"> {{ __('Declined Orders') }}</a>
         </li>
+        <li>
+            <a href="{{ route('admin-quote-index') }}"> {{ __('Quote Requests') }}</a>
+        </li>
 
     </ul>
 </li>
