@@ -18,7 +18,24 @@ class CatalogController extends FrontBaseController
     public function categories()
     {
         $categories = Category::where('status', 1)->get();
-        return view('frontend.products', compact('categories'));
+        $cat = null;
+        $subcat = null;
+        $childcat = null;
+
+        $prods = Product::with('user')
+            ->where('status', 1)
+            ->withCount('ratings')
+            ->withAvg('ratings', 'rating')
+            ->latest('id')
+            ->get()
+            ->map(function ($item) {
+                $item->price = $item->vendorSizePrice();
+
+                return $item;
+            })
+            ->paginate($this->gs->page_count);
+
+        return view('frontend.products', compact('categories', 'prods', 'cat', 'subcat', 'childcat'));
     }
 
     // -------------------------------- CATEGORY SECTION ----------------------------------------

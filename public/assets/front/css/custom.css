@@ -945,6 +945,32 @@ html { scroll-behavior: smooth; }
   margin-bottom: 24px;
 }
 
+.ignavo-hero__actions {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  flex-wrap: wrap;
+  max-width: 760px;
+}
+
+.ignavo-hero-search {
+  flex: 1 1 280px;
+  min-width: 240px;
+  max-width: 460px;
+  align-self: center;
+  box-shadow: 0 8px 24px rgba(26, 82, 118, 0.08);
+}
+
+.ignavo-hero-search button {
+  background: var(--light-bg, #f4f6f9);
+  color: var(--primary, #1a5276);
+}
+
+.ignavo-hero-search button:hover {
+  background: var(--primary, #1a5276);
+  color: #fff;
+}
+
 .ignavo-hero__btn {
   display: inline-flex;
   align-items: center;
@@ -1038,6 +1064,17 @@ html { scroll-behavior: smooth; }
   margin: 0;
   color: var(--text-muted, #95a5a6);
   line-height: 1.4;
+}
+
+.ignavo-hero-benefits-mobile {
+  padding: 32px 0 40px;
+  background: var(--light-bg, #f4f6f9);
+  border-top: 1px solid var(--border-light, #ecf0f1);
+}
+
+.ignavo-hero-benefits-mobile .ignavo-hero__benefit {
+  background: #fff;
+  border-color: var(--border-light, #ecf0f1);
 }
 
 /* ── Brand strip ────────────────────────────────── */
@@ -1824,6 +1861,16 @@ body.menu-open {
 
   .ignavo-hero__content {
     max-width: none;
+  }
+
+  .ignavo-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ignavo-hero-search {
+    max-width: none;
+    width: 100%;
   }
 
   .ignavo-contact-split__form { padding: 32px 24px; }

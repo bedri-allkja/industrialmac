@@ -114,11 +114,11 @@
                         </div>
 
 
-                        <!-- Attributes / filters continue below -->
+                        @if (
                             (!empty($cat) && !empty(json_decode($cat->attributes, true))) ||
                             (!empty($subcat) && !empty(json_decode($subcat->attributes, true))) ||
-                            (!empty($childcat) && !empty(json_decode($childcat->attributes, true))))
-
+                            (!empty($childcat) && !empty(json_decode($childcat->attributes, true)))
+                        )
                             @if (!empty($cat) && !empty(json_decode($cat->attributes, true)))
                                 @foreach ($cat->attributes as $key => $attr)
                                     <div class="single-product-widget">
@@ -274,24 +274,10 @@
             </div>
         </div>
     </div>
-
-    <input type="hidden" id="update_min_price" value="">
-    <input type="hidden" id="update_max_price" value="">
 @endsection
 
 @section('script')
     <script>
-        $(document).on("click", "#price_filter", function() {
-            let amountString = $("#amount").val();
-            amountString = amountString.replace(/\$/g, '');
-            let amounts = amountString.split('-');
-            let amount1 = amounts[0].trim();
-            let amount2 = amounts[1].trim();
-            $("#update_min_price").val(amount1);
-            $("#update_max_price").val(amount2);
-            filter();
-        });
-
         $(".attribute-input, #sortby, #pageby").on('change', function() {
             $(".ajax-loader").show();
             filter();
@@ -310,19 +296,10 @@
             if ($("#sortby").val() != '') {
                 params.append($("#sortby").attr('name'), $("#sortby").val());
             }
-            if ($("#start_value").val() != '') {
-                params.append($("#start_value").attr('name'), $("#start_value").val());
-            }
 
             let check_view = $('.check_view.active').data('shopview');
             if (check_view) {
                 params.append('view_check', check_view);
-            }
-            if ($("#update_min_price").val() != '') {
-                params.append('min', $("#update_min_price").val());
-            }
-            if ($("#update_max_price").val() != '') {
-                params.append('max', $("#update_max_price").val());
             }
 
             filterlink += '?' + params.toString();
@@ -355,31 +332,5 @@
                 $(this).attr('href', fullUrl + '?' + params.toString());
             });
         }
-    </script>
-
-    <script type="text/javascript">
-        (function($) {
-            "use strict";
-            $(function() {
-                const start_value = $("#start_value").val();
-                const end_value = $("#end_value").val();
-                const max_value = $("#max_value").val();
-
-                $("#slider-range").slider({
-                    range: true,
-                    min: 0,
-                    max: max_value,
-                    values: [start_value, end_value],
-                    step: 10,
-                    slide: function(event, ui) {
-                        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-                    },
-                });
-                $("#amount").val(
-                    "$" + $("#slider-range").slider("values", 0) +
-                    " - $" + $("#slider-range").slider("values", 5000)
-                );
-            });
-        })(jQuery);
     </script>
 @endsection
