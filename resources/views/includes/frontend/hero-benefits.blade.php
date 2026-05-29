@@ -1,55 +1,56 @@
+@php
+    $benefitIcons = [
+        'fa-solid fa-shield-halved',
+        'fa-solid fa-truck-fast',
+        'fa-solid fa-boxes-stacked',
+        'fa-solid fa-headset',
+    ];
+
+    $defaultBenefits = [
+        [
+            'title' => __('Manufacturer warranty'),
+            'details' => __('Genuine parts with manufacturer coverage'),
+        ],
+        [
+            'title' => __('Express delivery'),
+            'details' => __('Always and everywhere'),
+        ],
+        [
+            'title' => '+1.000.000 ' . __('Managed products'),
+            'details' => __('Extensive industrial catalog'),
+        ],
+        [
+            'title' => __('Expert support'),
+            'details' => __('We help you find the right part'),
+        ],
+    ];
+
+    $benefits = collect($defaultBenefits);
+
+    if (\Illuminate\Support\Facades\Schema::hasTable('services')) {
+        $services = \App\Models\Service::take(4)->get();
+
+        if ($services->isNotEmpty()) {
+            $benefits = $services->values()->map(function ($service, $index) use ($defaultBenefits) {
+                return [
+                    'title' => $service->title,
+                    'details' => $service->details,
+                ];
+            });
+        }
+    }
+@endphp
+
 <div class="ignavo-hero__benefits row g-3{{ isset($class) ? ' ' . $class : '' }}">
-    @if (\Illuminate\Support\Facades\Schema::hasTable('services'))
-        @foreach (\App\Models\Service::take(4)->get() as $service)
-            <div class="col-6 col-lg-3">
-                <div class="ignavo-hero__benefit h-100">
-                    <div class="ignavo-hero__benefit-icon">
-                        <img src="{{ asset('assets/images/services/' . $service->photo) }}"
-                            alt="{{ $service->title }}">
-                    </div>
-                    <div>
-                        <h6>{{ $service->title }}</h6>
-                        <p>{{ $service->details }}</p>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    @else
+    @foreach ($benefits as $index => $benefit)
         <div class="col-6 col-lg-3">
             <div class="ignavo-hero__benefit h-100">
-                <div class="ignavo-hero__benefit-icon"><i class="fas fa-shield-alt"></i></div>
-                <div>
-                    <h6>@lang('Manufacturer warranty')</h6>
-                    <p>@lang('Genuine parts with manufacturer coverage')</p>
+                <div class="ignavo-hero__benefit-icon" aria-hidden="true">
+                    <i class="{{ $benefitIcons[$index] ?? 'fa-solid fa-circle-check' }}"></i>
                 </div>
+                <h6>{{ $benefit['title'] }}</h6>
+                <p>{{ $benefit['details'] }}</p>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="ignavo-hero__benefit h-100">
-                <div class="ignavo-hero__benefit-icon"><i class="fas fa-shipping-fast"></i></div>
-                <div>
-                    <h6>@lang('Express delivery')</h6>
-                    <p>@lang('Always and everywhere')</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="ignavo-hero__benefit h-100">
-                <div class="ignavo-hero__benefit-icon"><i class="fas fa-boxes"></i></div>
-                <div>
-                    <h6>+1.000.000 @lang('Managed products')</h6>
-                    <p>@lang('Extensive industrial catalog')</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="ignavo-hero__benefit h-100">
-                <div class="ignavo-hero__benefit-icon"><i class="fas fa-headset"></i></div>
-                <div>
-                    <h6>@lang('Expert support')</h6>
-                    <p>@lang('We help you find the right part')</p>
-                </div>
-            </div>
-        </div>
-    @endif
+    @endforeach
 </div>

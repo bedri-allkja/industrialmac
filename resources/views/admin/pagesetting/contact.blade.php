@@ -69,18 +69,6 @@
                             </div>
     
                             <div class="row justify-content-center">
-                              <div class="col-lg-3">
-                                <div class="left-area">
-                                    <h4 class="heading">{{ __('Fax') }} *
-                                      </h4>
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <input type="text" class="input-field" placeholder="{{ __('Enter Fax') }}" name="fax" value="{{ $data->fax }}">
-                              </div>
-                            </div>
-
-                            <div class="row justify-content-center">
                                 <div class="col-lg-3">
                                   <div class="left-area">
                                     <h4 class="heading">

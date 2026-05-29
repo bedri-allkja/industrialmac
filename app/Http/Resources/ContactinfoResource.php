@@ -19,7 +19,6 @@ class ContactinfoResource extends JsonResource
         'email' => $this->email,
         'address' => $this->address,
         'phone' => $this->phone,
-        'fax' => $this->fax,
       ];
     }
 }

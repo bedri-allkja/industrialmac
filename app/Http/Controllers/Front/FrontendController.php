@@ -11,11 +11,13 @@ use App\Models\Generalsetting;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Brand;
+use App\Models\Language;
 use App\Models\Rating;
 use App\Models\Subscriber;
 use Artisan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -30,8 +32,16 @@ class FrontendController extends FrontBaseController
 
     public function language($id)
     {
-        Session::put('language', $id);
-        return redirect()->route('front.index');
+        $language = Language::find($id);
+
+        if (!$language) {
+            return redirect()->back();
+        }
+
+        Session::put('language', $language->id);
+        App::setLocale($language->name);
+
+        return redirect()->back();
     }
 
     // LANGUAGE SECTION ENDS
@@ -249,7 +259,7 @@ class FrontendController extends FrontBaseController
             ->latest()->first();
 
         $data['blogs'] = Blog::latest()->take(3)->get();
-        $data['faqs'] = DB::table('faqs')->latest('id')->take(4)->get();
+        $data['faqs'] = collect(site_faqs(4));
 
         return view('frontend.index', $data);
     }
@@ -554,14 +564,8 @@ class FrontendController extends FrontBaseController
         if (DB::table('pagesettings')->first()->faq == 0) {
             return redirect()->back();
         }
-        $faqs = DB::table('faqs')->latest('id')->get();
-        $count = count(DB::table('faqs')->get()) / 2;
-        if (($count % 1) != 0) {
-            $chunk = (int) $count + 1;
-        } else {
-            $chunk = $count;
-        }
-        return view('frontend.faq', compact('faqs', 'chunk'));
+
+        return view('frontend.faq');
     }
     // -------------------------------- FAQ SECTION ENDS----------------------------------------
 
@@ -588,7 +592,10 @@ class FrontendController extends FrontBaseController
             return redirect()->back();
         }
         $ps = $this->ps;
-        return view('frontend.contact', compact('ps'));
+        $categories = Category::where('status', 1)->orderBy('name')->get();
+        $brands = Brand::orderBy('name')->get();
+
+        return view('frontend.contact', compact('ps', 'categories', 'brands'));
     }
 
     //Send email to admin

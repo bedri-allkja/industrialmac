@@ -1,5 +1,4 @@
 @php
-    $compareCount = Session::has('compare') ? count(Session::get('compare')->items) : 0;
     $wishlistCount = Auth::guard('web')->check() ? Auth::guard('web')->user()->wishlistCount() : 0;
     $currentLanguage = Session::has('language')
         ? $languges->where('id', Session::get('language'))->first()
@@ -17,7 +16,7 @@
                     @if ($aboutPage)
                         <li><a href="{{ route('front.vendor', $aboutPage->slug) }}">@lang('About Us')</a></li>
                     @else
-                        <li><a href="{{ route('front.contact') }}">@lang('About Us')</a></li>
+                        <li><a href="{{ route('front.vendor', 'about') }}">@lang('About Us')</a></li>
                     @endif
                     @if ($ps->faq == 1)
                         <li><a href="{{ route('front.faq') }}">@lang('FAQ')</a></li>
@@ -118,11 +117,6 @@
                                 <span class="ignavo-header-badge" id="wishlist-count">0</span>
                             </a>
                         @endif
-
-                        <a href="{{ route('product.compare') }}" class="ignavo-header-icon-btn" title="@lang('Compare')">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span class="ignavo-header-badge" id="compare-count">{{ $compareCount }}</span>
-                        </a>
 
                         <a href="{{ route('front.quote') }}" class="ignavo-header-icon-btn" title="@lang('Request Quote')">
                             <i class="fas fa-file-invoice"></i>

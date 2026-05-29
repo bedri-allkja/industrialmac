@@ -58,7 +58,7 @@ class CatalogController extends FrontBaseController
         $minprice = $request->min;
         $maxprice = $request->max;
         $sort = $request->sort;
-        $search = $request->search;
+        $search = trim((string) $request->input('search', ''));
         $pageby = $request->pageby;
 
         $minprice = ($minprice / $this->curr->value);
@@ -111,8 +111,12 @@ class CatalogController extends FrontBaseController
             ->when($childcat, function ($query, $childcat) {
                 return $query->where('childcategory_id', $childcat->id);
             })
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', '%' . $search . '%')->orWhere('name', 'like', $search . '%');
+            ->when($search !== '', function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('name', 'like', $search . '%')
+                        ->orWhere('sku', 'like', '%' . $search . '%');
+                });
             })
             ->when($minprice, function ($query, $minprice) {
                 return $query->where('price', '>=', $minprice);
@@ -201,12 +205,33 @@ class CatalogController extends FrontBaseController
                 return $item;
             })->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
         $data['prods'] = $prods;
+
+        if ($search !== '' && $prods->total() === 0 && !$request->ajax()) {
+            return redirect()
+                ->route('front.quote', [
+                    'product_name' => $search,
+                    'product_sku' => $search,
+                ])
+                ->with('success', __('We could not find that product in our catalog. Tell us what you need and we will prepare a quote for you.'));
+        }
+
         if ($request->ajax()) {
             $data['ajax_check'] = 1;
             return view('frontend.ajax.category', $data);
         }
 
         return view('frontend.products', $data);
+    }
+
+    public function search(Request $request)
+    {
+        $search = trim((string) $request->input('search', ''));
+
+        if ($search === '') {
+            return redirect()->route('front.categories');
+        }
+
+        return redirect()->route('front.category', ['search' => $search]);
     }
 
     public function getsubs(Request $request)

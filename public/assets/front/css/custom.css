@@ -184,6 +184,18 @@ html { scroll-behavior: smooth; }
   cursor: pointer;
 }
 
+.ignavo-header-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+}
+
+.ignavo-header-dropdown i {
+  font-size: 10px;
+  line-height: 1;
+}
+
 .ignavo-header-utility__links a:hover,
 .ignavo-header-dropdown:hover {
   color: var(--primary, #1a5276);
@@ -232,8 +244,11 @@ html { scroll-behavior: smooth; }
 }
 
 .ignavo-header-logo .logo {
-  max-height: 42px;
+  max-height: 58px;
+  max-width: 260px;
   width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .ignavo-header-search {
@@ -498,7 +513,7 @@ html { scroll-behavior: smooth; }
 
 @media screen and (max-width: 767px) {
   .ignavo-header-main { padding: 12px 0; }
-  .ignavo-header-logo .logo { max-height: 43px; }
+  .ignavo-header-logo .logo { max-height: 48px; max-width: 200px; }
   .ignavo-header-main__right { gap: 8px; }
   .ignavo-header-icon-btn { width: 38px; height: 38px; }
 }
@@ -600,8 +615,29 @@ html { scroll-behavior: smooth; }
   background: #f4f6f9 !important;
 }
 
+.ignavo-header-utility .dropdown-menu {
+  min-width: 100%;
+  padding: 0;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
 .ignavo-header-utility .dropdown-menu .dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start;
+  min-height: 36px;
+  height: auto;
+  padding: 0 14px;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 500;
   color: #374151 !important;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ignavo-header-utility .dropdown-menu li:last-child .dropdown-item {
+  border-bottom: none;
 }
 
 .ignavo-header-utility .dropdown-menu .dropdown-item:hover,
@@ -723,7 +759,27 @@ html { scroll-behavior: smooth; }
   border-radius: 4px;
   font-size: 13px;
   height: 38px;
-  line-height: 36px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  float: none;
+  padding-left: 12px;
+  padding-right: 30px;
+}
+
+.nice-select:after {
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.nice-select.open:after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.nice-select .current {
+  padding: 0;
+  line-height: 1;
+  display: block;
 }
 
 /* ── Pagination ──────────────────────────────────── */
@@ -1018,63 +1074,57 @@ html { scroll-behavior: smooth; }
 
 .ignavo-hero__benefit {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
-  padding: 16px 14px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: var(--radius, 6px);
-  box-shadow: 0 8px 24px rgba(26, 82, 118, 0.08);
-  backdrop-filter: blur(6px);
+  gap: 18px;
+  padding: 28px 22px;
+  background: var(--primary, #1a5276) !important;
+  border: none;
+  border-radius: 4px;
+  box-shadow: none;
   min-height: 100%;
 }
 
 .ignavo-hero__benefit-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--light-bg, #f4f6f9);
-  border-radius: 50%;
-}
-
-.ignavo-hero__benefit-icon img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+  background: transparent;
+  border-radius: 0;
+  color: #d4b87a;
 }
 
 .ignavo-hero__benefit-icon i {
-  color: var(--primary, #1a5276);
-  font-size: 18px;
+  font-size: 34px;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .ignavo-hero__benefit h6 {
   font-size: 13px;
   font-weight: 700;
-  margin: 0 0 4px;
-  color: var(--text, #2c3e50);
-  line-height: 1.35;
+  margin: 0;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
 }
 
 .ignavo-hero__benefit p {
-  font-size: 12px;
+  font-size: 13px;
   margin: 0;
-  color: var(--text-muted, #95a5a6);
-  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.55;
 }
 
 .ignavo-hero-benefits-mobile {
   padding: 32px 0 40px;
   background: var(--light-bg, #f4f6f9);
   border-top: 1px solid var(--border-light, #ecf0f1);
-}
-
-.ignavo-hero-benefits-mobile .ignavo-hero__benefit {
-  background: #fff;
-  border-color: var(--border-light, #ecf0f1);
 }
 
 /* ── Brand strip ────────────────────────────────── */
@@ -2175,6 +2225,187 @@ body.menu-open {
   .cookie-consent__settings {
     padding-left: 16px;
     padding-right: 16px;
+  }
+}
+
+/* ── About Us page ───────────────────────────────── */
+.ignavo-about {
+  padding: 56px 0 72px;
+}
+
+.ignavo-about__hero {
+  max-width: 860px;
+  margin: 0 auto 48px;
+}
+
+.ignavo-about__eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent, #2e86c1);
+  margin-bottom: 12px;
+}
+
+.ignavo-about__title {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text, #2c3e50);
+  margin-bottom: 14px;
+}
+
+.ignavo-about__subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary, #1a5276);
+  margin-bottom: 20px;
+}
+
+.ignavo-about__intro,
+.ignavo-about__closing {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-muted, #7f8c8d);
+}
+
+.ignavo-about__closing {
+  max-width: 760px;
+  margin: 40px auto 48px;
+  font-weight: 500;
+  color: var(--text, #2c3e50);
+}
+
+.ignavo-about__card {
+  background: #fff;
+  border: 1px solid var(--border-light, #ecf0f1);
+  border-radius: 6px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 24px rgba(26, 82, 118, 0.06);
+}
+
+.ignavo-about__card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary, #1a5276);
+  margin-bottom: 12px;
+}
+
+.ignavo-about__card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-muted, #7f8c8d);
+  margin: 0;
+}
+
+.ignavo-about__section {
+  background: var(--primary, #1a5276);
+  color: #fff;
+  border-radius: 6px;
+  padding: 32px 28px;
+}
+
+.ignavo-about__section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #fff;
+}
+
+.ignavo-about__section p {
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.ignavo-about__quality {
+  margin-top: 48px;
+  background: #fff;
+  border: 1px solid var(--border-light, #ecf0f1);
+  border-radius: 6px;
+  padding: 36px 32px;
+}
+
+.ignavo-about__quality h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text, #2c3e50);
+  margin-bottom: 14px;
+}
+
+.ignavo-about__quality-intro {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-muted, #7f8c8d);
+  margin-bottom: 20px;
+}
+
+.ignavo-about__quality-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.ignavo-about__quality-list li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text, #2c3e50);
+}
+
+.ignavo-about__quality-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary, #1a5276);
+}
+
+.ignavo-faq-page {
+  padding-top: 48px;
+  padding-bottom: 72px;
+}
+
+.ignavo-faq-page__intro {
+  max-width: 820px;
+  margin: 0 auto 32px;
+}
+
+.ignavo-faq-page__intro h3 {
+  font-size: clamp(22px, 2.5vw, 30px);
+  font-weight: 700;
+  color: var(--text, #2c3e50);
+  margin: 0;
+}
+
+.ignavo-faq__accordion .accordion-button {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text, #2c3e50);
+}
+
+.ignavo-faq__accordion .accordion-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-muted, #7f8c8d);
+}
+
+@media screen and (max-width: 767px) {
+  .ignavo-about {
+    padding: 40px 0 56px;
+  }
+
+  .ignavo-about__quality {
+    padding: 28px 20px;
   }
 }
 

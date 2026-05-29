@@ -322,42 +322,29 @@
     </section>
 
     {{-- 13. FAQ section --}}
-    @if ($ps->faq == 1 && isset($faqs) && $faqs->count() > 0)
+    @if ($ps->faq == 1)
+        @php $faqContent = site_faq_content(); @endphp
         <section class="ignavo-faq home-section">
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-5">
                         <div class="ignavo-faq__media">
                             <img src="{{ asset('assets/images/blogs/1730868130customer-speaks-with-consultant-auto-parts-store1-minjpg.jpg') }}"
-                                alt="@lang('FAQ')"
+                                alt="{{ $faqContent['page_title'] }}"
                                 onerror="this.onerror=null;this.src='{{ asset('assets/images/noimage.png') }}';">
                             <div class="ignavo-faq__media-content">
-                                <h3>@lang('Questions you may be curious about')</h3>
-                                <a href="{{ route('front.faq') }}" class="template-btn">@lang('View All FAQs')</a>
+                                <h3>{{ $faqContent['home_title'] }}</h3>
+                                <a href="{{ route('front.faq') }}" class="template-btn">{{ $faqContent['view_all'] }}</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-7">
-                        <div class="accordion ignavo-faq__accordion" id="homeFaqList">
-                            @foreach ($faqs as $key => $faq)
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
-                                            type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#home-faq-{{ $key }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}">
-                                            {{ $faq->title }}
-                                        </button>
-                                    </h2>
-                                    <div id="home-faq-{{ $key }}"
-                                        class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
-                                        data-bs-parent="#homeFaqList">
-                                        <div class="accordion-body">
-                                            {!! clean($faq->details, ['Attr.EnableID' => true]) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                        @include('includes.frontend.faq-accordion', [
+                            'faqs' => site_faqs(4),
+                            'accordionId' => 'homeFaqList',
+                            'accordionClass' => 'ignavo-faq__accordion',
+                            'itemClass' => '',
+                        ])
                     </div>
                 </div>
             </div>

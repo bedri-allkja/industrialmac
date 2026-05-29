@@ -33,6 +33,9 @@ class VendorController extends FrontBaseController
       if (empty($page)) {
         return response()->view('errors.404', [], 404);
       }
+      if ($slug === 'about') {
+        return view('frontend.about', compact('page'));
+      }
       return view('frontend.page', compact('page'));
     }
     $data['vendor'] = $vendor;

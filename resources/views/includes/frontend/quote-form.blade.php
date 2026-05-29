@@ -94,7 +94,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <input type="text" name="product_name" class="form-control"
-                        placeholder="@lang('Product Name') *" value="{{ old('product_name') }}" required>
+                        placeholder="@lang('Product Name') *" value="{{ old('product_name', request('product_name')) }}" required>
                 </div>
                 @error('product_name')
                     <p class="my-1 text-danger small">{{ $message }}</p>
@@ -104,7 +104,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <input type="text" name="product_sku" class="form-control"
-                        placeholder="@lang('SKU / Product Code')" value="{{ old('product_sku') }}">
+                        placeholder="@lang('SKU / Product Code')" value="{{ old('product_sku', request('product_sku')) }}">
                 </div>
                 @error('product_sku')
                     <p class="my-1 text-danger small">{{ $message }}</p>
@@ -186,7 +186,7 @@
 
         <div class="col-md-12">
             <button type="submit" class="template-btn btn-forms">
-                @lang('Request Quote')
+                {{ $submitLabel ?? __('Request Quote') }}
             </button>
         </div>
     </div>

@@ -40,14 +40,6 @@
                                                         name="phone">
                                                 </div>
                                             </div>
-                                            <div class="single-form-wrapper flex-grow-1">
-                                                <div class="form-group">
-                                                    <label for="Fax">@lang('Fax')</label>
-                                                    <input type="text" id="Fax" class="form-control"
-                                                        placeholder="@lang('Fax')" value="{{ $user->fax }}"
-                                                        name="fax">
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="multi-form-wrapper d-flex gap-4 flex-column flex-sm-row">
                                             <div class="single-form-wrapper flex-grow-1">
