@@ -4,7 +4,8 @@
         ? $languges->where('id', Session::get('language'))->first()
         : $languges->where('is_default', '=', 1)->first();
     $aboutPage = $pages->where('header', '=', 1)->first();
-    $navCategories = $categories->take(4);
+    $megamenuCategories = $navCategories;
+    $headerNavCategories = $navCategories->take(6);
 @endphp
 
 <header class="header-section ignavo-header position-relative header-stikcy">
@@ -138,13 +139,16 @@
                             </a>
                             <div class="megamenu cat-megamenu">
                                 <div class="row w-100">
-                                    @foreach ($categories as $category)
+                                    @foreach ($megamenuCategories as $category)
                                         <div class="col-lg-3">
                                             <div class="single-menu mt-30">
-                                                <h5><a href="{{ route('front.category', [$category->slug]) }}">{{ $category->name }}</a></h5>
+                                                <h5>
+                                                    <a href="{{ route('front.category', [$category->slug]) }}">{{ $category->name }}</a>
+                                                    <small class="text-muted">({{ $category->products_count }})</small>
+                                                </h5>
                                                 @if ($category->subs->count() > 0)
                                                     <ul>
-                                                        @foreach ($category->subs as $subcategory)
+                                                        @foreach ($category->subs->take(6) as $subcategory)
                                                             <li>
                                                                 <a href="{{ route('front.category', [$category->slug, $subcategory->slug]) }}{{ !empty(request()->input('search')) ? '?search=' . request()->input('search') : '' }}">
                                                                     {{ $subcategory->name }}
@@ -157,6 +161,13 @@
                                         </div>
                                     @endforeach
                                 </div>
+                                @if ($categories->count() > $megamenuCategories->count())
+                                    <div class="text-center mt-3">
+                                        <a href="{{ route('front.categories') }}" class="view-all-link">
+                                            @lang('View All Categories') <i class="fas fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </li>
 
@@ -164,7 +175,7 @@
                             <a href="{{ route('front.index') }}">@lang('Home')</a>
                         </li>
 
-                        @foreach ($navCategories as $category)
+                        @foreach ($headerNavCategories as $category)
                             <li class="{{ request()->segment(2) == $category->slug ? 'active' : '' }}">
                                 <a href="{{ route('front.category', $category->slug) }}">{{ $category->name }}</a>
                             </li>

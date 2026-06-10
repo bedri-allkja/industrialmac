@@ -48,7 +48,7 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <h5>@lang('Categories')</h5>
                 <ul class="footer-category-links">
-                    @foreach ($categories->take(6) as $cate)
+                    @foreach (($navCategories ?? $categories)->take(6) as $cate)
                         <li>
                             <a href="{{ route('front.category', $cate->slug) }}">{{ $cate->name }}</a>
                         </li>

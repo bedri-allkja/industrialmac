@@ -29,7 +29,8 @@
 <body>
 
     @php
-        $categories = App\Models\Category::with('subs')->where('status', 1)->get();
+        $categories = front_menu_categories();
+        $navCategories = front_nav_categories(12);
         $pages = App\Models\Page::get();
         $currencies = App\Models\Currency::all();
         $languges = App\Models\Language::all();

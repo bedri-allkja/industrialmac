@@ -24,10 +24,6 @@ use Illuminate\Support\Facades\Session;
 class FrontendController extends FrontBaseController
 {
 
-    public function brand()
-    {
-        return $this->belongsTo(Brand::class, 'brand_id');
-    }
     // LANGUAGE SECTION
 
     public function language($id)
@@ -96,167 +92,71 @@ class FrontendController extends FrontBaseController
         $data['sliders'] = DB::table('sliders')
             ->get();
 
-        $data['featured_categories'] = Category::withCount('products')->where('is_featured', 1)->get();
+        $data['featured_categories'] = front_top_categories(6, true);
+
+        if ($data['featured_categories']->isEmpty()) {
+            $data['featured_categories'] = front_top_categories(6, false);
+        }
+
+        $data['featured_brands'] = front_top_brands(8);
 
         $data['arrivals'] = ArrivalSection::get()->toArray();
 
-        // count all product
+        $homeProductWith = [
+            'user:id,is_vendor',
+            'brand:id,name,image,slug',
+            'category:id,name,slug',
+        ];
 
-        $data['products'] = Product::where('status', 1)->count();
-        $data['ratings'] = Rating::count();
+        $poolSize = max(
+            (int) $gs->new_count,
+            (int) $gs->best_seller_count,
+            (int) $gs->popular_count,
+            (int) $gs->sale_count,
+            (int) $gs->trending_count,
+            12
+        );
 
-        $data['hot_products'] = Product::whereHot(1)->whereStatus(1)
-            ->take($gs->hot_count)
-
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->orderby('id', 'desc')
+        $productPool = Product::whereStatus(1)
+            ->with($homeProductWith)
+            ->orderByDesc('id')
+            ->take($poolSize)
             ->get();
 
-        $data['latest_products'] = Product::whereLatest(1)->whereStatus(1)
-            ->take($gs->new_count)
-            ->with([
-        'user:id,is_vendor',
-        'brand:id,name,image,slug'
-    ]) ->withCount('ratings')
-    ->withAvg('ratings', 'rating')
-    ->orderBy('id', 'desc')
-    ->get();
+        $data['latest_products'] = $productPool->take($gs->new_count)->values();
 
-        $data['sale_products'] = Product::whereSale(1)->whereStatus(1)
+        $data['best_products'] = front_has_flagged_products('best')
+            ? Product::whereStatus(1)->whereBest(1)->take($gs->best_seller_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : $productPool->take($gs->best_seller_count)->values();
 
-            ->take($gs->sale_count)
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->orderby('id', 'desc')
-            ->get();
+        $data['popular_products'] = front_has_flagged_products('featured')
+            ? Product::whereStatus(1)->whereFeatured(1)->take($gs->popular_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : $productPool->take($gs->popular_count)->values();
 
-        $data['best_products'] = Product::query()->whereStatus(1)->whereBest(1)
+        $data['sale_products'] = front_has_flagged_products('sale')
+            ? Product::whereSale(1)->whereStatus(1)->take($gs->sale_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : $productPool->take($gs->sale_count)->values();
 
-            ->take($gs->best_seller_count)
-        // get category id and created at
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
+        $data['trending_products'] = front_has_flagged_products('trending')
+            ? Product::whereStatus(1)->whereTrending(1)->take($gs->trending_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : $productPool->take($gs->trending_count)->values();
 
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->orderby('id', 'desc')
-            ->get();
+        $data['hot_products'] = front_has_flagged_products('hot')
+            ? Product::whereHot(1)->whereStatus(1)->take($gs->hot_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : collect();
 
-        $data['popular_products'] = Product::whereStatus(1)->whereFeatured(1)
+        $data['top_products'] = front_has_flagged_products('top')
+            ? Product::whereStatus(1)->whereTop(1)->take($gs->top_rated_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : collect();
 
-            ->take($gs->popular_count)
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->orderby('id', 'desc')
-            ->get();
-
-        $data['top_products'] = Product::whereStatus(1)->whereTop(1)
-
-            ->take($gs->top_rated_count)
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->orderby('id', 'desc')
-            ->withCount('ratings')->withAvg('ratings', 'rating')
-            ->get();
-
-        $data['big_products'] = Product::whereStatus(1)->whereBig(1)
-
-            ->take($gs->big_save_count)
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->orderby('id', 'desc')
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->get();
-
-        $data['trending_products'] = Product::whereStatus(1)->whereTrending(1)
-
-            ->take($gs->trending_count)
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->orderby('id', 'desc')
-            ->get();
+        $data['big_products'] = front_has_flagged_products('big')
+            ? Product::whereStatus(1)->whereBig(1)->take($gs->big_save_count)->with($homeProductWith)->orderByDesc('id')->get()
+            : collect();
 
         $data['flash_products'] = Product::whereStatus(1)->whereIsDiscount(1)
             ->where('discount_date', '>=', date('Y-m-d'))
-
-            ->with(['user' => function ($query) {
-                $query->select('id', 'is_vendor');
-            }])
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->latest()->first();
+            ->latest()
+            ->first();
 
         $data['blogs'] = Blog::latest()->take(3)->get();
         $data['faqs'] = collect(site_faqs(4));

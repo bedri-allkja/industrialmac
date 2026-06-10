@@ -144,6 +144,37 @@
 
     {{-- DELETE MODAL ENDS --}}
 
+    {{-- DELETE ALL MODAL --}}
+
+    <div class="modal fade" id="confirm-delete-all" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-all"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header d-block text-center">
+                    <h4 class="modal-title d-inline-block">{{ __('Delete All Products') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">{{ __('You are about to delete every product in the catalog.') }}</p>
+                    <p class="text-center">{{ __('This cannot be undone. Categories and brands will remain.') }}</p>
+                    <p class="text-center">{{ __('Do you want to proceed?') }}</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Cancel') }}</button>
+                    <form action="{{ route('admin-prod-delete-all') }}" class="d-inline delete-all-form" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">{{ __('Delete All Products') }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- DELETE ALL MODAL ENDS --}}
+
     {{-- GALLERY MODAL --}}
 
     <div class="modal fade" id="setgallery" tabindex="-1" role="dialog" aria-labelledby="setgallery"
@@ -205,11 +236,15 @@
                 ordering: false,
                 processing: true,
                 serverSide: true,
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
                 ajax: '{{ route('admin-prod-datatables') }}?type=all',
                 columns: [
 					{
                         data: 'photo',
-                        name: 'photo'
+                        name: 'photo',
+                        searchable: false,
+                        orderable: false
                     },
 					{
                         data: 'name',
@@ -252,7 +287,51 @@
                     '<a class="add-btn" href="{{ route('admin-prod-types') }}">' +
                     '<i class="fas fa-plus"></i> <span class="remove-mobile">{{ __('Add Product') }}<span>' +
                     '</a>' +
+                    '</div>' +
+                    '<div class="col-sm-4 table-contents text-right">' +
+                    '<a class="add-btn" href="javascript:;" data-toggle="modal" data-target="#confirm-delete-all" style="background:#dc3545;border-color:#dc3545;">' +
+                    '<i class="fas fa-trash"></i> <span class="remove-mobile">{{ __('Delete All Products') }}</span>' +
+                    '</a>' +
                     '</div>');
+            });
+
+            $('.delete-all-form').on('submit', function(e) {
+                e.preventDefault();
+
+                if (admin_loader == 1) {
+                    $('.gocover').show();
+                }
+
+                var $form = $(this);
+
+                $.ajax({
+                    method: 'POST',
+                    url: $form.prop('action'),
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    complete: function() {
+                        if (admin_loader == 1) {
+                            $('.gocover').hide();
+                        }
+                    },
+                    success: function(data) {
+                        $('#confirm-delete-all').modal('hide');
+                        $('#geniustable').DataTable().ajax.reload();
+                        $('.alert-danger').hide();
+                        $('.alert-success').show();
+                        $('.alert-success p').html(data);
+                        $(window).scrollTop(0);
+                    },
+                    error: function() {
+                        $('#confirm-delete-all').modal('hide');
+                        $('.alert-success').hide();
+                        $('.alert-danger').show();
+                        $('.alert-danger ul').html('<li>{{ __('Could not delete all products. Please try again.') }}</li>');
+                    }
+                });
             });
 
         })(jQuery);

@@ -31,38 +31,32 @@
     </section>
 
     {{-- 2. Brand logos row --}}
-    <section class="ignavo-brands-strip">
-        <div class="container">
-            @php
-                $hardcodedBrands = [
-                    ['name' => 'Bosch', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bosch-logo.svg/960px-Bosch-logo.svg.png'],
-                    ['name' => 'Denso', 'logo' => 'https://logowik.com/content/uploads/images/denso9853.jpg'],
-                    ['name' => 'Brembo', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Brembo_logo_%282022%29.svg/500px-Brembo_logo_%282022%29.svg.png'],
-                    ['name' => 'Hella', 'logo' => 'https://upload.wikimedia.org/wikipedia/en/thumb/8/86/Hella_logo.svg/250px-Hella_logo.svg.png'],
-                    ['name' => 'Valeo', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Valeo_Logo.svg/500px-Valeo_Logo.svg.png'],
-                    ['name' => 'Continental', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Continental_logo.svg/500px-Continental_logo.svg.png'],
-                    ['name' => 'SKF', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/SKF-Logo.svg/500px-SKF-Logo.svg.png'],
-                    ['name' => 'Philips', 'logo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Philips_logo_new.svg/640px-Philips_logo_new.svg.png'],
-                ];
-            @endphp
-            <div class="ignavo-brands-strip__row d-none d-md-flex">
-                @foreach ($hardcodedBrands as $brand)
-                    <div class="ignavo-brands-strip__item">
-                        <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}">
-                    </div>
-                @endforeach
-            </div>
-            <div class="ignavo-brands-carousel d-md-none">
-                @foreach ($hardcodedBrands as $brand)
-                    <div class="ignavo-brands-carousel__slide">
+    @if (isset($featured_brands) && $featured_brands->count() > 0)
+        <section class="ignavo-brands-strip">
+            <div class="container">
+                <div class="ignavo-brands-strip__row d-none d-md-flex">
+                    @foreach ($featured_brands as $brand)
+                        @continue(! brand_logo_url($brand))
                         <div class="ignavo-brands-strip__item">
-                            <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}">
+                            <img src="{{ brand_logo_url($brand) }}" alt="{{ $brand->name }}"
+                                onerror="this.onerror=null;this.closest('.ignavo-brands-strip__item')?.remove();">
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
+                <div class="ignavo-brands-carousel d-md-none">
+                    @foreach ($featured_brands as $brand)
+                        @continue(! brand_logo_url($brand))
+                        <div class="ignavo-brands-carousel__slide">
+                            <div class="ignavo-brands-strip__item">
+                                <img src="{{ brand_logo_url($brand) }}" alt="{{ $brand->name }}"
+                                    onerror="this.onerror=null;this.closest('.ignavo-brands-carousel__slide')?.remove();">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     {{-- 3. Category quick links --}}
     @if ($featured_categories->count() > 0)
@@ -106,34 +100,36 @@
     @endif
 
     {{-- 5. Dual promotional banners --}}
-    @if ($ps->arrival_section == 1 && count($arrivals) >= 2)
-        <section class="ignavo-dual-banners home-section">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <a href="{{ $arrivals[0]['url'] }}" class="ignavo-promo-banner ignavo-promo-banner--dark">
-                            <img src="{{ asset('assets/images/arrival/' . $arrivals[0]['photo']) }}" alt="{{ $arrivals[0]['title'] }}">
-                            <div class="ignavo-promo-banner__content">
-                                <span class="ignavo-promo-banner__tag">{{ $arrivals[0]['up_sale'] }}</span>
-                                <h3>@lang('Your Car Deserves the Best Parts')</h3>
-                                <span class="ignavo-promo-banner__btn">@lang('Search Product')</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-6">
-                        <a href="{{ $arrivals[1]['url'] }}" class="ignavo-promo-banner ignavo-promo-banner--light">
-                            <img src="{{ asset('assets/images/arrival/' . $arrivals[1]['photo']) }}" alt="{{ $arrivals[1]['title'] }}">
-                            <div class="ignavo-promo-banner__content">
-                                <span class="ignavo-promo-banner__tag">{{ $arrivals[1]['up_sale'] }}</span>
-                                <h3>@lang('Shop Smarter, Drive Stronger')</h3>
-                                <span class="ignavo-promo-banner__btn">@lang('Shop Now')</span>
-                            </div>
-                        </a>
-                    </div>
+    <section class="ignavo-dual-banners home-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <a href="{{ route('front.categories') }}" class="ignavo-promo-banner ignavo-promo-banner--dark">
+                        <img src="{{ asset('assets/images/blogs/1730868192various-repair-tools-sale-hardware-store-showcase-minjpg.jpg') }}"
+                            alt="@lang('Industrial components and hardware')"
+                            onerror="this.onerror=null;this.src='{{ asset('assets/images/container-ship.jpg') }}';">
+                        <div class="ignavo-promo-banner__content">
+                            <span class="ignavo-promo-banner__tag">@lang('Industrial Components')</span>
+                            <h3>@lang('Quality Parts for Your Operations')</h3>
+                            <span class="ignavo-promo-banner__btn">@lang('Browse Catalog')</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-6">
+                    <a href="{{ route('front.quote') }}" class="ignavo-promo-banner ignavo-promo-banner--light">
+                        <img src="{{ asset('assets/images/blogs/1730868130customer-speaks-with-consultant-auto-parts-store1-minjpg.jpg') }}"
+                            alt="@lang('Expert support for industrial parts')"
+                            onerror="this.onerror=null;this.src='{{ asset('assets/images/container-ship.jpg') }}';">
+                        <div class="ignavo-promo-banner__content">
+                            <span class="ignavo-promo-banner__tag">@lang('Expert Support')</span>
+                            <h3>@lang('Need a Part? We Will Find It for You')</h3>
+                            <span class="ignavo-promo-banner__btn">@lang('Request Quote')</span>
+                        </div>
+                    </a>
                 </div>
             </div>
-        </section>
-    @endif
+        </div>
+    </section>
 
     {{-- 6. Blue help CTA bar --}}
     <section class="ignavo-help-bar">
@@ -165,14 +161,10 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="ignavo-featured-grid__center">
-                            @if ($ps->arrival_section == 1 && isset($arrivals[2]))
-                                <img src="{{ asset('assets/images/arrival/' . $arrivals[2]['photo']) }}"
-                                    alt="@lang('Featured promotion')">
-                            @else
-                                <img src="{{ asset('assets/images/container-ship.jpg') }}" alt="@lang('Featured promotion')">
-                            @endif
+                            <img src="{{ asset('assets/images/container-ship.jpg') }}"
+                                alt="@lang('Global industrial parts supply')">
                             <div class="ignavo-featured-grid__center-content">
-                                <h3>@lang('Performance Starts Under the Hood')</h3>
+                                <h3>@lang('Reliable Supply for Industry Worldwide')</h3>
                                 <a href="{{ route('front.category') }}" class="template-btn">@lang('Shop Now')</a>
                             </div>
                         </div>
@@ -264,45 +256,6 @@
             </div>
         </section>
     @endif
-
-    {{-- 11. Three feature cards --}}
-    <section class="ignavo-info-cards home-section">
-        <div class="container">
-            <div class="row g-4">
-                @php
-                    $infoCards = [
-                        [
-                            'title' => __('Search by Make, Model & More'),
-                            'image' => $featured_categories->first()->image ?? null,
-                            'link' => route('front.category'),
-                        ],
-                        [
-                            'title' => __('Quality Parts You Can Trust'),
-                            'image' => $featured_categories->skip(1)->first()->image ?? null,
-                            'link' => route('front.category'),
-                        ],
-                        [
-                            'title' => __('Fast Delivery Worldwide'),
-                            'image' => $featured_categories->skip(2)->first()->image ?? null,
-                            'link' => route('front.contact'),
-                        ],
-                    ];
-                @endphp
-                @foreach ($infoCards as $card)
-                    <div class="col-lg-4 col-md-6">
-                        <a href="{{ $card['link'] }}" class="ignavo-info-card">
-                            <img src="{{ $card['image'] ? asset('assets/images/categories/' . $card['image']) : asset('assets/images/noimage.png') }}"
-                                alt="{{ $card['title'] }}">
-                            <div class="ignavo-info-card__content">
-                                <h4>{{ $card['title'] }}</h4>
-                                <span>@lang('Shop Now')</span>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
 
     {{-- 12. Blue help CTA bar (repeat) --}}
     <section class="ignavo-help-bar">

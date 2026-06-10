@@ -397,25 +397,22 @@ body.sticky-active { padding-top: var(--sticky-header-h, 0px); }
 }
 .single-product .img-wrapper {
   background: var(--light-bg);
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 4 / 3;
+  padding: 0;
+  display: block;
+  aspect-ratio: 1 / 1;
   position: relative;
   overflow: hidden;
 }
 .single-product .img-wrapper .img-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 100%;
   height: 100%;
 }
 .single-product .img-wrapper .product-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center;
   max-height: none;
   max-width: 100%;
 }

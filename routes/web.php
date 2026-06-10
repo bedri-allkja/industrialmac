@@ -278,6 +278,7 @@ Route::prefix('admin')->group(function () {
 
         // DELETE SECTION
         Route::delete('/products/delete/{id}', 'Admin\ProductController@destroy')->name('admin-prod-delete');
+        Route::delete('/products/delete-all', 'Admin\ProductController@destroyAll')->name('admin-prod-delete-all');
         // DELETE SECTION ENDS
 
         Route::get('/products/catalog/{id1}/{id2}', 'Admin\ProductController@catalog')->name('admin-prod-catalog');
@@ -314,7 +315,10 @@ Route::prefix('admin')->group(function () {
     Route::group(['middleware' => 'permissions:bulk_product_upload'], function () {
 
         Route::get('/products/import', 'Admin\ProductController@import')->name('admin-prod-import');
+        Route::get('/products/import/status/{id?}', 'Admin\ProductController@importStatus')->name('admin-prod-import-status');
+        Route::get('/products/import/files', 'Admin\ProductController@importFiles')->name('admin-prod-import-files');
         Route::post('/products/import-submit', 'Admin\ProductController@importSubmit')->name('admin-prod-importsubmit');
+        Route::post('/products/import/start-file', 'Admin\ProductController@importStartFile')->name('admin-prod-import-start-file');
     });
 
     //------------ ADMIN CSV IMPORT SECTION ENDS ------------

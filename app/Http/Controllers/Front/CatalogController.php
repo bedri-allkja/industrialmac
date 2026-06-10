@@ -17,22 +17,18 @@ class CatalogController extends FrontBaseController
 
     public function categories()
     {
-        $categories = Category::where('status', 1)->get();
+        $categories = front_menu_categories();
         $cat = null;
         $subcat = null;
         $childcat = null;
 
-        $prods = Product::with('user')
+        $prods = Product::with([
+                'user:id,is_vendor',
+                'brand:id,name,image,slug',
+                'category:id,name,slug',
+            ])
             ->where('status', 1)
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
             ->latest('id')
-            ->get()
-            ->map(function ($item) {
-                $item->price = $item->vendorSizePrice();
-
-                return $item;
-            })
             ->paginate($this->gs->page_count);
 
         return view('frontend.products', compact('categories', 'prods', 'cat', 'subcat', 'childcat'));
@@ -43,7 +39,7 @@ class CatalogController extends FrontBaseController
     public function category(Request $request, $slug = null, $slug1 = null, $slug2 = null, $slug3 = null)
     {
        
-        $data['categories'] = Category::where('status', 1)->get();
+        $data['categories'] = front_menu_categories();
 
         if ($request->view_check) {
             session::put('view', $request->view_check);
@@ -95,7 +91,11 @@ class CatalogController extends FrontBaseController
             ->take(5)
             ->get();
 
-        $prods = Product::with('user')->when($cat, function ($query, $cat) {
+        $prods = Product::with([
+            'user:id,is_vendor',
+            'brand:id,name,image,slug',
+            'category:id,name,slug',
+        ])->when($cat, function ($query, $cat) {
             return $query->where('category_id', $cat->id);
         })
             ->when($subcat, function ($query, $subcat) {
@@ -198,12 +198,15 @@ class CatalogController extends FrontBaseController
             }
         });
 
-        $prods = $prods->where('status', 1)->get()
+        $prods = $prods->where('status', 1)
+            ->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
 
-            ->map(function ($item) {
-                $item->price = $item->vendorSizePrice();
-                return $item;
-            })->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
+        $prods->getCollection()->transform(function ($item) {
+            $item->price = $item->vendorSizePrice();
+
+            return $item;
+        });
+
         $data['prods'] = $prods;
 
         if ($search !== '' && $prods->total() === 0 && !$request->ajax()) {

@@ -37,6 +37,16 @@
 /public/mix-manifest.json
 
 # ----------------------------------
+# Product media (imported locally, ~31GB — do not co
+# ----------------------------------
+/public/assets/images/products/*
+!/public/assets/images/products/.gitkeep
+/public/assets/images/thumbnails/*
+!/public/assets/images/thumbnails/.gitkeep
+/public/assets/images/galleries/*
+!/public/assets/images/galleries/.gitkeep
+
+# ----------------------------------
 # IDE / Editor
 # ----------------------------------
 .idea
