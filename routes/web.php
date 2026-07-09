@@ -1574,6 +1574,7 @@ Route::group(['middleware' => 'maintenance'], function () {
 
     // CATEGORY SECTION
     Route::get('/categories', 'Front\CatalogController@categories')->name('front.categories');
+    Route::get('/ajax/category/{id}/subcategories', 'Front\CatalogController@subcategories')->name('front.category.subs');
     Route::get('/category/{category?}/{subcategory?}/{childcategory?}', 'Front\CatalogController@category')->name('front.category');
     // CATEGORY SECTION ENDS
 

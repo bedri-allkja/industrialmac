@@ -77,11 +77,16 @@
                             <div class="im-mega">
                                 <div class="im-mega__inner">
                                     <div class="im-mega__grid">
-                                        @foreach ($categories as $category)
+                                        @foreach (($megaCategories ?? collect()) as $category)
                                             <a class="im-mega__link" href="{{ route('front.category', $category->slug) }}">
                                                 {{ $category->name }}
                                             </a>
                                         @endforeach
+                                    </div>
+                                    <div class="im-mega__footer">
+                                        <a class="im-mega__all" href="{{ route('front.categories') }}">
+                                            @lang('View all categories') <i class="fas fa-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

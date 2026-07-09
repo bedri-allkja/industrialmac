@@ -29,7 +29,8 @@
 <body>
 
     @php
-        $categories = front_menu_categories();
+        $categories = front_sidebar_categories();
+        $megaCategories = front_mega_categories(30);
         $navCategories = front_nav_categories(12);
         $pages = App\Models\Page::get();
         $currencies = App\Models\Currency::all();
@@ -81,6 +82,48 @@
         var mainurl = "{{ url('/') }}";
         var gs      = {!! json_encode(DB::table('generalsettings')->where('id','=',1)->first(['is_loader','decimal_separator','thousand_separator','is_cookie','is_talkto','talkto'])) !!};
         var ps_category = {{ $ps->category }};
+
+        // Lazy-load category subcategories (sidebar + mobile menu accordions).
+        (function () {
+            var subsUrl = "{{ url('/ajax/category') }}";
+
+            function toggleEl(btn) {
+                var sel = btn.getAttribute('data-target');
+                if (!sel) return;
+                var panel = document.querySelector(sel);
+                if (!panel) return;
+
+                var isOpen = panel.classList.toggle('is-open');
+                btn.classList.toggle('is-open', isOpen);
+
+                if (isOpen && panel.getAttribute('data-loaded') === '0') {
+                    var catId = btn.getAttribute('data-cat-id');
+                    if (!catId) return;
+                    panel.setAttribute('data-loaded', '1');
+                    panel.innerHTML = '<li class="im-cat-loading">{{ __('Loading...') }}</li>';
+                    fetch(subsUrl + '/' + catId + '/subcategories', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                        .then(function (r) { return r.text(); })
+                        .then(function (html) { panel.innerHTML = html; })
+                        .catch(function () {
+                            panel.setAttribute('data-loaded', '0');
+                            panel.innerHTML = '';
+                        });
+                }
+            }
+
+            document.addEventListener('click', function (e) {
+                var btn = e.target.closest ? e.target.closest('.im-cat-toggle') : null;
+                if (!btn) return;
+                e.preventDefault();
+                toggleEl(btn);
+            });
+
+            // Auto-open the active category on load.
+            document.querySelectorAll('.im-cat-subs[data-autoload="1"]').forEach(function (panel) {
+                var btn = document.querySelector('.im-cat-toggle[data-target="#' + panel.id + '"]');
+                if (btn) toggleEl(btn);
+            });
+        })();
 
         // Fix sticky header content jump
         (function(){

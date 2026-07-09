@@ -32,86 +32,35 @@
                                     placeholder="@lang('Search categories...')">
                             </div>
                             <div class="product-cat-widget product-cat-widget--scroll">
-                                <ul class="accordion" id="categoryAccordionList">
+                                <ul class="accordion im-cat-list" id="categoryAccordionList">
                                     @foreach ($categories as $category)
-                                        @if ($category->subs->count() > 0)
-                                            <li>
-                                                @php
-                                                    $isCategoryActive = Request::segment(2) === $category->slug;
-                                                @endphp
-                                                <div class="d-flex justify-content-between align-items-lg-baseline">
-                                                    <a href="{{ route('front.category', $category->slug) }}"
-                                                        class="{{ $isCategoryActive ? 'sidebar-active-color' : '' }}">
-                                                        {{ $category->name }}
-                                                    </a>
-                                                    <button data-bs-toggle="collapse"
-                                                        data-bs-target="#{{ $category->slug }}_level_2"
-                                                        aria-controls="{{ $category->slug }}_level_2"
-                                                        aria-expanded="{{ $isCategoryActive ? 'true' : 'false' }}"
-                                                        class="{{ $isCategoryActive ? '' : 'collapsed' }}">
+                                        @php
+                                            $isCategoryActive = Request::segment(2) === $category->slug;
+                                            $hasSubs = ($category->subs_count ?? 0) > 0;
+                                        @endphp
+                                        <li>
+                                            <div class="d-flex justify-content-between align-items-lg-baseline">
+                                                <a href="{{ route('front.category', $category->slug) }}"
+                                                    class="{{ $isCategoryActive ? 'sidebar-active-color' : '' }}">
+                                                    {{ $category->name }}
+                                                </a>
+                                                @if ($hasSubs)
+                                                    <button type="button" class="im-cat-toggle {{ $isCategoryActive ? 'is-open' : '' }}"
+                                                        data-cat-id="{{ $category->id }}"
+                                                        data-target="#catsubs-{{ $category->id }}">
                                                         <i class="fa-solid fa-plus"></i>
                                                         <i class="fa-solid fa-minus"></i>
                                                     </button>
-                                                </div>
-
-                                                @foreach ($category->subs as $subcategory)
-                                                    @php
-                                                        $isSubcategoryActive = $isCategoryActive && Request::segment(3) === $subcategory->slug;
-                                                    @endphp
-                                                    <ul id="{{ $category->slug }}_level_2"
-                                                        class="accordion-collapse collapse ms-3 {{ $isCategoryActive ? 'show' : '' }}">
-                                                        <li>
-                                                            <div class="d-flex justify-content-between align-items-lg-baseline">
-                                                                <a href="{{ route('front.category', [$category->slug, $subcategory->slug]) }}"
-                                                                    class="{{ $isSubcategoryActive ? 'sidebar-active-color' : '' }}"
-                                                                    @if ($subcategory->childs->count() > 0)
-                                                                        data-bs-toggle="collapse"
-                                                                        data-bs-target="#inner{{ $subcategory->slug }}_level_2_1"
-                                                                        aria-controls="inner{{ $subcategory->slug }}_level_2_1"
-                                                                        aria-expanded="{{ $isSubcategoryActive ? 'true' : 'false' }}"
-                                                                    @endif>
-                                                                    {{ $subcategory->name }}
-                                                                </a>
-                                                                @if ($subcategory->childs->count() > 0)
-                                                                    <button data-bs-toggle="collapse"
-                                                                        data-bs-target="#inner{{ $subcategory->slug }}_level_2_1"
-                                                                        aria-controls="inner{{ $subcategory->slug }}_level_2_1"
-                                                                        aria-expanded="{{ $isSubcategoryActive ? 'true' : 'false' }}"
-                                                                        class="{{ $isSubcategoryActive ? '' : 'collapsed' }}">
-                                                                        <i class="fa-solid fa-plus"></i>
-                                                                        <i class="fa-solid fa-minus"></i>
-                                                                    </button>
-                                                                @endif
-                                                            </div>
-
-                                                            @if ($subcategory->childs->count() > 0)
-                                                                <ul id="inner{{ $subcategory->slug }}_level_2_1"
-                                                                    class="accordion-collapse collapse ms-3 {{ $isSubcategoryActive ? 'show' : '' }}">
-                                                                    @foreach ($subcategory->childs as $child)
-                                                                        @php
-                                                                            $isChildActive = $isSubcategoryActive && Request::segment(4) === $child->slug;
-                                                                        @endphp
-                                                                        <li>
-                                                                            <a href="{{ route('front.category', [$category->slug, $subcategory->slug, $child->slug]) }}"
-                                                                                class="{{ $isChildActive ? 'sidebar-active-color' : '' }}">
-                                                                                {{ $child->name }}
-                                                                            </a>
-                                                                        </li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            @endif
-                                                        </li>
-                                                    </ul>
-                                                @endforeach
-                                            </li>
-                                        @else
-                                            <li>
-                                                <a href="{{ route('front.category', $category->slug) }}"
-                                                    class="{{ Request::segment(2) === $category->slug ? 'sidebar-active-color' : '' }}">
-                                                    {{ $category->name }}
-                                                </a>
-                                            </li>
-                                        @endif
+                                                @endif
+                                            </div>
+                                            @if ($hasSubs)
+                                                <ul id="catsubs-{{ $category->id }}"
+                                                    class="im-cat-subs ms-3 {{ $isCategoryActive ? 'is-open' : '' }}"
+                                                    data-loaded="0"
+                                                    @if ($isCategoryActive) data-autoload="1" @endif>
+                                                </ul>
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>

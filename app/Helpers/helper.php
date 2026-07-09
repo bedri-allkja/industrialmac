@@ -272,6 +272,33 @@ function front_menu_categories()
     );
 }
 
+/**
+ * Lightweight top-level categories for the sidebar / mobile menu.
+ *
+ * Only loads id/name/slug plus a subcategory count so the page stays small.
+ * Subcategories are loaded on demand via AJAX (see front.category.subs).
+ */
+function front_sidebar_categories()
+{
+    return \Illuminate\Support\Facades\Cache::remember(
+        'front.sidebar_categories',
+        3600,
+        fn () => \App\Models\Category::query()
+            ->where('status', 1)
+            ->withCount('subs')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug'])
+    );
+}
+
+/**
+ * Top categories (by product count) for the header "Products" mega menu.
+ */
+function front_mega_categories(int $limit = 30)
+{
+    return front_top_categories($limit, false);
+}
+
 function front_product_flags(): array
 {
     return \Illuminate\Support\Facades\Cache::remember('front.product_flags', 3600, function () {

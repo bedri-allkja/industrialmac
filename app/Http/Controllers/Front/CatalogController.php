@@ -15,23 +15,32 @@ class CatalogController extends FrontBaseController
 
     // CATEGORIES SECTOPN
 
-    public function categories()
+    public function categories(Request $request)
     {
-        $categories = front_menu_categories();
-        $cat = null;
-        $subcat = null;
-        $childcat = null;
+        $search = trim((string) $request->input('q', ''));
 
-        $prods = Product::with([
-                'user:id,is_vendor',
-                'brand:id,name,image,slug',
-                'category:id,name,slug',
-            ])
+        $query = Category::where('status', 1);
+
+        if ($search !== '') {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $categoryList = $query->orderBy('name')
+            ->paginate($this->gs->page_count, ['id', 'name', 'slug', 'photo', 'image'])
+            ->appends(['q' => $search]);
+
+        return view('frontend.categories', compact('categoryList', 'search'));
+    }
+
+    // Lazy-loaded subcategories (with their child categories) for the
+    // sidebar / mobile menu accordions. Keeps the initial page light.
+    public function subcategories($id)
+    {
+        $category = Category::with(['subs.childs'])
             ->where('status', 1)
-            ->latest('id')
-            ->paginate($this->gs->page_count);
+            ->findOrFail($id);
 
-        return view('frontend.products', compact('categories', 'prods', 'cat', 'subcat', 'childcat'));
+        return view('frontend.ajax.category-subs', compact('category'))->render();
     }
 
     // -------------------------------- CATEGORY SECTION ----------------------------------------
@@ -39,7 +48,7 @@ class CatalogController extends FrontBaseController
     public function category(Request $request, $slug = null, $slug1 = null, $slug2 = null, $slug3 = null)
     {
        
-        $data['categories'] = front_menu_categories();
+        $data['categories'] = front_sidebar_categories();
 
         if ($request->view_check) {
             session::put('view', $request->view_check);
