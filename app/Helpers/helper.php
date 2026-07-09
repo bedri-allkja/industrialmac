@@ -8,6 +8,100 @@ function site_brand_logo(): string
     return asset('assets/images/INDUSTRIALMAC.png');
 }
 
+/**
+ * Standard "request a quote" description shown on EVERY product page.
+ *
+ * The product name and brand name are injected dynamically and the copy is
+ * language-aware (English + Italian). Because it is generated at render time it
+ * always reflects the live product/brand and never has to be stored per product.
+ */
+function product_quote_description($product): string
+{
+    $productName = trim((string) ($product->name ?? ''));
+    $brandName = null;
+    if (isset($product->brand) && $product->brand && !empty($product->brand->name)) {
+        $brandName = trim((string) $product->brand->name);
+    }
+
+    // Locale code assigned to the Italian language for this install
+    // (Admin > Languages). English is the default for every other locale.
+    $isItalian = app()->getLocale() === 'industrialmac_it';
+
+    return $isItalian
+        ? product_quote_description_it($productName, $brandName)
+        : product_quote_description_en($productName, $brandName);
+}
+
+function product_quote_description_en(string $productName, ?string $brandName): string
+{
+    $product = '<strong>"' . e($productName) . '"</strong>';
+    $company = '<strong>INDUSTRIALMAC</strong>';
+
+    $intro = $brandName
+        ? 'Contact us to receive a personalized quotation for the ' . $product
+            . ' manufactured by <strong>"' . e($brandName) . '"</strong>.'
+        : 'Contact us to receive a personalized quotation for the ' . $product . '.';
+
+    $disclaimerBrand = $brandName
+        ? '<strong>"' . e($brandName) . '"</strong>'
+        : 'the respective manufacturer';
+
+    $p = [];
+    $p[] = $intro;
+    $p[] = 'The ' . $company . ' sales team is ready to provide you with up-to-date pricing, '
+        . 'availability, delivery times, and suitable alternative solutions tailored to your requirements.';
+    $p[] = 'We supply <strong>new</strong> and <strong>original</strong> products only, carefully sourced '
+        . 'through our qualified international supplier network. Whenever applicable, products are covered by '
+        . "the <strong>manufacturer's warranty</strong>.";
+    $p[] = 'Thanks to our headquarters in Italy and our well-established global sourcing network, we are able '
+        . 'to offer <strong>fast worldwide delivery</strong>, secure shipping, competitive pricing, and '
+        . 'professional customer support throughout the entire purchasing process.';
+    $p[] = 'If you are looking for additional part numbers, spare parts, or other products from the same '
+        . 'manufacturer, our technical sales specialists will be happy to assist you. Upon request, we can '
+        . 'also provide product catalogs, technical datasheets, and PDF documentation.';
+    $p[] = '<strong>Disclaimer:</strong> INDUSTRIALMAC is an independent industrial supplier and is not '
+        . 'necessarily an authorized distributor or representative of ' . $disclaimerBrand . '. All trademarks, '
+        . 'logos, brand names, and product codes displayed on this website remain the property of their '
+        . 'respective owners and are used for identification purposes only.';
+
+    return '<div class="product-quote-desc"><p>' . implode('</p><p>', $p) . '</p></div>';
+}
+
+function product_quote_description_it(string $productName, ?string $brandName): string
+{
+    $product = '<strong>"' . e($productName) . '"</strong>';
+    $company = '<strong>INDUSTRIALMAC</strong>';
+
+    $intro = $brandName
+        ? 'Contattaci per ricevere un\'offerta personalizzata sul prodotto ' . $product
+            . ' del marchio <strong>"' . e($brandName) . '"</strong>.'
+        : 'Contattaci per ricevere un\'offerta personalizzata sul prodotto ' . $product . '.';
+
+    $disclaimerBrand = $brandName
+        ? 'del marchio <strong>"' . e($brandName) . '"</strong>'
+        : 'del rispettivo produttore';
+
+    $p = [];
+    $p[] = $intro;
+    $p[] = 'Il team di ' . $company . ' è a tua disposizione per fornirti rapidamente informazioni su prezzi '
+        . 'aggiornati, disponibilità, tempi di consegna e soluzioni alternative compatibili con le tue esigenze.';
+    $p[] = 'Forniamo esclusivamente <strong>prodotti nuovi e originali</strong>, accuratamente selezionati dai '
+        . 'nostri fornitori qualificati. Quando previsto dal produttore, i prodotti sono coperti dalla '
+        . '<strong>garanzia ufficiale</strong>.';
+    $p[] = 'Grazie alla nostra consolidata rete di approvvigionamento internazionale e alla sede operativa in '
+        . 'Italia, siamo in grado di offrire <strong>consegne rapide</strong>, spedizioni sicure e un supporto '
+        . 'commerciale altamente professionale, seguendo il cliente in ogni fase dell\'acquisto.';
+    $p[] = 'Se hai bisogno di altri codici, ricambi o prodotti dello stesso marchio, il nostro team '
+        . 'tecnico-commerciale sarà lieto di aiutarti a individuare la soluzione più adatta e, su richiesta, '
+        . 'potrà fornirti cataloghi, schede tecniche e documentazione in formato PDF.';
+    $p[] = '<strong>Nota:</strong> INDUSTRIALMAC è un fornitore indipendente di componenti industriali e non è '
+        . 'necessariamente un distributore o rappresentante autorizzato ' . $disclaimerBrand . '. Tutti i marchi, '
+        . 'loghi, nomi commerciali e codici prodotto presenti sul sito appartengono ai rispettivi proprietari e '
+        . 'sono utilizzati esclusivamente a scopo identificativo.';
+
+    return '<div class="product-quote-desc"><p>' . implode('</p><p>', $p) . '</p></div>';
+}
+
 function brand_logo_url($brand): ?string
 {
     if (!$brand) {

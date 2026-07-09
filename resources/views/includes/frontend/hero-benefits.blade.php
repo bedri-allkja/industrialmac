@@ -33,8 +33,8 @@
         if ($services->isNotEmpty()) {
             $benefits = $services->values()->map(function ($service, $index) use ($defaultBenefits) {
                 return [
-                    'title' => $service->title,
-                    'details' => $service->details,
+                    'title' => __($service->title),
+                    'details' => __($service->details),
                 ];
             });
         }

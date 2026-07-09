@@ -2475,6 +2475,20 @@ body.menu-open {
 }
 
 /* ===================================================================
+   Product "request a quote" description
+   =================================================================== */
+.product-quote-desc p {
+  margin-bottom: 14px;
+  line-height: 1.75;
+}
+.product-quote-desc p:last-child {
+  margin-bottom: 0;
+}
+.product-quote-desc strong {
+  font-weight: 700;
+}
+
+/* ===================================================================
    INDUSTRIALMAC header (matches homepage mockup)
    =================================================================== */
 .im-header {

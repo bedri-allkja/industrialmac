@@ -245,7 +245,7 @@
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane show active" id="description-tab-pane" role="tabpanel"
                                         aria-labelledby="description-tab" tabindex="0">
-                                        {!! clean($productt->details, ['Attr.EnableID' => true]) !!}
+                                        {!! product_quote_description($productt) !!}
                                     </div>
                                     <div class="tab-pane fade" id="buy-return-policy-tab-pane" role="tabpanel"
                                         aria-labelledby="buy-return-policy-tab" tabindex="0">
