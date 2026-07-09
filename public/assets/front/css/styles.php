@@ -19,23 +19,23 @@ $header  = $hex($_GET['header_color'] ?? '') ?: '#154360';
 
 echo <<<CSS
 :root {
-  --primary: #1a5276;
-  --primary-dark: #154360;
-  --primary-darker: #0e2f44;
-  --accent: #2e86c1;
-  --accent-light: #3498db;
-  --light-bg: #f4f6f9;
+  --primary: #13294b;
+  --primary-dark: #0d1d38;
+  --primary-darker: #081326;
+  --accent: #2e6ab8;
+  --accent-light: #4a8ad4;
+  --light-bg: #eef3fb;
   --card-bg: #ffffff;
-  --text: #2c3e50;
-  --text-secondary: #5d6d7e;
-  --text-muted: #95a5a6;
-  --border: #dce1e6;
-  --border-light: #ecf0f1;
-  --footer-bg: #1b2631;
-  --footer-dark: #151d26;
-  --success: #27ae60;
-  --warning: #f39c12;
-  --danger: #e74c3c;
+  --text: #1b2733;
+  --text-secondary: #46586b;
+  --text-muted: #7b8a99;
+  --border: #d3dbe6;
+  --border-light: #e6ecf4;
+  --footer-bg: #10233d;
+  --footer-dark: #0a1729;
+  --success: #12a150;
+  --warning: #f5a30a;
+  --danger: #e5352b;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
@@ -66,12 +66,12 @@ a:hover { color: var(--primary); }
   font-size: 13px;
   padding: 11px 28px;
   transition: var(--transition);
-  box-shadow: 0 2px 6px rgba(26,82,118,0.2);
+  box-shadow: 0 2px 6px rgba(19,41,75,0.28);
 }
 .btn-primary:hover, .template-btn:hover, .hero-shop-now-btn:hover {
   background: var(--primary-dark) !important;
   border-color: var(--primary-dark) !important;
-  box-shadow: 0 4px 12px rgba(26,82,118,0.3);
+  box-shadow: 0 4px 12px rgba(19,41,75,0.38);
   filter: none;
 }
 .template-btn.dark-btn {

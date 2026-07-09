@@ -28,7 +28,7 @@
             <div class="mycard bg1">
                 <div class="left">
                     <h5 class="title">{{ __('Orders Pending!') }} </h5>
-                    <span class="number">{{count($pending)}}</span>
+                    <span class="number">{{ $pending }}</span>
                     <a href="{{ route('admin-orders-all') }}?status=pending" class="link">{{ __('View All') }}</a>
                 </div>
                 <div class="right d-flex align-self-center">
@@ -42,7 +42,7 @@
             <div class="mycard bg2">
                 <div class="left">
                     <h5 class="title">{{ __('Orders Procsessing!') }}</h5>
-                    <span class="number">{{count($processing)}}</span>
+                    <span class="number">{{ $processing }}</span>
                     <a href="{{ route('admin-orders-all') }}?status=processing" class="link">{{ __('View All') }}</a>
                 </div>
                 <div class="right d-flex align-self-center">
@@ -56,7 +56,7 @@
             <div class="mycard bg3">
                 <div class="left">
                     <h5 class="title">{{ __('Orders Completed!') }}</h5>
-                    <span class="number">{{count($completed)}}</span>
+                    <span class="number">{{ $completed }}</span>
                     <a href="{{ route('admin-orders-all') }}?status=completed" class="link">{{ __('View All') }}</a>
                 </div>
                 <div class="right d-flex align-self-center">
@@ -70,7 +70,7 @@
             <div class="mycard bg4">
                 <div class="left">
                     <h5 class="title">{{ __('Total Products!') }}</h5>
-                    <span class="number">{{count($products)}}</span>
+                    <span class="number">{{ $products }}</span>
                     <a href="{{route('admin-prod-index')}}" class="link">{{ __('View All') }}</a>
                 </div>
                 <div class="right d-flex align-self-center">
@@ -84,7 +84,7 @@
             <div class="mycard bg5">
                 <div class="left">
                     <h5 class="title">{{ __('Total Customers!') }}</h5>
-                    <span class="number">{{count($users)}}</span>
+                    <span class="number">{{ $users }}</span>
                     <a href="{{route('admin-user-index')}}" class="link">{{ __('View All') }}</a>
                 </div>
                 <div class="right d-flex align-self-center">
@@ -98,7 +98,7 @@
             <div class="mycard bg6">
                 <div class="left">
                     <h5 class="title">{{ __('Total Posts!') }}</h5>
-                    <span class="number">{{count($blogs)}}</span>
+                    <span class="number">{{ $blogs }}</span>
                     <a href="{{ route('admin-blog-index') }}" class="link">{{ __('View All') }}</a>
                 </div>
                 <div class="right d-flex align-self-center">

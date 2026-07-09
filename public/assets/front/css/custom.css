@@ -897,6 +897,42 @@ html { scroll-behavior: smooth; }
 .hero-slider-wrapper { overflow: hidden; width: 100%; }
 .gs-hero-section::before { display: none !important; }
 
+/* ── Category sidebar search + scroll (long lists) ─ */
+.cat-widget-search {
+  margin-bottom: 12px;
+}
+.cat-widget-search input {
+  width: 100%;
+  height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+  color: var(--text, #2c3e50);
+  background: #fff;
+  border: 1px solid var(--border, #dce1e6);
+  border-radius: var(--radius, 6px);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.cat-widget-search input:focus {
+  border-color: var(--accent, #2e6ab8);
+  box-shadow: 0 0 0 3px rgba(19, 41, 75, 0.12);
+}
+.product-cat-widget--scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.product-cat-widget--scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.product-cat-widget--scroll::-webkit-scrollbar-thumb {
+  background: var(--border, #dce1e6);
+  border-radius: 999px;
+}
+.product-cat-widget--scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted, #95a5a6);
+}
+
 /* ── Category sidebar sticky ────────────────────── */
 .gs-product-sidebar-wrapper .single-product-widget {
   position: sticky;
@@ -2435,6 +2471,355 @@ body.menu-open {
 
   .ignavo-about__quality {
     padding: 28px 20px;
+  }
+}
+
+/* ===================================================================
+   INDUSTRIALMAC header (matches homepage mockup)
+   =================================================================== */
+.im-header {
+  position: relative;
+  z-index: 1000;
+}
+
+/* --- Top info bar --- */
+.im-topbar {
+  background: var(--primary-darker, #081326);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+}
+.im-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 40px;
+  padding: 6px 0;
+}
+.im-topbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.im-topbar__left {
+  gap: 22px;
+}
+.im-topbar__right {
+  gap: 22px;
+}
+.im-topbar__left li a,
+.im-topbar__right li {
+  color: rgba(255, 255, 255, 0.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.im-topbar__left li a:hover {
+  color: #fff;
+}
+.im-topbar__left li a i,
+.im-topbar__right li i {
+  color: var(--accent-light, #4a8ad4);
+  font-size: 13px;
+}
+.im-topbar__center {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  text-align: center;
+}
+.im-flag {
+  font-size: 14px;
+}
+.im-lang {
+  position: relative;
+}
+.im-lang__btn {
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.im-lang__btn i {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+.im-lang:hover .im-lang__btn {
+  color: #fff;
+}
+.im-lang:hover .im-lang__btn i {
+  transform: rotate(180deg);
+}
+.im-lang__menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 150px;
+  margin-top: 8px;
+  padding: 6px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #eef1f5;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(8, 19, 38, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 1300;
+}
+.im-lang:hover .im-lang__menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+/* bridge across the gap so it doesn't close while moving the mouse down */
+.im-lang__menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -8px;
+  height: 8px;
+}
+.im-lang__link {
+  display: block;
+  padding: 7px 12px;
+  font-size: 13px;
+  color: #33415c !important;
+  border-radius: 6px;
+}
+.im-lang__link:hover,
+.im-lang__link.active {
+  background: #f3f6fb;
+  color: var(--primary, #13294b) !important;
+}
+
+/* --- Main bar --- */
+.im-header .header-top,
+.im-header .header-top.sticky {
+  background: #fff !important;
+  border-bottom: 1px solid #eef1f5;
+  padding: 0 !important;
+}
+.im-header .header-top.sticky {
+  z-index: 1050;
+  box-shadow: 0 4px 24px rgba(8, 19, 38, 0.09);
+}
+.im-header-main__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 78px;
+}
+.im-header-main__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.im-header-toggle {
+  /* style.css sets `.header-toggle { display:none }`; we must re-enable it.
+     `.d-xl-none` still hides it on desktop (>=1200px) via !important. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  font-size: 24px;
+  color: var(--primary, #13294b);
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.im-header-logo img.logo {
+  max-height: 54px;
+  width: auto;
+}
+
+/* --- Centered nav --- */
+.im-nav {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.im-nav__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.im-nav__item {
+  position: relative;
+}
+.im-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary, #13294b) !important;
+  border-radius: 8px;
+  transition: color 0.15s ease;
+}
+.im-nav__link:hover {
+  color: #e5352b !important;
+}
+.im-nav__item.active > .im-nav__link {
+  color: #e5352b !important;
+}
+.im-nav__chevron {
+  font-size: 10px;
+  margin-top: 2px;
+  transition: transform 0.2s ease;
+}
+.im-nav__item--mega:hover .im-nav__chevron {
+  transform: rotate(180deg);
+}
+
+/* --- Products mega dropdown (all categories) --- */
+.im-mega {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  width: min(940px, 92vw);
+  background: #fff;
+  border: 1px solid #eef1f5;
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(8, 19, 38, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 1200;
+}
+.im-nav__item--mega:hover .im-mega {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+/* Invisible bridge covering the gap between the link and the panel so the
+   dropdown stays open while the mouse travels down into it. */
+.im-mega::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -12px;
+  height: 12px;
+}
+.im-mega__inner {
+  max-height: 72vh;
+  overflow-y: auto;
+  padding: 18px 22px;
+}
+.im-mega__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px 24px;
+}
+.im-mega__link {
+  display: block;
+  padding: 7px 10px;
+  font-size: 13.5px;
+  color: #33415c !important;
+  border-radius: 6px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.im-mega__link:hover {
+  background: #f3f6fb;
+  color: #e5352b !important;
+}
+.im-mega__inner::-webkit-scrollbar {
+  width: 8px;
+}
+.im-mega__inner::-webkit-scrollbar-thumb {
+  background: #d3dbe6;
+  border-radius: 8px;
+}
+
+/* --- Actions (cart + Request Quote) --- */
+.im-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: flex-end;
+}
+.im-header-cart {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e5352b;
+  color: #fff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.im-header-cart:hover {
+  background: #c72b22;
+  transform: translateY(-1px);
+}
+.im-quote-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--primary, #13294b);
+  color: #fff !important;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.im-quote-btn:hover {
+  background: var(--primary-dark, #0d1d38);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(8, 19, 38, 0.22);
+}
+.im-quote-btn i {
+  font-size: 13px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1199px) {
+  .im-header-main__inner {
+    min-height: 64px;
+  }
+  .im-header-logo img.logo {
+    max-height: 44px;
+  }
+}
+@media (max-width: 575px) {
+  .im-quote-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .im-quote-btn i {
+    display: none;
+  }
+  .im-header-cart {
+    width: 40px;
+    height: 40px;
   }
 }
 

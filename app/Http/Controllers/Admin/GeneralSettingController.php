@@ -265,9 +265,10 @@ class GeneralSettingController extends AdminBaseController
 
     public function generalMailUpdate(Request $request)
     {
-        $input = $request->all();
+        $input = $request->except('_token');
         $maildata = Generalsetting::findOrFail(1);
         $maildata->update($input);
+        cache()->forget('generalsettings');
         //--- Redirect Section
         $msg = 'Mail Data Updated Successfully.';
         return response()->json($msg);

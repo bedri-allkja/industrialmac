@@ -119,10 +119,12 @@ class QuoteRequestController extends FrontBaseController
             (new GeniusMailer())->sendCustomMail([
                 'to' => $adminEmail,
                 'subject' => $subject,
-                'body' => $body,
+                'body' => nl2br(e($body)),
             ]);
         } else {
-            mail($adminEmail, $subject, $body, 'From: ' . $gs->from_name . ' <' . $gs->from_email . '>');
+            $headers = 'From: ' . $gs->from_name . ' <' . $gs->from_email . '>' . "\r\n";
+            $headers .= 'Content-Type: text/plain; charset=UTF-8' . "\r\n";
+            mail($adminEmail, $subject, $body, $headers);
         }
 
         return back()->with('success', __('Your quote request has been sent. We will contact you shortly.'));

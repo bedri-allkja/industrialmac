@@ -33,6 +33,31 @@ function front_top_brands(int $limit = 8)
         'front.top_brands.' . $limit,
         3600,
         function () use ($limit) {
+            // 1) Admin-curated: brands the admin marked as "featured" (with a logo)
+            //    control this homepage strip. Managed from Admin > Brands.
+            $hasImage = function ($query) {
+                $query->where(function ($q) {
+                    $q->whereNotNull('image')->where('image', '!=', '')
+                        ->orWhere(function ($q2) {
+                            $q2->whereNotNull('photo')->where('photo', '!=', '');
+                        });
+                });
+            };
+
+            $featured = \App\Models\Brand::where('is_featured', 1)
+                ->where($hasImage)
+                ->orderBy('name')
+                ->take($limit)
+                ->get(['id', 'name', 'slug', 'image', 'photo']);
+
+            if ($featured->isNotEmpty()) {
+                return $featured->each(function ($brand) {
+                    $brand->products_count = 0;
+                });
+            }
+
+            // 2) Fallback (no featured brands chosen yet): auto-pick the brands
+            //    that have the most products so the section is never empty.
             $rows = \Illuminate\Support\Facades\DB::table('products')
                 ->select('brand_id', \Illuminate\Support\Facades\DB::raw('COUNT(*) as products_count'))
                 ->where('status', 1)

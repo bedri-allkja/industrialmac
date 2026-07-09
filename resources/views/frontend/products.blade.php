@@ -27,8 +27,12 @@
                         <!-- Categories -->
                         <div class="single-product-widget">
                             <h5 class="widget-title">@lang('Categories')</h5>
-                            <div class="product-cat-widget">
-                                <ul class="accordion">
+                            <div class="cat-widget-search">
+                                <input type="text" id="categoryFilterInput" autocomplete="off"
+                                    placeholder="@lang('Search categories...')">
+                            </div>
+                            <div class="product-cat-widget product-cat-widget--scroll">
+                                <ul class="accordion" id="categoryAccordionList">
                                     @foreach ($categories as $category)
                                         @if ($category->subs->count() > 0)
                                             <li>
@@ -332,5 +336,20 @@
                 $(this).attr('href', fullUrl + '?' + params.toString());
             });
         }
+
+        // Live filter for the (long) categories sidebar list
+        (function () {
+            var input = document.getElementById('categoryFilterInput');
+            var list = document.getElementById('categoryAccordionList');
+            if (!input || !list) return;
+            var items = list.querySelectorAll(':scope > li');
+            input.addEventListener('input', function () {
+                var term = this.value.trim().toLowerCase();
+                items.forEach(function (li) {
+                    var text = (li.textContent || '').toLowerCase();
+                    li.style.display = term === '' || text.indexOf(term) !== -1 ? '' : 'none';
+                });
+            });
+        })();
     </script>
 @endsection

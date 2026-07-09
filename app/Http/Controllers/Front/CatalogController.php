@@ -75,21 +75,18 @@ class CatalogController extends FrontBaseController
             $data['childcat'] = $childcat;
         }
 
-        $data['latest_products'] = Product::with('user')->whereStatus(1)->whereLatest(1)
-            ->whereHas('user', function ($q) {
-                $q->where('is_vendor', 2);
-            })
-            ->when('user', function ($query) {
-                foreach ($query as $q) {
-                    if ($q->is_vendor == 2) {
-                        return $q;
-                    }
-                }
-            })
-            ->withCount('ratings')
-            ->withAvg('ratings', 'rating')
-            ->take(5)
-            ->get();
+        // Sidebar "latest products" widget is identical on every category page and
+        // its rating aggregates are expensive over a large catalog, so cache it.
+        $data['latest_products'] = cache()->remember('front.catalog.latest_products', now()->addMinutes(15), function () {
+            return Product::with('user')->whereStatus(1)->whereLatest(1)
+                ->whereHas('user', function ($q) {
+                    $q->where('is_vendor', 2);
+                })
+                ->withCount('ratings')
+                ->withAvg('ratings', 'rating')
+                ->take(5)
+                ->get();
+        });
 
         $prods = Product::with([
             'user:id,is_vendor',

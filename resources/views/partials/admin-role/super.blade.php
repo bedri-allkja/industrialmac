@@ -21,7 +21,12 @@
             <a href="{{ route('admin-order-create') }}"> {{ __('Pos') }}</a>
         </li>
         <li>
-            <a href="{{ route('admin-quote-index') }}"> {{ __('Quote Requests') }}</a>
+            @php $pendingQuotes = \App\Models\QuoteRequest::where('status', 'pending')->count(); @endphp
+            <a href="{{ route('admin-quote-index') }}"> {{ __('Quote Requests') }}
+                @if ($pendingQuotes > 0)
+                    <span class="badge badge-danger" style="background:#e5352b;color:#fff;border-radius:10px;padding:2px 7px;font-size:11px;margin-left:6px;">{{ $pendingQuotes }}</span>
+                @endif
+            </a>
         </li>
 
     </ul>

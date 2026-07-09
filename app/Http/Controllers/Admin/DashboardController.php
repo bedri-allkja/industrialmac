@@ -19,9 +19,9 @@ class DashboardController extends AdminBaseController
     public function index()
     {
 
-        $data['pending'] = Order::where('status', '=', 'pending')->get();
-        $data['processing'] = Order::where('status', '=', 'processing')->get();
-        $data['completed'] = Order::where('status', '=', 'completed')->get();
+        $data['pending'] = Order::where('status', '=', 'pending')->count();
+        $data['processing'] = Order::where('status', '=', 'processing')->count();
+        $data['completed'] = Order::where('status', '=', 'completed')->count();
         $data['days'] = "";
         $data['sales'] = "";
         for ($i = 0; $i < 30; $i++) {
@@ -29,9 +29,9 @@ class DashboardController extends AdminBaseController
 
             $data['sales'] .= "'" . Order::where('status', '=', 'completed')->whereDate('created_at', '=', date("Y-m-d", strtotime('-' . $i . ' days')))->count() . "',";
         }
-        $data['users'] = User::all();
-        $data['products'] = Product::all();
-        $data['blogs'] = Blog::all();
+        $data['users'] = User::count();
+        $data['products'] = Product::count();
+        $data['blogs'] = Blog::count();
         $data['pproducts'] = Product::latest('id')->take(5)->get();
         $data['rorders'] = Order::latest('id')->take(5)->get();
         $data['poproducts'] = Product::latest('views')->take(5)->get();

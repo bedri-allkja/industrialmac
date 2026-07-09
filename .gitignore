@@ -37,14 +37,14 @@
 /public/mix-manifest.json
 
 # ----------------------------------
-# Product media (imported locally, ~31GB — do not co
+# Uploaded image data (products, categories, banners, blogs, brands,
+# galleries, thumbnails, quote-request uploads, etc.)
+# Do NOT track/upload any image data to the server. The folder
+# structure is preserved via .gitkeep files; all actual images are ignored.
 # ----------------------------------
-/public/assets/images/products/*
-!/public/assets/images/products/.gitkeep
-/public/assets/images/thumbnails/*
-!/public/assets/images/thumbnails/.gitkeep
-/public/assets/images/galleries/*
-!/public/assets/images/galleries/.gitkeep
+/public/assets/images/**
+!/public/assets/images/**/
+!/public/assets/images/**/.gitkeep
 
 # ----------------------------------
 # IDE / Editor

@@ -93,6 +93,8 @@ class BrandsController extends AdminBaseController
 
         $data->fill($input)->save();
 
+        $this->clearBrandStripCache();
+
         return response()->json(__('New Brand Added Successfully.'));
     }
 
@@ -149,6 +151,8 @@ class BrandsController extends AdminBaseController
 
         $data->update($input);
 
+        $this->clearBrandStripCache();
+
         return response()->json(__('Brand Updated Successfully.'));
     }
 
@@ -158,7 +162,18 @@ class BrandsController extends AdminBaseController
         $data->is_featured = (int) $id2;
         $data->save();
 
+        $this->clearBrandStripCache();
+
         return response()->json(__('Status Updated Successfully.'));
+    }
+
+    // Homepage brand-logo strip is cached; refresh it when the admin
+    // changes which brands are featured or updates their logos.
+    private function clearBrandStripCache(): void
+    {
+        foreach ([8, 12, 50] as $limit) {
+            cache()->forget('front.top_brands.' . $limit);
+        }
     }
 
     public function destroy($id)
@@ -177,6 +192,8 @@ class BrandsController extends AdminBaseController
         }
 
         $data->delete();
+
+        $this->clearBrandStripCache();
 
         return response()->json(__('Brand Deleted Successfully.'));
     }
