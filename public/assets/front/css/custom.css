@@ -1184,23 +1184,34 @@ html { scroll-behavior: smooth; }
 .ignavo-brands-strip__row {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  gap: 24px 40px;
+  gap: 16px;
 }
 
-.ignavo-brands-strip__item img {
-  max-height: 32px;
-  max-width: 100px;
-  object-fit: contain;
-  opacity: 0.7;
-  filter: grayscale(100%);
+.ignavo-brands-strip__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 168px;
+  height: 72px;
+  padding: 14px 20px;
+  background: #fff;
+  border: 1px solid var(--border-light, #ecf0f1);
+  border-radius: 10px;
   transition: all 0.25s ease;
 }
 
-.ignavo-brands-strip__item:hover img {
-  opacity: 1;
-  filter: grayscale(0%);
+.ignavo-brands-strip__item:hover {
+  border-color: var(--primary-color, #0d6efd);
+  box-shadow: 0 6px 18px rgba(16, 42, 82, 0.1);
+  transform: translateY(-2px);
+}
+
+.ignavo-brands-strip__item img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .ignavo-brands-strip__name {
@@ -1223,7 +1234,10 @@ html { scroll-behavior: smooth; }
   display: flex !important;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
+}
+
+.ignavo-brands-carousel .ignavo-brands-strip__item {
+  width: 100%;
 }
 
 .ignavo-brands-strip {

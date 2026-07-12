@@ -14,7 +14,7 @@
                 aria-selected="true">@lang('MENU')</button>
             <button class="flex-grow-1 state-right-btn active-tab-btn" id="categories-tab" data-bs-toggle="tab"
                 data-bs-target="#categories" type="button" role="tab" aria-controls="categories"
-                aria-selected="false">@lang('CATEGORIES')</button>
+                aria-selected="false">@lang('BRANDS')</button>
         </div>
     </nav>
 

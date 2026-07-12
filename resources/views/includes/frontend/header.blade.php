@@ -70,8 +70,8 @@
                             <a class="im-nav__link" href="{{ route('front.index') }}">@lang('Home')</a>
                         </li>
 
-                        <li class="im-nav__item im-nav__item--mega {{ request()->routeIs('front.categories') || request()->routeIs('front.category') ? 'active' : '' }}">
-                            <a class="im-nav__link" href="{{ route('front.categories') }}">
+                        <li class="im-nav__item im-nav__item--mega {{ request()->routeIs('front.category') ? 'active' : '' }}">
+                            <a class="im-nav__link" href="{{ route('front.category') }}">
                                 @lang('Products') <i class="fas fa-chevron-down im-nav__chevron"></i>
                             </a>
                             <div class="im-mega">
@@ -85,14 +85,14 @@
                                     </div>
                                     <div class="im-mega__footer">
                                         <a class="im-mega__all" href="{{ route('front.categories') }}">
-                                            @lang('View all categories') <i class="fas fa-arrow-right"></i>
+                                            @lang('View all brands') <i class="fas fa-arrow-right"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </li>
 
-                        <li class="im-nav__item">
+                        <li class="im-nav__item {{ request()->routeIs('front.categories') ? 'active' : '' }}">
                             <a class="im-nav__link" href="{{ route('front.categories') }}">@lang('Brands')</a>
                         </li>
 

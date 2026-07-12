@@ -32,47 +32,37 @@
 
     {{-- 2. Brand logos row --}}
     @if (isset($featured_brands) && $featured_brands->count() > 0)
+        @php
+            // Only brands with a hardcoded official logo URL are shown in this strip.
+            $hardcodedBrandLogos = [
+                'abb' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/ABB_logo.svg/960px-ABB_logo.svg.png?_=20181028032939',
+                'allen-bradley' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Allen-Bradley_logo.svg/1280px-Allen-Bradley_logo.svg.png',
+                'euchner' => 'https://www.euchner.com/en-us/wp-content/themes/euchner/img/logo.png',
+                'baumer' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Baumer_Logo.svg/960px-Baumer_Logo.svg.png',
+                'murrelektronik' => 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Murrelektronik.svg',
+                'lenze' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9WwpAXdDqkJriCVr6-JUfAeLO3ucqP3Q_bNwcBgMxew&s=10',
+            ];
+            $homeBrandLogo = fn ($brand) => $hardcodedBrandLogos[$brand->slug] ?? null;
+        @endphp
         <section class="ignavo-brands-strip">
             <div class="container">
                 <div class="ignavo-brands-strip__row d-none d-md-flex">
                     @foreach ($featured_brands as $brand)
-                        @continue(! brand_logo_url($brand))
+                        @continue(! $homeBrandLogo($brand))
                         <div class="ignavo-brands-strip__item">
-                            <img src="{{ brand_logo_url($brand) }}" alt="{{ $brand->name }}"
+                            <img src="{{ $homeBrandLogo($brand) }}" alt="{{ $brand->name }}"
                                 onerror="this.onerror=null;this.closest('.ignavo-brands-strip__item')?.remove();">
                         </div>
                     @endforeach
                 </div>
                 <div class="ignavo-brands-carousel d-md-none">
                     @foreach ($featured_brands as $brand)
-                        @continue(! brand_logo_url($brand))
+                        @continue(! $homeBrandLogo($brand))
                         <div class="ignavo-brands-carousel__slide">
                             <div class="ignavo-brands-strip__item">
-                                <img src="{{ brand_logo_url($brand) }}" alt="{{ $brand->name }}"
+                                <img src="{{ $homeBrandLogo($brand) }}" alt="{{ $brand->name }}"
                                     onerror="this.onerror=null;this.closest('.ignavo-brands-carousel__slide')?.remove();">
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- 3. Category quick links --}}
-    @if ($featured_categories->count() > 0)
-        <section class="ignavo-categories">
-            <div class="container">
-                <div class="row g-3 row-cols-2 row-cols-sm-3 row-cols-lg-6">
-                    @foreach ($featured_categories->take(6) as $fcategory)
-                        <div class="col">
-                            <a href="{{ route('front.category', $fcategory->slug) }}" class="ignavo-categories__card">
-                                <div class="ignavo-categories__icon">
-                                    <img src="{{ asset('assets/images/categories/' . $fcategory->image) }}"
-                                        alt="{{ $fcategory->name }}"
-                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/noimage.png') }}';">
-                                </div>
-                                <span>{{ $fcategory->name }}</span>
-                            </a>
                         </div>
                     @endforeach
                 </div>

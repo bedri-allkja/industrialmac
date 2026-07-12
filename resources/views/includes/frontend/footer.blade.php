@@ -46,7 +46,7 @@
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
-                <h5>@lang('Categories')</h5>
+                <h5>@lang('Brands')</h5>
                 <ul class="footer-category-links">
                     @foreach (($navCategories ?? $categories)->take(6) as $cate)
                         <li>

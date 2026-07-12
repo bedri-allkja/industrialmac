@@ -7,10 +7,10 @@
         <div class="container">
             <div class="row justify-content-center content-wrapper">
                 <div class="col-12">
-                    <h2 class="breadcrumb-title">@lang('Categories')</h2>
+                    <h2 class="breadcrumb-title">@lang('Products')</h2>
                     <ul class="bread-menu">
                         <li><a href="{{ route('front.index') }}">@lang('Home')</a></li>
-                        <li><a href="javascript:;">@lang('Categories')</a></li>
+                        <li><a href="javascript:;">@lang('Products')</a></li>
                     </ul>
                 </div>
             </div>
@@ -26,10 +26,10 @@
                     <div class="gs-product-sidebar-wrapper">
                         <!-- Categories -->
                         <div class="single-product-widget">
-                            <h5 class="widget-title">@lang('Categories')</h5>
+                            <h5 class="widget-title">@lang('Brands')</h5>
                             <div class="cat-widget-search">
                                 <input type="text" id="categoryFilterInput" autocomplete="off"
-                                    placeholder="@lang('Search categories...')">
+                                    placeholder="@lang('Search brands...')">
                             </div>
                             <div class="product-cat-widget product-cat-widget--scroll">
                                 <ul class="accordion im-cat-list" id="categoryAccordionList">

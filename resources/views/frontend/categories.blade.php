@@ -7,10 +7,10 @@
         <div class="container">
             <div class="row justify-content-center content-wrapper">
                 <div class="col-12">
-                    <h2 class="breadcrumb-title">@lang('Categories')</h2>
+                    <h2 class="breadcrumb-title">@lang('Brands')</h2>
                     <ul class="bread-menu">
                         <li><a href="{{ route('front.index') }}">@lang('Home')</a></li>
-                        <li><a href="javascript:;">@lang('Categories')</a></li>
+                        <li><a href="javascript:;">@lang('Brands')</a></li>
                     </ul>
                 </div>
             </div>
@@ -21,11 +21,11 @@
     <div class="gs-blog-wrapper" style="padding:40px 0;">
         <div class="container">
             <div class="product-nav-wrapper mb-4">
-                <h5 class="mb-0">@lang('Categories') ({{ $categoryList->total() }})</h5>
+                <h5 class="mb-0">@lang('Brands') ({{ $categoryList->total() }})</h5>
                 <form class="im-cat-search-form" action="{{ route('front.categories') }}" method="GET">
                     <div class="input-group">
                         <input type="text" name="q" class="form-control" value="{{ $search ?? '' }}"
-                            placeholder="@lang('Search categories...')" autocomplete="off">
+                            placeholder="@lang('Search brands...')" autocomplete="off">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
@@ -35,7 +35,7 @@
 
             @if ($categoryList->count() == 0)
                 <div class="product-nav-wrapper d-flex justify-content-center mt-4">
-                    <h5>@lang('No categories found')</h5>
+                    <h5>@lang('No brands found')</h5>
                 </div>
             @else
                 <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-lg-3">
