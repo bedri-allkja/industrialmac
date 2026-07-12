@@ -115,17 +115,26 @@ class QuoteRequestController extends FrontBaseController
             $body .= "Catalog product: " . url('/item/' . $product->slug) . "\n";
         }
 
-        if ($gs->is_smtp) {
-            (new GeniusMailer())->sendCustomMail([
-                'to' => $adminEmail,
-                'subject' => $subject,
-                'body' => nl2br(e($body)),
-            ]);
-        } else {
-            $headers = 'From: ' . $gs->from_name . ' <' . $gs->from_email . '>' . "\r\n";
-            $headers .= 'Content-Type: text/plain; charset=UTF-8' . "\r\n";
-            mail($adminEmail, $subject, $body, $headers);
-        }
+        // Send the notification AFTER the response is returned to the browser
+        // so the visitor never waits for the (potentially slow) SMTP handshake.
+        $htmlBody = nl2br(e($body));
+        dispatch(function () use ($gs, $adminEmail, $subject, $body, $htmlBody) {
+            try {
+                if ($gs->is_smtp) {
+                    (new GeniusMailer())->sendCustomMail([
+                        'to' => $adminEmail,
+                        'subject' => $subject,
+                        'body' => $htmlBody,
+                    ]);
+                } else {
+                    $headers = 'From: ' . $gs->from_name . ' <' . $gs->from_email . '>' . "\r\n";
+                    $headers .= 'Content-Type: text/plain; charset=UTF-8' . "\r\n";
+                    mail($adminEmail, $subject, $body, $headers);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Quote email failed: ' . $e->getMessage());
+            }
+        })->afterResponse();
 
         return back()->with('success', __('Your quote request has been sent. We will contact you shortly.'));
     }

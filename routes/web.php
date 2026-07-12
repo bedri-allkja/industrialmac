@@ -5,6 +5,17 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+
+// TEMPORARY: clears caches from the browser. Remove after use.
+Route::get('/__clear-cache-9f3a', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+
+    return 'Cache svuotata con successo. Ricordati di rimuovere questa rotta.';
+});
+
 Route::get('/under-maintenance', 'Front\FrontendController@maintenance')->name('front-maintenance');
 
 Route::prefix('admin')->group(function () {

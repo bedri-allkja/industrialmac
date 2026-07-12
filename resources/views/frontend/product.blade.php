@@ -36,22 +36,44 @@
 
                 <!-- Gallery -->
                 <div class="col-lg-6">
+                    @php
+                        $noImage = asset('assets/images/noimage.png');
+                        // The "box" fallback: the product's thumbnail (which usually exists
+                        // even when the full-size photo file is missing on disk).
+                        $thumbPhoto = !empty($productt->thumbnail)
+                            ? asset('assets/images/thumbnails/' . $productt->thumbnail)
+                            : $noImage;
+                        if (!empty($productt->photo)) {
+                            $mainPhoto = filter_var($productt->photo, FILTER_VALIDATE_URL)
+                                ? $productt->photo
+                                : asset('assets/images/products/' . $productt->photo);
+                        } elseif (!empty($productt->thumbnail)) {
+                            $mainPhoto = $thumbPhoto;
+                        } else {
+                            $mainPhoto = $noImage;
+                        }
+                    @endphp
                     <div class="gs-product-details-gallery-wrapper">
                         <div class="product-main-slider">
-                            <img src="{{ filter_var($productt->photo, FILTER_VALIDATE_URL) ? $productt->photo : asset('assets/images/products/' . $productt->photo) }}"
+                            <img src="{{ $mainPhoto }}"
                                 alt="{{ $productt->name }}"
-                                data-zoom-image="{{ filter_var($productt->photo, FILTER_VALIDATE_URL) ? $productt->photo : asset('assets/images/products/' . $productt->photo) }}"
+                                data-zoom-image="{{ $mainPhoto }}"
+                                onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='{{ $thumbPhoto }}';this.setAttribute('data-zoom-image','{{ $thumbPhoto }}');}else{this.onerror=null;this.src='{{ $noImage }}';}"
                                 class="main-img">
                             @foreach ($productt->galleries as $gal)
                                 <img src="{{ asset('assets/images/galleries/' . $gal->photo) }}"
-                                    data-image="{{ asset('assets/images/galleries/' . $gal->photo) }}" class="main-img">
+                                    data-image="{{ asset('assets/images/galleries/' . $gal->photo) }}"
+                                    onerror="this.onerror=null;this.src='{{ $thumbPhoto }}';" class="main-img">
                             @endforeach
                         </div>
                         <div class="product-nav-slider">
-                            <img src="{{ filter_var($productt->photo, FILTER_VALIDATE_URL) ? $productt->photo : asset('assets/images/products/' . $productt->photo) }}"
-                                alt="{{ $productt->name }}" class="nav-img">
+                            <img src="{{ $mainPhoto }}"
+                                alt="{{ $productt->name }}"
+                                onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='{{ $thumbPhoto }}';}else{this.onerror=null;this.src='{{ $noImage }}';}"
+                                class="nav-img">
                             @foreach ($productt->galleries as $gal)
-                                <img src="{{ asset('assets/images/galleries/' . $gal->photo) }}" class="nav-img">
+                                <img src="{{ asset('assets/images/galleries/' . $gal->photo) }}"
+                                    onerror="this.onerror=null;this.src='{{ $thumbPhoto }}';" class="nav-img">
                             @endforeach
                         </div>
                     </div>

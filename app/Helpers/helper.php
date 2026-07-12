@@ -121,66 +121,56 @@ function brand_logo_url($brand): ?string
     return asset('assets/images/brands/' . $image);
 }
 
+function brand_logo_exists($brand): bool
+{
+    if (!$brand) {
+        return false;
+    }
+
+    $image = $brand->image ?: $brand->photo;
+
+    if (!$image) {
+        return false;
+    }
+
+    if (filter_var($image, FILTER_VALIDATE_URL)) {
+        return true;
+    }
+
+    return is_file(public_path('assets/images/brands/' . $image));
+}
+
 function front_top_brands(int $limit = 8)
 {
     return \Illuminate\Support\Facades\Cache::remember(
         'front.top_brands.' . $limit,
         3600,
         function () use ($limit) {
-            // 1) Admin-curated: brands the admin marked as "featured" (with a logo)
-            //    control this homepage strip. Managed from Admin > Brands.
-            $hasImage = function ($query) {
+            // The homepage strip is a logo strip: only show brands that have a
+            // logo uploaded. Brands without a logo are never shown. Brands the
+            // admin marked as "Featured" are shown first, then the rest fill up
+            // the remaining slots (alphabetically). Managed from Admin > Brands.
+            $withLogo = function ($query) {
                 $query->where(function ($q) {
-                    $q->whereNotNull('image')->where('image', '!=', '')
-                        ->orWhere(function ($q2) {
-                            $q2->whereNotNull('photo')->where('photo', '!=', '');
-                        });
+                    $q->where(function ($q2) {
+                        $q2->whereNotNull('image')->where('image', '!=', '');
+                    })->orWhere(function ($q2) {
+                        $q2->whereNotNull('photo')->where('photo', '!=', '');
+                    });
                 });
             };
 
-            $featured = \App\Models\Brand::where('is_featured', 1)
-                ->where($hasImage)
+            $columns = ['id', 'name', 'slug', 'image', 'photo'];
+
+            // Featured brands first, then the rest alphabetically. Keep only the
+            // brands whose logo file actually exists, then take the limit.
+            return \App\Models\Brand::where($withLogo)
+                ->orderByDesc('is_featured')
                 ->orderBy('name')
+                ->get($columns)
+                ->filter(fn ($brand) => brand_logo_exists($brand))
                 ->take($limit)
-                ->get(['id', 'name', 'slug', 'image', 'photo']);
-
-            if ($featured->isNotEmpty()) {
-                return $featured->each(function ($brand) {
-                    $brand->products_count = 0;
-                });
-            }
-
-            // 2) Fallback (no featured brands chosen yet): auto-pick the brands
-            //    that have the most products so the section is never empty.
-            $rows = \Illuminate\Support\Facades\DB::table('products')
-                ->select('brand_id', \Illuminate\Support\Facades\DB::raw('COUNT(*) as products_count'))
-                ->where('status', 1)
-                ->whereNotNull('brand_id')
-                ->groupBy('brand_id')
-                ->orderByDesc('products_count')
-                ->limit(50)
-                ->get();
-
-            if ($rows->isEmpty()) {
-                return collect();
-            }
-
-            $counts = $rows->pluck('products_count', 'brand_id');
-
-            return \App\Models\Brand::whereIn('id', $rows->pluck('brand_id'))
-                ->where(function ($query) {
-                    $query->whereNotNull('image')->where('image', '!=', '')
-                        ->orWhere(function ($query) {
-                            $query->whereNotNull('photo')->where('photo', '!=', '');
-                        });
-                })
-                ->get(['id', 'name', 'slug', 'image', 'photo'])
-                ->sortByDesc(fn ($brand) => $counts[$brand->id] ?? 0)
-                ->take($limit)
-                ->values()
-                ->each(function ($brand) use ($counts) {
-                    $brand->products_count = $counts[$brand->id] ?? 0;
-                });
+                ->values();
         }
     );
 }

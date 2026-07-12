@@ -33,6 +33,7 @@ class GeniusMailer
             $this->mail->Password   = $this->gs->mail_pass;   // SMTP password
             $this->mail->SMTPSecure = $this->gs->mail_encryption;      // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $this->mail->Port       = $this->gs->mail_port;
+            $this->mail->Timeout    = 15;                    // Don't let a slow SMTP host hang the process
         }
     }
 
