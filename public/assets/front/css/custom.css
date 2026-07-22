@@ -2647,7 +2647,7 @@ body.menu-open {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  min-height: 78px;
+  min-height: 96px;
 }
 .im-header-main__left {
   display: flex;
@@ -2671,8 +2671,16 @@ body.menu-open {
   padding: 4px 8px;
 }
 .im-header-logo img.logo {
-  max-height: 54px;
+  max-height: 72px;
+  max-width: 280px;
   width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.mobile-menu-top .mobile-menu-brand-logo {
+  max-height: 56px;
+  width: auto;
+  object-fit: contain;
 }
 
 /* --- Centered nav --- */
@@ -2831,10 +2839,11 @@ body.menu-open {
 /* --- Responsive --- */
 @media (max-width: 1199px) {
   .im-header-main__inner {
-    min-height: 64px;
+    min-height: 80px;
   }
   .im-header-logo img.logo {
-    max-height: 44px;
+    max-height: 58px;
+    max-width: 220px;
   }
 }
 @media (max-width: 575px) {
