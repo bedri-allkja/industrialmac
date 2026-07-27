@@ -5,6 +5,8 @@
                 <img class="product-img"
                     src="{{ $product->thumbnail ? asset('assets/images/thumbnails/' . $product->thumbnail) : asset('assets/images/noimage.png') }}"
                     alt="{{ $product->showName() }}"
+                    loading="lazy"
+                    decoding="async"
                     onerror="this.onerror=null;this.src={{ json_encode(asset('assets/images/noimage.png')) }};">
             </a>
 
@@ -34,6 +36,8 @@
                 <img class="product-brand-logo"
                     src="{{ brand_logo_url($product->brand) }}"
                     alt="{{ $product->brand->name }}"
+                    loading="lazy"
+                    decoding="async"
                     onerror="this.onerror=null;this.style.display='none';this.nextElementSibling?.classList.remove('d-none');">
                 @if ($product->brand)
                     <div class="product-brand-name d-none">{{ $product->brand->name }}</div>

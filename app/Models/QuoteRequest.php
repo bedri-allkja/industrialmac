@@ -38,4 +38,9 @@ class QuoteRequest extends Model
     {
         return $this->belongsTo(Brand::class)->withDefault();
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

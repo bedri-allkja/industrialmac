@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\{
     Classes\GeniusMailer,
+    Models\EmailLog,
     Models\EmailTemplate,
     Models\Generalsetting,
     Models\User
@@ -31,7 +32,69 @@ class EmailController extends AdminBaseController
     }
 
     public function config(){
-        return view('admin.email.config');
+        $emailLogs = EmailLog::latest('id')->take(50)->get();
+        return view('admin.email.config', compact('emailLogs'));
+    }
+
+    public function sendTest(Request $request)
+    {
+        $request->validate([
+            'test_email' => 'required|email|max:255',
+        ]);
+
+        $gs = Generalsetting::findOrFail(1);
+        $to = $request->test_email;
+        $subject = 'IndustrialMac SMTP Test';
+        $body = '<p>This is a test email from <strong>IndustrialMac</strong>.</p>'
+            . '<p>If you received this, SMTP is working.</p>'
+            . '<p>Sent at: ' . now()->toDateTimeString() . '</p>';
+
+        try {
+            if ((int) $gs->is_smtp === 1) {
+                $ok = (new GeniusMailer())->sendCustomMail([
+                    'to' => $to,
+                    'subject' => $subject,
+                    'body' => $body,
+                    'type' => 'test',
+                ]);
+            } else {
+                $headers = 'From: ' . $gs->from_name . ' <' . $gs->from_email . '>' . "\r\n";
+                $headers .= 'MIME-Version: 1.0' . "\r\n";
+                $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+                $ok = @mail($to, $subject, $body, $headers);
+                try {
+                    EmailLog::create([
+                        'type' => 'test',
+                        'to_email' => $to,
+                        'from_email' => $gs->from_email,
+                        'subject' => $subject,
+                        'status' => $ok ? 'sent' : 'failed',
+                        'error' => $ok ? null : 'PHP mail() returned false',
+                    ]);
+                } catch (\Throwable $ignore) {
+                }
+            }
+
+            if ($ok) {
+                return back()->with('success', __('Test email sent to :email. Check the inbox and Email Logs below.', ['email' => $to]));
+            }
+
+            return back()->with('unsuccess', __('Test email failed. Check Email Logs for the error details.'));
+        } catch (\Throwable $e) {
+            try {
+                EmailLog::create([
+                    'type' => 'test',
+                    'to_email' => $to,
+                    'from_email' => $gs->from_email,
+                    'subject' => $subject,
+                    'status' => 'failed',
+                    'error' => $e->getMessage(),
+                ]);
+            } catch (\Throwable $ignore) {
+            }
+
+            return back()->with('unsuccess', __('Test email failed: :error', ['error' => $e->getMessage()]));
+        }
     }
 
     public function edit($id)

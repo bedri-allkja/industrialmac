@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Blog;
-use App\Models\Counter;
-use App\Models\Order;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
-use App\Models\User;
+use App\Models\QuoteRequest;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
 use Validator;
@@ -18,31 +19,58 @@ class DashboardController extends AdminBaseController
 
     public function index()
     {
+        $data = Cache::remember('admin.dashboard.v2', 60, function () {
+            $since = Carbon::now()->subDays(29)->startOfDay();
 
-        $data['pending'] = Order::where('status', '=', 'pending')->count();
-        $data['processing'] = Order::where('status', '=', 'processing')->count();
-        $data['completed'] = Order::where('status', '=', 'completed')->count();
-        $data['days'] = "";
-        $data['sales'] = "";
-        for ($i = 0; $i < 30; $i++) {
-            $data['days'] .= "'" . date("d M", strtotime('-' . $i . ' days')) . "',";
+            $quoteCounts = QuoteRequest::selectRaw('status, COUNT(*) as total')
+                ->groupBy('status')
+                ->pluck('total', 'status');
 
-            $data['sales'] .= "'" . Order::where('status', '=', 'completed')->whereDate('created_at', '=', date("Y-m-d", strtotime('-' . $i . ' days')))->count() . "',";
-        }
-        $data['users'] = User::count();
-        $data['products'] = Product::count();
-        $data['blogs'] = Blog::count();
-        $data['pproducts'] = Product::latest('id')->take(5)->get();
-        $data['rorders'] = Order::latest('id')->take(5)->get();
-        $data['poproducts'] = Product::latest('views')->take(5)->get();
-        $data['rusers'] = User::latest('id')->take(5)->get();
-        $data['referrals'] = Counter::where('type', 'referral')->latest('total_count')->take(5)->get();
-        $data['browsers'] = Counter::where('type', 'browser')->latest('total_count')->take(5)->get();
+            $quotesByDay = QuoteRequest::selectRaw('DATE(created_at) as day, COUNT(*) as total')
+                ->where('created_at', '>=', $since)
+                ->groupBy('day')
+                ->pluck('total', 'day');
 
-        $data['activation_notify'] = "";
+            $days = [];
+            $quoteSeries = [];
+            for ($i = 29; $i >= 0; $i--) {
+                $date = Carbon::now()->subDays($i);
+                $key = $date->format('Y-m-d');
+                $days[] = $date->format('d M');
+                $quoteSeries[] = (int) ($quotesByDay[$key] ?? 0);
+            }
+
+            $statusBreakdown = [
+                'pending' => (int) ($quoteCounts['pending'] ?? 0),
+                'processing' => (int) ($quoteCounts['processing'] ?? 0),
+                'completed' => (int) ($quoteCounts['completed'] ?? 0),
+                'cancelled' => (int) (($quoteCounts['cancelled'] ?? 0) + ($quoteCounts['declined'] ?? 0)),
+            ];
+
+            return [
+                'pending_quotes' => $statusBreakdown['pending'],
+                'total_quotes' => array_sum($statusBreakdown),
+                'quotes_month' => array_sum($quoteSeries),
+                'products' => Product::count(),
+                'brands' => Brand::count(),
+                'categories' => Category::where('status', 1)->count(),
+                'days' => $days,
+                'quote_series' => $quoteSeries,
+                'status_breakdown' => $statusBreakdown,
+                'recent_quotes' => QuoteRequest::latest('id')->take(8)->get([
+                    'id', 'customer_name', 'company_name', 'product_name', 'status', 'created_at',
+                ]),
+                'poproducts' => Product::with('category:id,name')
+                    ->latest('views')
+                    ->take(5)
+                    ->get(['id', 'name', 'photo', 'sku', 'views', 'category_id', 'slug']),
+            ];
+        });
+
+        $data['activation_notify'] = '';
         if (file_exists(public_path() . '/rooted.txt')) {
             $rooted = file_get_contents(public_path() . '/rooted.txt');
-            if ($rooted < date('Y-m-d', strtotime("+10 days"))) {
+            if ($rooted < date('Y-m-d', strtotime('+10 days'))) {
                 $data['activation_notify'] = "<i class='icofont-warning-alt icofont-4x'></i><br>Please activate your system.<br> If you do not activate your system now, it will be inactive on " . $rooted . "!!<br><a href='" . url('/admin/activation') . "' class='btn btn-success'>Activate Now</a>";
             }
         }

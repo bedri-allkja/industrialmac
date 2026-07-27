@@ -63,6 +63,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/conv/notf/clear', 'Admin\NotificationController@conv_notf_clear')->name('conv-notf-clear');
     // Product Notification Ends
 
+    // Quote Notification
+    Route::get('/quote/notf/show', 'Admin\NotificationController@quote_notf_show')->name('quote-notf-show');
+    Route::get('/quote/notf/clear', 'Admin\NotificationController@quote_notf_clear')->name('quote-notf-clear');
+    // Quote Notification Ends
+
     //------------ ADMIN NOTIFICATION SECTION ENDS ------------
 
     //------------ ADMIN DASHBOARD & PROFILE SECTION ------------
@@ -753,6 +758,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/email-templates/{id}', 'Admin\EmailController@edit')->name('admin-mail-edit');
         Route::post('/email-templates/{id}', 'Admin\EmailController@update')->name('admin-mail-update');
         Route::get('/email-config', 'Admin\EmailController@config')->name('admin-mail-config');
+        Route::post('/email-config/test', 'Admin\EmailController@sendTest')->name('admin-mail-test');
         Route::get('/groupemail', 'Admin\EmailController@groupemail')->name('admin-group-show');
         Route::post('/groupemailpost', 'Admin\EmailController@groupemailpost')->name('admin-group-submit');
     });

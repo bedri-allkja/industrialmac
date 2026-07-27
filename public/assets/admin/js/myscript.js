@@ -1009,6 +1009,7 @@
           $("#conv-notf-count").html(data["conv_count"]);
           $("#order-notf-count").html(data["order_count"]);
           $("#product-notf-count").html(data["product_count"]);
+          $("#quote-notf-count").html(data["quote_count"]);
         },
       });
     }, 300000);
@@ -1071,6 +1072,20 @@
   });
 
   // CONVERSATION NOTIFICATION ENDS
+
+  // QUOTE NOTIFICATION
+
+  $(document).on("click", "#notf_quote", function () {
+    $("#quote-notf-count").html("0");
+    $("#quote-notf-show").load($("#quote-notf-show").data("href"));
+  });
+
+  $(document).on("click", "#quote-notf-clear", function () {
+    $(this).parent().parent().trigger("click");
+    $.get($("#quote-notf-clear").data("href"));
+  });
+
+  // QUOTE NOTIFICATION ENDS
 
   // SEND MESSAGE SECTION
   $(document).on("click", ".send", function () {

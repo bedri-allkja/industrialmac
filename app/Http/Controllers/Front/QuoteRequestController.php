@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Classes\GeniusMailer;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Notification;
 use App\Models\Product;
 use App\Models\QuoteRequest;
 use Illuminate\Http\Request;
@@ -97,7 +98,15 @@ class QuoteRequestController extends FrontBaseController
 
         $quote = QuoteRequest::create($data);
 
-        $adminEmail = $ps->contact_email ?: $gs->from_email;
+        Notification::create([
+            'quote_request_id' => $quote->id,
+        ]);
+
+        \Illuminate\Support\Facades\Cache::forget('admin.dashboard.v2');
+
+        // SMTP sends FROM info@... ; alerts go TO admin personal inbox(es).
+        $adminEmail = $gs->quote_notify_email
+            ?: ($ps->contact_email ?: $gs->from_email);
         $subject = 'New Quote Request #' . $quote->id;
         $body = "A new quote request was submitted.\n\n";
         $body .= "Request ID: {$quote->id}\n";
@@ -114,6 +123,7 @@ class QuoteRequestController extends FrontBaseController
         if ($product) {
             $body .= "Catalog product: " . url('/item/' . $product->slug) . "\n";
         }
+        $body .= "\nAdmin: " . url('/admin/quote-requests/' . $quote->id) . "\n";
 
         // Send the notification AFTER the response is returned to the browser
         // so the visitor never waits for the (potentially slow) SMTP handshake.
@@ -125,11 +135,29 @@ class QuoteRequestController extends FrontBaseController
                         'to' => $adminEmail,
                         'subject' => $subject,
                         'body' => $htmlBody,
+                        'type' => 'quote',
                     ]);
                 } else {
                     $headers = 'From: ' . $gs->from_name . ' <' . $gs->from_email . '>' . "\r\n";
                     $headers .= 'Content-Type: text/plain; charset=UTF-8' . "\r\n";
-                    mail($adminEmail, $subject, $body, $headers);
+                    foreach (preg_split('/[,;]+/', (string) $adminEmail) as $to) {
+                        $to = trim($to);
+                        if ($to === '') {
+                            continue;
+                        }
+                        $ok = @mail($to, $subject, $body, $headers);
+                        try {
+                            \App\Models\EmailLog::create([
+                                'type' => 'quote',
+                                'to_email' => $to,
+                                'from_email' => $gs->from_email,
+                                'subject' => $subject,
+                                'status' => $ok ? 'sent' : 'failed',
+                                'error' => $ok ? null : 'PHP mail() returned false',
+                            ]);
+                        } catch (\Throwable $ignore) {
+                        }
+                    }
                 }
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::error('Quote email failed: ' . $e->getMessage());

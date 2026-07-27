@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
 
-    protected $fillable = ['order_id','user_id','vendor_id','product_id','conversation_id'];
+    protected $fillable = ['order_id','user_id','vendor_id','product_id','conversation_id','quote_request_id'];
 
     public function order()
     {
@@ -34,6 +34,11 @@ class Notification extends Model
         return $this->belongsTo('App\Models\Conversation')->withDefault();
     }
 
+    public function quoteRequest()
+    {
+        return $this->belongsTo(QuoteRequest::class, 'quote_request_id')->withDefault();
+    }
+
     public static function countRegistration()
     {
         return Notification::where('user_id','!=',null)->where('is_read','=',0)->latest('id')->get()->count();
@@ -52,6 +57,11 @@ class Notification extends Model
     public static function countConversation()
     {
         return Notification::where('conversation_id','!=',null)->where('is_read','=',0)->latest('id')->get()->count();
+    }
+
+    public static function countQuote()
+    {
+        return Notification::where('quote_request_id','!=',null)->where('is_read','=',0)->latest('id')->get()->count();
     }
 
 }

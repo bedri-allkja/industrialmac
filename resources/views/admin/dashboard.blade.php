@@ -1,521 +1,287 @@
 @extends('layouts.admin')
 
+@section('styles')
+<style>
+.im-dash { --im-ink:#0f172a; --im-muted:#64748b; --im-line:#e2e8f0; --im-accent:#0ea5e9; --im-warn:#f59e0b; --im-ok:#10b981; --im-danger:#ef4444; }
+.im-dash .im-stat {
+    background:#fff; border:1px solid var(--im-line); border-radius:14px; padding:18px 18px 16px;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px; height:100%;
+    box-shadow:0 1px 2px rgba(15,23,42,.04); transition:transform .15s ease, box-shadow .15s ease;
+}
+.im-dash .im-stat:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(15,23,42,.06); }
+.im-dash .im-stat .label { color:var(--im-muted); font-size:13px; font-weight:600; margin:0 0 6px; text-transform:uppercase; letter-spacing:.03em; }
+.im-dash .im-stat .value { color:var(--im-ink); font-size:28px; font-weight:700; line-height:1.1; margin:0 0 8px; }
+.im-dash .im-stat .link { font-size:13px; font-weight:600; color:var(--im-accent); text-decoration:none; }
+.im-dash .im-stat .icon {
+    width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:18px; flex-shrink:0;
+}
+.im-dash .im-stat.accent .icon { background:linear-gradient(135deg,#0284c7,#38bdf8); }
+.im-dash .im-stat.warn .icon { background:linear-gradient(135deg,#d97706,#fbbf24); }
+.im-dash .im-stat.ok .icon { background:linear-gradient(135deg,#059669,#34d399); }
+.im-dash .im-stat.ink .icon { background:linear-gradient(135deg,#1e293b,#64748b); }
+.im-dash .im-panel {
+    background:#fff; border:1px solid var(--im-line); border-radius:14px; overflow:hidden;
+    box-shadow:0 1px 2px rgba(15,23,42,.04); height:100%;
+}
+.im-dash .im-panel-h {
+    padding:14px 18px; border-bottom:1px solid var(--im-line); display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.im-dash .im-panel-h h5 { margin:0; font-size:15px; font-weight:700; color:var(--im-ink); }
+.im-dash .im-panel-b { padding:16px 18px; }
+.im-dash .im-table { width:100%; margin:0; }
+.im-dash .im-table th {
+    font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--im-muted);
+    border-top:0; border-bottom:1px solid var(--im-line); font-weight:700; padding:10px 8px;
+}
+.im-dash .im-table td { vertical-align:middle; border-top:1px solid #f1f5f9; padding:12px 8px; font-size:13px; color:#334155; }
+.im-dash .badge-soft {
+    display:inline-block; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:700; text-transform:capitalize;
+}
+.im-dash .badge-soft.pending { background:#fff7ed; color:#c2410c; }
+.im-dash .badge-soft.processing { background:#eff6ff; color:#1d4ed8; }
+.im-dash .badge-soft.completed { background:#ecfdf5; color:#047857; }
+.im-dash .badge-soft.declined,
+.im-dash .badge-soft.cancelled { background:#fef2f2; color:#b91c1c; }
+.im-dash .prod-thumb { width:42px; height:42px; object-fit:contain; border-radius:8px; background:#f8fafc; border:1px solid var(--im-line); }
+.im-dash canvas { max-width:100%; }
+</style>
+@endsection
+
 @section('content')
-<div class="content-area">
+<div class="content-area im-dash">
     @include('alerts.form-success')
 
     @if($activation_notify != "")
     <div class="alert alert-danger validation">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">×</span></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
         <h3 class="text-center">{!! clean($activation_notify, array('Attr.EnableID' => true)) !!}</h3>
-        
     </div>
     @endif
 
     @if(Session::has('cache'))
-
     <div class="alert alert-success validation">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">×</span></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
         <h3 class="text-center">{{ Session::get("cache") }}</h3>
     </div>
-
     @endif
 
     <div class="row row-cards-one">
-        <div class="col-md-12 col-lg-6 col-xl-4">
-            <div class="mycard bg1">
-                <div class="left">
-                    <h5 class="title">{{ __('Orders Pending!') }} </h5>
-                    <span class="number">{{ $pending }}</span>
-                    <a href="{{ route('admin-orders-all') }}?status=pending" class="link">{{ __('View All') }}</a>
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="im-stat warn">
+                <div>
+                    <p class="label">{{ __('Pending Quotes') }}</p>
+                    <p class="value">{{ $pending_quotes }}</p>
+                    <a class="link" href="{{ route('admin-quote-index') }}">{{ __('View quotes') }}</a>
                 </div>
-                <div class="right d-flex align-self-center">
-                    <div class="icon">
-                        <i class="icofont-dollar"></i>
-                    </div>
-                </div>
+                <div class="icon"><i class="fas fa-file-invoice"></i></div>
             </div>
         </div>
-        <div class="col-md-12 col-lg-6 col-xl-4">
-            <div class="mycard bg2">
-                <div class="left">
-                    <h5 class="title">{{ __('Orders Procsessing!') }}</h5>
-                    <span class="number">{{ $processing }}</span>
-                    <a href="{{ route('admin-orders-all') }}?status=processing" class="link">{{ __('View All') }}</a>
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="im-stat accent">
+                <div>
+                    <p class="label">{{ __('Quotes (30 days)') }}</p>
+                    <p class="value">{{ $quotes_month }}</p>
+                    <a class="link" href="{{ route('admin-quote-index') }}">{{ __('Open list') }}</a>
                 </div>
-                <div class="right d-flex align-self-center">
-                    <div class="icon">
-                        <i class="icofont-truck-alt"></i>
-                    </div>
-                </div>
+                <div class="icon"><i class="fas fa-chart-line"></i></div>
             </div>
         </div>
-        <div class="col-md-12 col-lg-6 col-xl-4">
-            <div class="mycard bg3">
-                <div class="left">
-                    <h5 class="title">{{ __('Orders Completed!') }}</h5>
-                    <span class="number">{{ $completed }}</span>
-                    <a href="{{ route('admin-orders-all') }}?status=completed" class="link">{{ __('View All') }}</a>
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="im-stat ok">
+                <div>
+                    <p class="label">{{ __('Products') }}</p>
+                    <p class="value">{{ number_format($products) }}</p>
+                    <a class="link" href="{{ route('admin-prod-index') }}">{{ __('Manage products') }}</a>
                 </div>
-                <div class="right d-flex align-self-center">
-                    <div class="icon">
-                        <i class="icofont-check-circled"></i>
-                    </div>
-                </div>
+                <div class="icon"><i class="icofont-cart-alt"></i></div>
             </div>
         </div>
-        <div class="col-md-12 col-lg-6 col-xl-4">
-            <div class="mycard bg4">
-                <div class="left">
-                    <h5 class="title">{{ __('Total Products!') }}</h5>
-                    <span class="number">{{ $products }}</span>
-                    <a href="{{route('admin-prod-index')}}" class="link">{{ __('View All') }}</a>
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="im-stat ink">
+                <div>
+                    <p class="label">{{ __('Brands') }}</p>
+                    <p class="value">{{ number_format($brands) }}</p>
+                    <a class="link" href="{{ route('admin-brand-index') }}">{{ __('Manage brands') }}</a>
                 </div>
-                <div class="right d-flex align-self-center">
-                    <div class="icon">
-                        <i class="icofont-cart-alt"></i>
-                    </div>
-                </div>
+                <div class="icon"><i class="fas fa-tags"></i></div>
             </div>
         </div>
-        <div class="col-md-12 col-lg-6 col-xl-4">
-            <div class="mycard bg5">
-                <div class="left">
-                    <h5 class="title">{{ __('Total Customers!') }}</h5>
-                    <span class="number">{{ $users }}</span>
-                    <a href="{{route('admin-user-index')}}" class="link">{{ __('View All') }}</a>
-                </div>
-                <div class="right d-flex align-self-center">
-                    <div class="icon">
-                        <i class="icofont-users-alt-5"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 col-lg-6 col-xl-4">
-            <div class="mycard bg6">
-                <div class="left">
-                    <h5 class="title">{{ __('Total Posts!') }}</h5>
-                    <span class="number">{{ $blogs }}</span>
-                    <a href="{{ route('admin-blog-index') }}" class="link">{{ __('View All') }}</a>
-                </div>
-                <div class="right d-flex align-self-center">
-                    <div class="icon">
-                        <i class="icofont-newspaper"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <div class="row row-cards-one">
-        <div class="col-md-6 col-xl-3">
-            <div class="card c-info-box-area">
-                <div class="c-info-box box1">
-                    <p>{{ App\Models\User::where( 'created_at', '>', Carbon\Carbon::now()->subDays(30))->get()->count()  }}</p>
+        <div class="col-lg-8 mb-3">
+            <div class="im-panel">
+                <div class="im-panel-h">
+                    <h5>{{ __('Quote requests — last 30 days') }}</h5>
                 </div>
-                <div class="c-info-box-content">
-                    <h6 class="title">{{ __('New Customers') }}</h6>
-                    <p class="text">{{ __('Last 30 Days') }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card c-info-box-area">
-                <div class="c-info-box box2">
-                    <p>{{ App\Models\User::count() }}</p>
-                </div>
-                <div class="c-info-box-content">
-                    <h6 class="title">{{ __('Total Customers') }}</h6>
-                    <p class="text">{{ __('All Time') }}</p>
+                <div class="im-panel-b">
+                    <canvas id="quoteTrendChart" height="110"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card c-info-box-area">
-                <div class="c-info-box box3">
-                    <p>{{ App\Models\Order::where('status','=','completed')->where( 'created_at', '>', Carbon\Carbon::now()->subDays(30))->get()->count()  }}</p>
+        <div class="col-lg-4 mb-3">
+            <div class="im-panel">
+                <div class="im-panel-h">
+                    <h5>{{ __('Quote status') }}</h5>
                 </div>
-                <div class="c-info-box-content">
-                    <h6 class="title">{{ __('Total Sales') }}</h6>
-                    <p class="text">{{ __('Last 30 days') }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card c-info-box-area">
-                <div class="c-info-box box4">
-                     <p>{{ App\Models\Order::where('status','=','completed')->get()->count() }}</p>
-                </div>
-                <div class="c-info-box-content">
-                    <h6 class="title">{{ __('Total Sales') }}</h6>
-                    <p class="text">{{ __('All Time') }}</p>
+                <div class="im-panel-b">
+                    <canvas id="quoteStatusChart" height="220"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row row-cards-one">
-
-        <div class="col-md-12 col-lg-6 col-sm-12 col-xl-6">
-            <div class="card">
-                <h5 class="card-header">{{ __('Recent Order(s)') }}</h5>
-                <div class="card-body">
-
-                <div class="table-responsive  dashboard-home-table">
-                                    <table id="poproducts" class="table table-hover dt-responsive" cellspacing="0" width="100%">
+        <div class="col-lg-7 mb-3">
+            <div class="im-panel">
+                <div class="im-panel-h">
+                    <h5>{{ __('Recent quote requests') }}</h5>
+                    <a class="link" href="{{ route('admin-quote-index') }}">{{ __('View all') }}</a>
+                </div>
+                <div class="im-panel-b p-0">
+                    <div class="table-responsive">
+                        <table class="table im-table mb-0">
                             <thead>
                                 <tr>
-
-                                    <th>{{ __('Order Number') }}</th>
-                                    <th>{{ __('Order Date') }}</th>
+                                    <th>#</th>
+                                    <th>{{ __('Customer') }}</th>
+                                    <th>{{ __('Product') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th></th>
                                 </tr>
-                                @foreach($rorders as $data)
+                            </thead>
+                            <tbody>
+                                @forelse($recent_quotes as $quote)
                                 <tr>
-                                    <td>{{ $data->order_number }}</td>
-                                    <td>{{ date('Y-m-d',strtotime($data->created_at)) }}</td>
+                                    <td>{{ $quote->id }}</td>
                                     <td>
-                                        <div class="action-list"><a href="{{ route('admin-order-show',$data->id) }}"><i
-                                                    class="fas fa-eye"></i> {{ __('Details') }}</a>
-                                        </div>
+                                        <strong>{{ $quote->customer_name }}</strong>
+                                        @if($quote->company_name)
+                                            <div class="text-muted" style="font-size:12px;">{{ $quote->company_name }}</div>
+                                        @endif
+                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::limit($quote->product_name ?: '—', 40) }}</td>
+                                    <td><span class="badge-soft {{ $quote->status }}">{{ $quote->status }}</span></td>
+                                    <td class="text-right">
+                                        <a href="{{ route('admin-quote-show', $quote->id) }}"><i class="fas fa-eye"></i></a>
                                     </td>
                                 </tr>
-                                @endforeach
-                            </thead>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">{{ __('No quote requests yet.') }}</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
-        <div class="col-md-12 col-lg-6 col-sm-12 col-xl-6">
-                <div class="card">
-                        <h5 class="card-header">{{ __('Recent Customer(s)') }}</h5>
-                        <div class="card-body">
-        
-                             <div class="table-responsive  dashboard-home-table">
-                                    <table id="poproducts" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>{{ __('Customer Email') }}</th>
-                                            <th>{{ __('Joined') }}</th>
-                                        </tr>
-                                        @foreach($rusers as $data)
-                                        <tr>
-                                            <td>{{ $data->email }}</td>
-                                            <td>{{ $data->created_at }}</td>
-                                            <td>
-                                                <div class="action-list"><a href="{{ route('admin-user-show',$data->id) }}"><i
-                                                            class="fas fa-eye"></i> {{ __('Details') }}</a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </thead>
-                                </table>
-                            </div>
-        
-                        </div>
+        <div class="col-lg-5 mb-3">
+            <div class="im-panel">
+                <div class="im-panel-h">
+                    <h5>{{ __('Most viewed products') }}</h5>
+                    <a class="link" href="{{ route('admin-prod-index') }}">{{ __('Products') }}</a>
+                </div>
+                <div class="im-panel-b p-0">
+                    <div class="table-responsive">
+                        <table class="table im-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Views') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($poproducts as $product)
+                                <tr>
+                                    <td>
+                                        <img class="prod-thumb" loading="lazy"
+                                            src="{{ filter_var($product->photo, FILTER_VALIDATE_URL) ? $product->photo : asset('assets/images/products/'.$product->photo) }}"
+                                            alt="">
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin-prod-edit', $product->id) }}">
+                                            {{ \Illuminate\Support\Str::limit(strip_tags($product->name), 42) }}
+                                        </a>
+                                        <div class="text-muted" style="font-size:12px;">{{ $product->category->name ?? '' }}</div>
+                                    </td>
+                                    <td>{{ number_format($product->views) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-        </div>
-    </div>
-
-    <div class="row row-cards-one">
-
-            <div class="col-md-12 col-lg-12 col-sm-12 col-xl-12">
-                    <div class="card">
-                            <h5 class="card-header">{{ __('Popular Product(s)') }}</h5>
-                            <div class="card-body">
-            
-                                <div class="table-responsive  dashboard-home-table">
-                                    <table id="poproducts" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>{{ __('Featured Image') }}</th>
-                                                <th>{{ __('Name') }}</th>
-                                                <th>{{ __('Category') }}</th>
-                                                <th>{{ __('Type') }}</th>
-                                                <th>{{ __('Price') }}</th>
-                                                <th></th>
-                                                
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($poproducts as $data)
-                                            <tr>
-                                            <td><img src="{{filter_var($data->photo, FILTER_VALIDATE_URL) ?$data->photo:asset('assets/images/products/'.$data->photo)}}"></td>
-                                            <td>{{  mb_strlen(strip_tags($data->name),'UTF-8') > 50 ? mb_substr(strip_tags($data->name),0,50,'UTF-8').'...' : strip_tags($data->name) }}</td>
-                                            <td>{{ $data->category->name }}
-                                                    @if(isset($data->subcategory))
-                                                    <br>
-                                                    {{ $data->subcategory->name }}
-                                                    @endif
-                                                    @if(isset($data->childcategory))
-                                                    <br>
-                                                    {{ $data->childcategory->name }}
-                                                    @endif
-                                                </td>
-                                                <td>{{ $data->type }}</td>
-
-                                                <td> {{ $data->showPrice() }} </td>
-
-                                                <td>
-                                                    <div class="action-list"><a href="{{ route('admin-prod-edit',$data->id) }}"><i
-                                                                class="fas fa-eye"></i> {{ __('Details') }}</a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-    
-            </div>
-    
-        </div>
-
-    <div class="row row-cards-one">
-
-            <div class="col-md-12 col-lg-12 col-sm-12 col-xl-12">
-                    <div class="card">
-                            <h5 class="card-header">{{ __('Recent Product(s)') }}</h5>
-                            <div class="card-body">
-            
-                                <div class="table-responsive dashboard-home-table">
-                                    <table id="pproducts" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-                                            <thead>
-                                                    <tr>
-                                                        <th>{{ __('Featured Image') }}</th>
-                                                        <th>{{ __('Name') }}</th>
-                                                        <th>{{ __('Category') }}</th>
-                                                        <th>{{ __('Type') }}</th>
-                                                        <th>{{ __('Price') }}</th>
-                                                        <th></th>
-                                                        
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($pproducts as $data)
-                                                    <tr>
-                                                    <td><img src="{{filter_var($data->photo, FILTER_VALIDATE_URL) ?$data->photo:asset('assets/images/products/'.$data->photo)}}"></td>
-                                                    <td>{{  mb_strlen(strip_tags($data->name),'UTF-8') > 50 ? mb_substr(strip_tags($data->name),0,50,'UTF-8').'...' : strip_tags($data->name) }}</td>
-                                                    <td>{{ $data->category->name }}
-                                                        @if(isset($data->subcategory))
-                                                        <br>
-                                                        {{ $data->subcategory->name }}
-                                                        @endif
-                                                        @if(isset($data->childcategory))
-                                                        <br>
-                                                        {{ $data->childcategory->name }}
-                                                        @endif
-                                                    </td>
-                                                        <td>{{ $data->type }}</td>
-                                                        <td> {{ $data->showPrice() }} </td>
-                                                        <td>
-                                                            <div class="action-list"><a href="{{ route('admin-prod-edit',$data->id) }}"><i
-                                                                        class="fas fa-eye"></i> {{ __('Details') }}</a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                    </table>
-                                </div>
-            
-                            </div>
-                        </div>
-    
-            </div>
-    
-    </div>
-
-    <div class="row row-cards-one">
-
-        <div class="col-md-12 col-lg-12 col-sm-12 col-xl-12">
-            <div class="card">
-                <h5 class="card-header">{{ __('Total Sales in Last 30 Days') }}</h5>
-                <div class="card-body">
-
-                    <canvas  id="lineChart"></canvas>
-
                 </div>
             </div>
-
         </div>
-
     </div>
-
-
-
-
-    <div class="row row-cards-one">
-
-        <div class="col-md-12 col-sm-12 col-lg-6 col-xl-6">
-            <div class="card">
-                <h5 class="card-header">{{ __('Top Referrals') }}</h5>
-                <div class="card-body">
-                    <div class="admin-fix-height-card">
-                         <div id="chartContainer-topReference"></div>
-                    </div>
-                       
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-md-12 col-lg-6 col-sm-12 col-xl-6">
-                <div class="card">
-                        <h5 class="card-header">{{ __('Most Used OS') }}</h5>
-                        <div class="card-body">
-                        <div class="admin-fix-height-card">
-                            <div id="chartContainer-os"></div>
-                        </div>
-                        </div>
-                    </div>
-        </div>
-        
-    </div>
-
-
-
 </div>
-
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    "use strict";
 
-<script type="text/javascript">
-    
-    (function($) {
-		"use strict";
+    var labels = @json($days);
+    var quoteSeries = @json($quote_series);
+    var status = @json($status_breakdown);
 
-    displayLineChart();
-
-    function displayLineChart() {
-        var data = {
-            labels: [
-            {!!$days!!}
-            ],
-            datasets: [{
-                label: "Prime and Fibonacci",
-                fillColor: "#3dbcff",
-                strokeColor: "#0099ff",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                data: [
-                {!!$sales!!}
-                ]
-            }]
-        };
-        var ctx = document.getElementById("lineChart").getContext("2d");
-        var options = {
-            responsive: true
-        };
-        var lineChart = new Chart(ctx).Line(data, options);
+    var trend = document.getElementById('quoteTrendChart');
+    if (trend) {
+        new Chart(trend, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '{{ __("Quotes") }}',
+                    data: quoteSeries,
+                    borderColor: '#0ea5e9',
+                    backgroundColor: 'rgba(14,165,233,.15)',
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: 2,
+                    pointHoverRadius: 4,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { maxTicksLimit: 8, color: '#94a3b8' } },
+                    y: { beginAtZero: true, ticks: { precision: 0, color: '#94a3b8' }, grid: { color: '#f1f5f9' } }
+                }
+            }
+        });
     }
 
-    $('#poproducts').dataTable( {
-      "ordering": false,
-          'lengthChange': false,
-          'searching'   : false,
-          'ordering'    : false,
-          'info'        : false,
-          'autoWidth'   : false,
-          'responsive'  : true,
-          'paging'  : false
-    } );
-
-    $('#pproducts').dataTable( {
-      "ordering": false,
-      'lengthChange': false,
-          'searching'   : false,
-          'ordering'    : false,
-          'info'        : false,
-          'autoWidth'   : false,
-          'responsive'  : true,
-          'paging'  : false
-    } );
-
-        var chart1 = new CanvasJS.Chart("chartContainer-topReference",
-            {
-                exportEnabled: true,
-                animationEnabled: true,
-
-                legend: {
-                    cursor: "pointer",
-                    horizontalAlign: "right",
-                    verticalAlign: "center",
-                    fontSize: 16,
-                    padding: {
-                        top: 20,
-                        bottom: 2,
-                        right: 20,
-                    },
+    var statusEl = document.getElementById('quoteStatusChart');
+    if (statusEl) {
+        new Chart(statusEl, {
+            type: 'doughnut',
+            data: {
+                labels: ['{{ __("Pending") }}', '{{ __("Processing") }}', '{{ __("Completed") }}', '{{ __("Cancelled") }}'],
+                datasets: [{
+                    data: [status.pending || 0, status.processing || 0, status.completed || 0, status.cancelled || 0],
+                    backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, color: '#64748b' } }
                 },
-                data: [
-                    {
-                        type: "pie",
-                        showInLegend: true,
-                        legendText: "",
-                        toolTipContent: "{name}: <strong>{#percent%} (#percent%)</strong>",
-                        indexLabel: "#percent%",
-                        indexLabelFontColor: "white",
-                        indexLabelPlacement: "inside",
-                        dataPoints: [
-                                @foreach($referrals as $browser)
-                                    {y:{{$browser->total_count}}, name: "{{$browser->referral}}"},
-                                @endforeach
-                        ]
-                    }
-                ]
-            });
-        chart1.render();
-
-        var chart = new CanvasJS.Chart("chartContainer-os",
-            {
-                exportEnabled: true,
-                animationEnabled: true,
-                legend: {
-                    cursor: "pointer",
-                    horizontalAlign: "right",
-                    verticalAlign: "center",
-                    fontSize: 16,
-                    padding: {
-                        top: 20,
-                        bottom: 2,
-                        right: 20,
-                    },
-                },
-                data: [
-                    {
-                        type: "pie",
-                        showInLegend: true,
-                        legendText: "",
-                        toolTipContent: "{name}: <strong>{#percent%} (#percent%)</strong>",
-                        indexLabel: "#percent%",
-                        indexLabelFontColor: "white",
-                        indexLabelPlacement: "inside",
-                        dataPoints: [
-                            @foreach($browsers as $browser)
-                                {y:{{$browser->total_count}}, name: "{{$browser->referral}}"},
-                            @endforeach
-                        ]
-                    }
-                ]
-            });
-        chart.render();    
-
-    })(jQuery);
-    
+                cutout: '62%'
+            }
+        });
+    }
+})();
 </script>
-
 @endsection

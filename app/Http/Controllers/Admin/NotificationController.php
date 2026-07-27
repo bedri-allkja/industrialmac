@@ -13,12 +13,14 @@ class NotificationController extends AdminBaseController
       $order_count = DB::table('notifications')->where('order_id','!=',null)->where('is_read','=',0)->count();
       $product_count = DB::table('notifications')->where('product_id','!=',null)->where('is_read','=',0)->count();
       $conv_count = DB::table('notifications')->where('conversation_id','!=',null)->where('is_read','=',0)->count();
+      $quote_count = DB::table('notifications')->where('quote_request_id','!=',null)->where('is_read','=',0)->count();
 
       $data = array();        
       $data['user_count'] = $user_count;
       $data['conv_count'] = $conv_count;
       $data['order_count'] = $order_count;
       $data['product_count'] = $product_count;
+      $data['quote_count'] = $quote_count;
 
       return response()->json($data);            
   } 
@@ -93,6 +95,23 @@ class NotificationController extends AdminBaseController
         }
       }       
       return view('admin.notification.message',compact('datas'));           
-  } 
+  }
+
+  public function quote_notf_clear()
+  {
+      Notification::where('quote_request_id','!=',null)->delete();
+  }
+
+  public function quote_notf_show()
+  {
+      $datas = Notification::where('quote_request_id','!=',null)->latest('id')->get();
+      if($datas->count() > 0){
+        foreach($datas as $data){
+          $data->is_read = 1;
+          $data->update();
+        }
+      }
+      return view('admin.notification.quote',compact('datas'));
+  }
 
 }

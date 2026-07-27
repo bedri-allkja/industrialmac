@@ -4,7 +4,9 @@
             <a href="{{ route('front.product', $product->slug) }}">
                 <img class="product-img"
                     src="{{ $product->thumbnail ? asset('assets/images/thumbnails/' . $product->thumbnail) : asset('assets/images/noimage.png') }}"
-                    alt="{{ $product->showName() }}">
+                    alt="{{ $product->showName() }}"
+                    loading="lazy"
+                    decoding="async">
             </a>
         </div>
         <div class="content-wrapper">

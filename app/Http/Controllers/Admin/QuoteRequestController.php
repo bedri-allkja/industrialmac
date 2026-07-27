@@ -48,6 +48,8 @@ class QuoteRequestController extends AdminBaseController
         $data->status = $request->status;
         $data->save();
 
+        \Illuminate\Support\Facades\Cache::forget('admin.dashboard.v2');
+
         return back()->with('success', __('Quote request updated successfully.'));
     }
 
@@ -60,6 +62,8 @@ class QuoteRequestController extends AdminBaseController
         }
 
         $data->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('admin.dashboard.v2');
 
         return back()->with('success', __('Quote request deleted successfully.'));
     }

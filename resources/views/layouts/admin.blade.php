@@ -130,6 +130,18 @@
 									</div>
 								</li>
 
+								<li class="bell-area">
+									<a id="notf_quote" class="dropdown-toggle-1" href="javascript:;">
+										<i class="fas fa-file-invoice"></i>
+										<span id="quote-notf-count">{{ App\Models\Notification::countQuote() }}</span>
+									</a>
+									<div class="dropdown-menu">
+										<div class="dropdownmenu-wrapper" data-href="{{ route('quote-notf-show') }}"
+											id="quote-notf-show">
+										</div>
+									</div>
+								</li>
+
 								<li class="login-profile-area">
 									<a class="dropdown-toggle-1" href="javascript:;">
 										<div class="user-img">
