@@ -186,36 +186,86 @@ class GeniusMailer
         $subject = $mailData['subject'] ?? null;
         $recipients = $this->normalizeRecipients($mailData['to'] ?? '');
         $toLabel = implode(', ', $recipients);
+        $body = (string) ($mailData['body'] ?? '');
 
-        try {
-
-            //Recipients
-            $this->mail->clearAddresses();
-            $this->mail->setFrom($this->gs->from_email, $this->gs->from_name);
-
-            foreach ($recipients as $to) {
-                $this->mail->addAddress($to);
-            }
-
-            if (count($recipients) === 0) {
-                $this->logMail($type, $toLabel ?: '(none)', $subject, 'failed', 'No valid recipient email');
-                return false;
-            }
-
-            // Content
-            $this->mail->isHTML(true);
-
-            $this->mail->Subject = $mailData['subject'];
-
-            $this->mail->Body = $mailData['body'];
-
-            $this->mail->send();
-            $this->logMail($type, $toLabel, $subject, 'sent');
-        } catch (Exception $e) {
-            $this->logMail($type, $toLabel, $subject, 'failed', $e->getMessage());
+        if (count($recipients) === 0) {
+            $this->logMail($type, $toLabel ?: '(none)', $subject, 'failed', 'No valid recipient email');
             return false;
         }
 
-        return true;
+        // Prefer HTTPS providers (GoDaddy blocks outbound SMTP to Microsoft).
+        $graph = new MicrosoftGraphMailer($this->gs);
+        if ($graph->isConfigured()) {
+            try {
+                $graph->send($recipients, (string) $subject, $body, $this->gs->from_email, $this->gs->from_name);
+                $this->logMail($type, $toLabel, $subject, 'sent');
+                return true;
+            } catch (\Throwable $e) {
+                $this->logMail($type, $toLabel, $subject, 'failed', 'Graph: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+        $sg = new SendGridMailer($this->gs);
+        if ($sg->isConfigured()) {
+            try {
+                $sg->send($recipients, (string) $subject, $body, $this->gs->from_email, $this->gs->from_name);
+                $this->logMail($type, $toLabel, $subject, 'sent');
+                return true;
+            } catch (\Throwable $e) {
+                $this->logMail($type, $toLabel, $subject, 'failed', 'SendGrid: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+        // Split recipients: Microsoft-hosted domain cannot be reached via local Exim.
+        $msRecipients = [];
+        $smtpRecipients = [];
+        foreach ($recipients as $email) {
+            $domain = strtolower(substr(strrchr($email, '@') ?: '', 1));
+            if (in_array($domain, ['industrialmac.it', 'industrialmac.com'], true)) {
+                $msRecipients[] = $email;
+            } else {
+                $smtpRecipients[] = $email;
+            }
+        }
+
+        $ok = true;
+
+        if (count($msRecipients) > 0) {
+            try {
+                (new FormSubmitMailer())->send(
+                    $msRecipients,
+                    (string) $subject,
+                    $body,
+                    (string) $this->gs->from_email,
+                    (string) $this->gs->from_name
+                );
+                $this->logMail($type, implode(', ', $msRecipients), $subject, 'sent');
+            } catch (\Throwable $e) {
+                $this->logMail($type, implode(', ', $msRecipients), $subject, 'failed', 'FormSubmit: ' . $e->getMessage());
+                $ok = false;
+            }
+        }
+
+        if (count($smtpRecipients) > 0) {
+            try {
+                $this->mail->clearAddresses();
+                $this->mail->setFrom($this->gs->from_email, $this->gs->from_name);
+                foreach ($smtpRecipients as $to) {
+                    $this->mail->addAddress($to);
+                }
+                $this->mail->isHTML(true);
+                $this->mail->Subject = $mailData['subject'];
+                $this->mail->Body = $body;
+                $this->mail->send();
+                $this->logMail($type, implode(', ', $smtpRecipients), $subject, 'sent');
+            } catch (Exception $e) {
+                $this->logMail($type, implode(', ', $smtpRecipients), $subject, 'failed', $e->getMessage());
+                $ok = false;
+            }
+        }
+
+        return $ok;
     }
 }

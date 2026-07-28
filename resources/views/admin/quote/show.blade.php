@@ -19,6 +19,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     @include('alerts.admin.form-success')
+                    @if (session('unsuccess'))
+                        <div class="alert alert-danger">{{ session('unsuccess') }}</div>
+                    @endif
 
                     <div class="product-description">
                         <div class="body-area">
@@ -100,6 +103,45 @@
                                                 style="max-width:240px;border-radius:6px;border:1px solid #ddd;">
                                         </a>
                                     @endif
+
+                                    <div class="mt-4 p-4 border rounded bg-white">
+                                        <h5>{{ __('Email Customer') }}</h5>
+                                        <p class="text-muted small">{{ __('Send a reply to') }} <strong>{{ $data->customer_email }}</strong></p>
+                                        <form action="{{ route('admin-quote-email', $data->id) }}" method="POST">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label>{{ __('Subject') }}</label>
+                                                <input type="text" name="subject" class="form-control" required
+                                                    value="{{ old('subject', __('Re: Quote request #:id', ['id' => $data->id]) . ($data->product_name ? ' — ' . $data->product_name : '')) }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>{{ __('Message') }}</label>
+                                                <textarea name="body" class="form-control" rows="6" required placeholder="{{ __('Write your reply to the customer...') }}">{{ old('body') }}</textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">{{ __('Send Email') }}</button>
+                                        </form>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <h5>{{ __('Email History') }}</h5>
+                                        @forelse($data->messages as $msg)
+                                            <div class="border rounded p-3 mb-2 {{ $msg->status === 'sent' ? 'bg-light' : 'bg-danger-light' }}">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>{{ $msg->subject }}</strong>
+                                                    <span class="badge badge-{{ $msg->status === 'sent' ? 'success' : 'danger' }}">{{ ucfirst($msg->status) }}</span>
+                                                </div>
+                                                <div class="small text-muted mb-2">
+                                                    {{ $msg->created_at }} · {{ __('To') }}: {{ $msg->to_email }}
+                                                </div>
+                                                <div style="white-space:pre-wrap;">{{ $msg->body }}</div>
+                                                @if($msg->error)
+                                                    <div class="text-danger small mt-1">{{ $msg->error }}</div>
+                                                @endif
+                                            </div>
+                                        @empty
+                                            <p class="text-muted">{{ __('No emails sent for this quote yet.') }}</p>
+                                        @endforelse
+                                    </div>
                                 </div>
 
                                 <div class="col-lg-5">

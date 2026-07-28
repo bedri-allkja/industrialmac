@@ -170,6 +170,57 @@
                           </div>
                         </div>
 
+                        <div class="row justify-content-center mt-4">
+                          <div class="col-lg-9">
+                            <h4 class="heading">{{ __('Microsoft Graph (required to deliver into info@)') }}</h4>
+                            <p class="sub-heading">{{ __('This host cannot SMTP to Microsoft. Graph sends over HTTPS into the mailbox. Tenant ID is usually already known for industrialmac.it.') }}</p>
+                          </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                          <div class="col-lg-3">
+                            <div class="left-area">
+                                <h4 class="heading">{{ __('MS Tenant ID') }}</h4>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <input type="text" class="input-field" name="ms_tenant_id" value="{{ $gs->ms_tenant_id ?: 'e96a97ab-5e1e-4bcc-9d4e-f14452e9ec9d' }}" placeholder="Directory (tenant) ID">
+                          </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                          <div class="col-lg-3">
+                            <div class="left-area">
+                                <h4 class="heading">{{ __('MS Client ID') }}</h4>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <input type="text" class="input-field" name="ms_client_id" value="{{ $gs->ms_client_id }}" placeholder="Application (client) ID">
+                          </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                          <div class="col-lg-3">
+                            <div class="left-area">
+                                <h4 class="heading">{{ __('MS Client Secret') }}</h4>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <input type="password" class="input-field" name="ms_client_secret" value="{{ $gs->ms_client_secret }}" placeholder="Client secret value">
+                          </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                          <div class="col-lg-3">
+                            <div class="left-area">
+                                <h4 class="heading">{{ __('SendGrid API Key (optional backup)') }}</h4>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <input type="password" class="input-field" name="sendgrid_api_key" value="{{ $gs->sendgrid_api_key }}" placeholder="SG....">
+                          </div>
+                        </div>
+
                         <div class="row justify-content-center">
                           <div class="col-lg-3">
                             <div class="left-area">
@@ -233,6 +284,52 @@
                             </div>
                             <div class="col-lg-6">
                               <button class="addProductSubmit-btn" type="submit">{{ __('Send Test Email') }}</button>
+                            </div>
+                          </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <h4 class="heading mb-3">{{ __('Send Individual Email') }}</h4>
+                        <p class="text-muted mb-3">{{ __('Compose and send one email to any address.') }}</p>
+                        <form action="{{ route('admin-mail-individual') }}" method="POST">
+                          @csrf
+                          <div class="row justify-content-center">
+                            <div class="col-lg-3">
+                              <div class="left-area">
+                                <h4 class="heading">{{ __('To') }} *</h4>
+                              </div>
+                            </div>
+                            <div class="col-lg-6">
+                              <input type="email" class="input-field" name="to_email" required value="{{ old('to_email') }}" placeholder="customer@example.com">
+                            </div>
+                          </div>
+                          <div class="row justify-content-center">
+                            <div class="col-lg-3">
+                              <div class="left-area">
+                                <h4 class="heading">{{ __('Subject') }} *</h4>
+                              </div>
+                            </div>
+                            <div class="col-lg-6">
+                              <input type="text" class="input-field" name="subject" required value="{{ old('subject') }}">
+                            </div>
+                          </div>
+                          <div class="row justify-content-center">
+                            <div class="col-lg-3">
+                              <div class="left-area">
+                                <h4 class="heading">{{ __('Message') }} *</h4>
+                              </div>
+                            </div>
+                            <div class="col-lg-6">
+                              <textarea class="input-field" name="body" rows="6" required placeholder="{{ __('Write your message...') }}">{{ old('body') }}</textarea>
+                            </div>
+                          </div>
+                          <div class="row justify-content-center">
+                            <div class="col-lg-3">
+                              <div class="left-area"></div>
+                            </div>
+                            <div class="col-lg-6">
+                              <button class="addProductSubmit-btn" type="submit">{{ __('Send Email') }}</button>
                             </div>
                           </div>
                         </form>

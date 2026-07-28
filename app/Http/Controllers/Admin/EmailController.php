@@ -112,71 +112,67 @@ class EmailController extends AdminBaseController
     public function groupemailpost(Request $request)
     {
         $config = Generalsetting::findOrFail(1);
-        if($request->type == 0)
-        {
-        $users = User::all();
-        //Sending Email To Users
-        foreach($users as $user)
-        {
-            if($config->is_smtp == 1)
-            {
-                $data = [
-                    'to' => $user->email,
-                    'subject' => $request->subject,
-                    'body' => $request->body,
-                ];
+        $emails = [];
 
-                $mailer = new GeniusMailer();
-                $mailer->sendCustomMail($data);            
-            }
-            else
-            {
-               $to = $user->email;
-               $subject = $request->subject;
-               $msg = $request->body;
-                $headers = "From: ".$config->from_name."<".$config->from_email.">";
-               mail($to,$subject,$msg,$headers);
-            }  
-        } 
-        //--- Redirect Section          
-        $msg = __('Email Sent Successfully.');
-        return response()->json($msg);    
-        //--- Redirect Section Ends  
+        if ((string) $request->type === '0') {
+            $emails = User::query()->pluck('email')->filter()->unique()->values()->all();
+        } elseif ((string) $request->type === '2') {
+            $emails = \App\Models\QuoteRequest::query()
+                ->whereNotNull('customer_email')
+                ->pluck('customer_email')
+                ->filter(function ($email) {
+                    return filter_var($email, FILTER_VALIDATE_EMAIL);
+                })
+                ->unique()
+                ->values()
+                ->all();
+        } elseif ((string) $request->type === '1') {
+            $emails = User::where('is_vendor', '=', '2')->pluck('email')->filter()->unique()->values()->all();
         }
 
-        else if($request->type == 1)
-        {
-        $users = User::where('is_vendor','=','2')->get();
-        //Sending Email To Vendors        
-        foreach($users as $user)
-        {
-            if($config->is_smtp == 1)
-            {
-                $data = [
-                    'to' => $user->email,
+        $sent = 0;
+        foreach ($emails as $email) {
+            if ($config->is_smtp == 1) {
+                $ok = (new GeniusMailer())->sendCustomMail([
+                    'to' => $email,
                     'subject' => $request->subject,
                     'body' => $request->body,
-                ];
-
-                $mailer = new GeniusMailer();
-                $mailer->sendCustomMail($data);            
-            }
-            else
-            {
-               $to = $user->email;
-               $subject = $request->subject;
-               $msg = $request->body;
+                    'type' => 'group',
+                ]);
+                if ($ok) {
+                    $sent++;
+                }
+            } else {
                 $headers = "From: ".$config->from_name."<".$config->from_email.">";
-               mail($to,$subject,$msg,$headers);
-            }  
-        } 
-        //--- Redirect Section          
-        $msg = __('Email Sent Successfully.');
-        return response()->json($msg);    
-        //--- Redirect Section Ends  
+                if (@mail($email, $request->subject, $request->body, $headers)) {
+                    $sent++;
+                }
+            }
         }
 
+        return response()->json(__('Email Sent Successfully.') . ' (' . $sent . '/' . count($emails) . ')');
+    }
 
+    public function sendIndividual(Request $request)
+    {
+        $request->validate([
+            'to_email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'body' => 'required|string|max:10000',
+        ]);
+
+        $ok = (new GeniusMailer())->sendCustomMail([
+            'to' => $request->to_email,
+            'subject' => $request->subject,
+            'body' => nl2br(e($request->body)),
+            'type' => 'individual',
+        ]);
+
+        if ($ok) {
+            return back()->with('success', __('Email sent to :email', ['email' => $request->to_email]));
+        }
+
+        return back()->with('unsuccess', __('Email failed to send. Check Email Logs.'));
     }
 
     public function update(Request $request, $id)
@@ -184,10 +180,8 @@ class EmailController extends AdminBaseController
         $data = EmailTemplate::findOrFail($id);
         $input = $request->all();
         $data->update($input);
-        //--- Redirect Section          
         $msg = __('Data Updated Successfully.');
-        return response()->json($msg);    
-        //--- Redirect Section Ends  
+        return response()->json($msg);
     }
 
 }

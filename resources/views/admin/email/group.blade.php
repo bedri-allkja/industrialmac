@@ -42,9 +42,9 @@
                           </div>
                           <div class="col-lg-7">
                               <select name="type" required="">
-                                <option value=""> {{ __('Choose User Type') }} </option>
+                                <option value=""> {{ __('Choose Audience') }} </option>
                                 <option value="0">{{ __('Customers') }}</option>
-                                <option value="1">{{ __('Vendors') }}</option>
+                                <option value="2">{{ __('Quote Request Contacts') }}</option>
                               </select>
                           </div>
                         </div>

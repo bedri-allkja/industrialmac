@@ -130,6 +130,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/quote-requests', 'Admin\QuoteRequestController@index')->name('admin-quote-index');
         Route::get('/quote-requests/{id}', 'Admin\QuoteRequestController@show')->name('admin-quote-show');
         Route::post('/quote-requests/{id}/status', 'Admin\QuoteRequestController@updateStatus')->name('admin-quote-status');
+        Route::post('/quote-requests/{id}/email', 'Admin\QuoteRequestController@sendEmail')->name('admin-quote-email');
         Route::delete('/quote-requests/{id}', 'Admin\QuoteRequestController@destroy')->name('admin-quote-delete');
         //------------ ADMIN QUOTE REQUEST SECTION ENDS ------------
 
@@ -759,6 +760,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/email-templates/{id}', 'Admin\EmailController@update')->name('admin-mail-update');
         Route::get('/email-config', 'Admin\EmailController@config')->name('admin-mail-config');
         Route::post('/email-config/test', 'Admin\EmailController@sendTest')->name('admin-mail-test');
+        Route::post('/email-config/send', 'Admin\EmailController@sendIndividual')->name('admin-mail-individual');
         Route::get('/groupemail', 'Admin\EmailController@groupemail')->name('admin-group-show');
         Route::post('/groupemailpost', 'Admin\EmailController@groupemailpost')->name('admin-group-submit');
     });

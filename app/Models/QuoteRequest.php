@@ -43,4 +43,9 @@ class QuoteRequest extends Model
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function messages()
+    {
+        return $this->hasMany(QuoteMessage::class)->latest('id');
+    }
 }
