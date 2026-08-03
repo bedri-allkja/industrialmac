@@ -23,6 +23,7 @@
     @endif
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css') }}">
     @yield('css')
+    @stack('styles')
 
 </head>
 
@@ -185,6 +186,7 @@
 
       
   @yield('script')
+  @stack('scripts')
 
 </body>
 

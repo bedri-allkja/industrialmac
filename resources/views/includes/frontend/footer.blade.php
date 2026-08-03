@@ -7,71 +7,62 @@
                 </a>
 
                 <div class="footer-contact-info">
-                    <a href="tel:{{ $ps->phone }}">
+                    <a href="{{ route('front.contact') }}">
                         <i class="fas fa-map-marker-alt me-2"></i>
-                        {{ $ps->street }}
+                        Via Della Volta 37, Brescia 25124, Italy
                     </a>
-                    <a href="tel:{{ $ps->phone }}">
-                        <i class="fas fa-phone-alt me-2"></i>
-                        {{ $ps->phone }}
-                    </a>
-                    <a href="mailto:{{ $ps->email }}">
+                    <a href="mailto:{{ $ps->email ?: 'info@industrialmac.it' }}">
                         <i class="fas fa-envelope me-2"></i>
-                        {{ $ps->email }}
+                        {{ $ps->email ?: 'info@industrialmac.it' }}
                     </a>
-                </div>
-
-                <div class="social-links mt-3">
-                    @foreach (DB::table('social_links')->where('user_id', 0)->where('status', 1)->get() as $link)
-                        <a href="{{ $link->link ?? '#' }}" target="_blank" rel="noopener">
-                            <i class="{{ $link->icon }}"></i>
-                        </a>
-                    @endforeach
                 </div>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
                 <h5>@lang('Company')</h5>
                 <ul class="footer-category-links">
-                    @if ($ps->home == 1)
-                        <li><a href="{{ route('front.index') }}">{{ __('Homepage') }}</a></li>
-                    @endif
-                    @foreach ($pages->where('header', '=', 1) as $data)
-                        <li><a href="{{ route('front.vendor', $data->slug) }}">{{ $data->title }}</a></li>
-                    @endforeach
-                    @if ($ps->contact == 1)
-                        <li><a href="{{ route('front.contact') }}">{{ __('Contact Us') }}</a></li>
-                    @endif
+                    <li><a href="{{ route('front.index') }}">@lang('Homepage')</a></li>
+                    <li><a href="{{ route('front.about') }}">@lang('About Us')</a></li>
+                    <li><a href="{{ route('front.quality') }}">@lang('Quality Policy')</a></li>
+                    <li><a href="{{ route('front.faq') }}">@lang('Questions & Answers')</a></li>
                 </ul>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
-                <h5>@lang('Brands')</h5>
+                <h5>@lang('Contacts')</h5>
                 <ul class="footer-category-links">
-                    @foreach (($navCategories ?? $categories)->take(6) as $cate)
-                        <li>
-                            <a href="{{ route('front.category', $cate->slug) }}">{{ $cate->name }}</a>
-                        </li>
-                    @endforeach
+                    <li><a href="{{ route('front.contact') }}">@lang('Contacts')</a></li>
+                    <li>
+                        <a href="{{ route('front.privacy') }}">
+                            {{ optional($langg)->language === 'Italian' ? 'Informativa sulla Privacy' : __('Privacy Policy') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('front.cookie') }}">
+                            {{ optional($langg)->language === 'Italian' ? 'Cookie Policy' : __('Cookie Policy') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('front.legal') }}">
+                            {{ optional($langg)->language === 'Italian' ? 'Note Legali' : __('Legal Notice') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
                 <h5>@lang('Address')</h5>
-                <ul class="footer-category-links">
-                    <li>
-                        <i class="fas fa-map-marker-alt me-1" style="color:rgba(255,255,255,0.5)"></i>
-                        {{ $ps->street }}
-                    </li>
-                    <li>
-                        <i class="fas fa-phone-alt me-1" style="color:rgba(255,255,255,0.5)"></i>
-                        <a href="tel:{{ $ps->phone }}">{{ $ps->phone }}</a>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope me-1" style="color:rgba(255,255,255,0.5)"></i>
-                        <a href="mailto:{{ $ps->email }}">{{ $ps->email }}</a>
-                    </li>
-                </ul>
+                <div class="ratio ratio-4x3 mb-2" style="border-radius:8px;overflow:hidden;">
+                    <iframe
+                        title="Industrialmac map"
+                        src="https://www.google.com/maps?q=Via+Della+Volta+37,+25124+Brescia,+Italy&output=embed"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        style="border:0;width:100%;height:100%;"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p class="small text-white-50 mb-0">Via Della Volta 37, Brescia 25124, Italy</p>
             </div>
         </div>
 

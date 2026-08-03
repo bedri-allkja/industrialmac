@@ -1,13 +1,4 @@
 @if ($gs->is_cookie == 1)
-    @php
-        $privacyPage = $pages->firstWhere('slug', 'privacy-policy')
-            ?? $pages->firstWhere('title', 'Privacy Policy')
-            ?? $pages->where('header', 1)->first();
-        $privacyUrl = $privacyPage
-            ? route('front.vendor', $privacyPage->slug)
-            : route('front.contact');
-    @endphp
-
     <div id="cookie-consent" class="cookie-consent" aria-live="polite" aria-label="@lang('Cookie consent')" hidden>
         <div class="cookie-consent__panel">
             <div class="cookie-consent__main">
@@ -18,7 +9,13 @@
                     <h3>@lang('We value your privacy')</h3>
                     <p>
                         @lang('We use cookies to ensure the website works properly, remember your preferences, and — with your consent — analyze traffic and improve our services. You can accept all cookies, reject non-essential cookies, or manage your preferences below.')
-                        <a href="{{ $privacyUrl }}" class="cookie-consent__link">@lang('Privacy policy')</a>
+                        <a href="{{ route('front.privacy') }}" class="cookie-consent__link">
+                            {{ optional($langg)->language === 'Italian' ? 'Informativa sulla Privacy' : __('Privacy Policy') }}
+                        </a>
+                        ·
+                        <a href="{{ route('front.cookie') }}" class="cookie-consent__link">
+                            {{ optional($langg)->language === 'Italian' ? 'Cookie Policy' : __('Cookie Policy') }}
+                        </a>
                     </p>
                 </div>
                 <div class="cookie-consent__actions">

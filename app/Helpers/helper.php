@@ -143,13 +143,11 @@ function brand_logo_exists($brand): bool
 function front_top_brands(int $limit = 8)
 {
     return \Illuminate\Support\Facades\Cache::remember(
-        'front.top_brands.' . $limit,
-        3600,
+        'front.top_brands.clicked.' . $limit,
+        900,
         function () use ($limit) {
-            // The homepage strip is a logo strip: only show brands that have a
-            // logo uploaded. Brands without a logo are never shown. Brands the
-            // admin marked as "Featured" are shown first, then the rest fill up
-            // the remaining slots (alphabetically). Managed from Admin > Brands.
+            // Logo strip ranked by real visitor interest: sum of product page
+            // views for each brand. Featured brands break ties.
             $withLogo = function ($query) {
                 $query->where(function ($q) {
                     $q->where(function ($q2) {
@@ -160,17 +158,39 @@ function front_top_brands(int $limit = 8)
                 });
             };
 
-            $columns = ['id', 'name', 'slug', 'image', 'photo'];
-
-            // Featured brands first, then the rest alphabetically. Keep only the
-            // brands whose logo file actually exists, then take the limit.
-            return \App\Models\Brand::where($withLogo)
+            return \App\Models\Brand::query()
+                ->where($withLogo)
+                ->withSum(['products as click_views' => function ($q) {
+                    $q->where('status', 1);
+                }], 'views')
+                ->orderByDesc('click_views')
                 ->orderByDesc('is_featured')
                 ->orderBy('name')
-                ->get($columns)
+                ->get(['id', 'name', 'slug', 'image', 'photo'])
                 ->filter(fn ($brand) => brand_logo_exists($brand))
                 ->take($limit)
                 ->values();
+        }
+    );
+}
+
+function front_most_viewed_products(int $limit = 12)
+{
+    return \Illuminate\Support\Facades\Cache::remember(
+        'front.most_viewed_products.' . $limit,
+        900,
+        function () use ($limit) {
+            return \App\Models\Product::query()
+                ->where('status', 1)
+                ->with([
+                    'user:id,is_vendor',
+                    'brand:id,name,image,slug',
+                    'category:id,name,slug',
+                ])
+                ->orderByDesc('views')
+                ->orderByDesc('id')
+                ->take($limit)
+                ->get();
         }
     );
 }
@@ -316,9 +336,21 @@ function front_has_flagged_products(string $flag): bool
     return $flags[$flag] ?? false;
 }
 
+function site_content_locale(): string
+{
+    $locale = app()->getLocale();
+
+    return match ($locale) {
+        'industrialmac_it' => 'it',
+        'industrialmac_es' => 'es',
+        'industrialmac_ru' => 'ru',
+        default => 'en',
+    };
+}
+
 function site_faq_locale(): string
 {
-    return app()->getLocale() === 'industrialmac_it' ? 'it' : 'en';
+    return site_content_locale();
 }
 
 function site_faqs(?int $limit = null): array

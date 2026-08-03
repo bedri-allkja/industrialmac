@@ -1582,6 +1582,16 @@ Route::group(['middleware' => 'maintenance'], function () {
     Route::get('/contact/refresh_code', 'Front\FrontendController@refresh_code');
     // CONTACT SECTION  ENDS
 
+    // COMPANY + LEGAL / POLICY PAGES (EN + IT)
+    Route::get('/about', 'Front\PolicyController@about')->name('front.about');
+    Route::get('/quality-policy', 'Front\PolicyController@quality')->name('front.quality');
+    Route::get('/questions-answers', 'Front\FrontendController@faq')->name('front.qa');
+    Route::get('/privacy-policy', 'Front\PolicyController@privacy')->name('front.privacy');
+    Route::get('/cookie-policy', 'Front\PolicyController@cookie')->name('front.cookie');
+    Route::get('/legal-notice', 'Front\PolicyController@legal')->name('front.legal');
+    Route::redirect('/privacy', '/privacy-policy');
+    // COMPANY + LEGAL / POLICY PAGES ENDS
+
     // QUOTE REQUEST SECTION
     Route::get('/request-quote', 'Front\QuoteRequestController@create')->name('front.quote');
     Route::post('/request-quote', 'Front\QuoteRequestController@store')->name('front.quote.submit');

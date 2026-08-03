@@ -98,7 +98,8 @@ class FrontendController extends FrontBaseController
             $data['featured_categories'] = front_top_categories(6, false);
         }
 
-        $data['featured_brands'] = front_top_brands(8);
+        // Homepage brand logos: most-viewed brands (visitor clicks on products).
+        $data['featured_brands'] = front_top_brands(12);
 
         $data['arrivals'] = ArrivalSection::get()->toArray();
 
@@ -119,19 +120,19 @@ class FrontendController extends FrontBaseController
 
         $productPool = Product::whereStatus(1)
             ->with($homeProductWith)
+            ->orderByDesc('views')
             ->orderByDesc('id')
             ->take($poolSize)
             ->get();
 
         $data['latest_products'] = $productPool->take($gs->new_count)->values();
 
-        $data['best_products'] = front_has_flagged_products('best')
-            ? Product::whereStatus(1)->whereBest(1)->take($gs->best_seller_count)->with($homeProductWith)->orderByDesc('id')->get()
-            : $productPool->take($gs->best_seller_count)->values();
+        // Top Selling = most clicked/viewed products (not admin "best" flag).
+        $bestCount = max(1, (int) $gs->best_seller_count);
+        $data['best_products'] = front_most_viewed_products($bestCount);
 
-        $data['popular_products'] = front_has_flagged_products('featured')
-            ? Product::whereStatus(1)->whereFeatured(1)->take($gs->popular_count)->with($homeProductWith)->orderByDesc('id')->get()
-            : $productPool->take($gs->popular_count)->values();
+        $popularCount = max(1, (int) $gs->popular_count);
+        $data['popular_products'] = front_most_viewed_products(max($popularCount, 8));
 
         $data['sale_products'] = front_has_flagged_products('sale')
             ? Product::whereSale(1)->whereStatus(1)->take($gs->sale_count)->with($homeProductWith)->orderByDesc('id')->get()

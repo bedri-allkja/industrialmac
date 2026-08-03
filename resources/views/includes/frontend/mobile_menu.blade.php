@@ -33,8 +33,10 @@
                             <li><a href="{{ route('front.index') }}">@lang('Home')</a></li>
                             <li><a href="{{ route('front.category') }}">@lang('Products')</a></li>
                             <li><a href="{{ route('front.categories') }}">@lang('Brands')</a></li>
-                            <li><a href="{{ route('front.vendor', $aboutSlug) }}">@lang('Company')</a></li>
-                            <li><a href="{{ route('front.contact') }}">@lang('Contact')</a></li>
+                            <li><a href="{{ route('front.about') }}">@lang('Company')</a></li>
+                            <li><a href="{{ route('front.quality') }}">@lang('Quality Policy')</a></li>
+                            <li><a href="{{ route('front.faq') }}">@lang('Questions & Answers')</a></li>
+                            <li><a href="{{ route('front.contact') }}">@lang('Contacts')</a></li>
                             <li><a href="{{ route('front.cart') }}">@lang('Cart')</a></li>
                         </ul>
 
@@ -62,45 +64,8 @@
                                 </li>
                             @endforeach
                         </ul>
-                        <div class="auth-actions-btn gap-3 d-flex flex-column mt-3">
-                            <a class="template-btn" href="{{ route('front.categories') }}">
-                                @lang('View all brands') <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Search Bar -->
-<div class="search-bar" id="searchBar">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <form class="search-form"
-                    action="{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}">
-                    @if (!empty(request()->input('sort')))
-                        <input type="hidden" name="sort" value="{{ request()->input('sort') }}">
-                    @endif
-                    @if (!empty(request()->input('minprice')))
-                        <input type="hidden" name="minprice" value="{{ request()->input('minprice') }}">
-                    @endif
-                    @if (!empty(request()->input('maxprice')))
-                        <input type="hidden" name="maxprice" value="{{ request()->input('maxprice') }}">
-                    @endif
-
-                    <div class="input-group input__group">
-                        <input type="text" class="form-control form__control" name="search"
-                            placeholder="@lang('Search Products')">
-                        <button class="btn btn-primary search-icn" type="submit" aria-label="@lang('Search')">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M21 21L17.5 17.5M20 11.5C20 16.19 16.19 20 11.5 20C6.81 20 3 16.19 3 11.5C3 6.81 6.81 3 11.5 3C16.19 3 20 6.81 20 11.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

@@ -66,8 +66,9 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <select name="country" class="form-control" required>
-                    <option value="" disabled @selected(!old('country'))>@lang('Select Country') *</option>
+                <select name="country" class="form-control quote-country-select" required
+                    data-placeholder="@lang('Select Country') *">
+                    <option value=""></option>
                     @foreach (App\Models\Country::where('status', 1)->orderBy('country_name')->get() as $countryOption)
                         <option value="{{ $countryOption->country_name }}" @selected(old('country') == $countryOption->country_name)>
                             {{ $countryOption->country_name }}
@@ -107,22 +108,6 @@
                         placeholder="@lang('SKU / Product Code')" value="{{ old('product_sku', request('product_sku')) }}">
                 </div>
                 @error('product_sku')
-                    <p class="my-1 text-danger small">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <select name="category_id" class="form-control">
-                        <option value="">@lang('Select Category')</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                @error('category_id')
                     <p class="my-1 text-danger small">{{ $message }}</p>
                 @enderror
             </div>
@@ -191,3 +176,62 @@
         </div>
     </div>
 </form>
+
+@once
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" crossorigin="anonymous">
+        <style>
+            .quote-request-form .select2-container { width: 100% !important; }
+            .quote-request-form .select2-container .select2-selection--single {
+                height: 48px;
+                border: 1px solid #ced4da;
+                border-radius: .375rem;
+                padding: 8px 12px;
+            }
+            .quote-request-form .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 30px;
+                padding-left: 0;
+                color: #495057;
+            }
+            .quote-request-form .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 46px;
+            }
+            .quote-request-form .select2-container--default .select2-selection--single .select2-selection__placeholder {
+                color: #6c757d;
+            }
+        </style>
+    @endpush
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" crossorigin="anonymous"></script>
+        <script>
+            (function () {
+                function initQuoteCountrySelect() {
+                    if (typeof jQuery === 'undefined' || !jQuery.fn.select2) {
+                        return;
+                    }
+                    jQuery('.quote-country-select').each(function () {
+                        var $el = jQuery(this);
+                        if ($el.hasClass('select2-hidden-accessible')) {
+                            return;
+                        }
+                        $el.select2({
+                            width: '100%',
+                            placeholder: $el.data('placeholder') || 'Select Country *',
+                            allowClear: false,
+                            dropdownParent: $el.closest('.form-group')
+                        });
+                    });
+                }
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initQuoteCountrySelect);
+                } else {
+                    initQuoteCountrySelect();
+                }
+                // jQuery ready as fallback if scripts load later
+                if (typeof jQuery !== 'undefined') {
+                    jQuery(initQuoteCountrySelect);
+                }
+            })();
+        </script>
+    @endpush
+@endonce

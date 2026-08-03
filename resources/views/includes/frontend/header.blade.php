@@ -6,9 +6,7 @@
     $aboutSlug = $aboutPage ? $aboutPage->slug : 'about';
     // Contact details shown in the top bar. Editable in the admin panel at
     // Menu Page Settings > Contact Us Page (falls back to defaults if empty).
-    $headerEmail = !empty($ps->email) ? $ps->email : 'info@industrialmac.com';
-    $headerPhone = !empty($ps->phone) ? $ps->phone : '+39 030 240 0871';
-    $headerPhoneHref = preg_replace('/[^0-9+]/', '', $headerPhone);
+    $headerEmail = !empty($ps->email) ? $ps->email : 'info@industrialmac.it';
 @endphp
 
 <header class="header-section im-header header-stikcy">
@@ -20,16 +18,16 @@
                     <li>
                         <a href="mailto:{{ $headerEmail }}"><i class="fas fa-envelope"></i> {{ $headerEmail }}</a>
                     </li>
-                    <li>
-                        <a href="tel:{{ $headerPhoneHref }}"><i class="fas fa-phone-alt"></i> {{ $headerPhone }}</a>
-                    </li>
                 </ul>
 
                 <div class="im-topbar__center">@lang('Fast shipping across Italy and Europe')</div>
 
                 <ul class="im-topbar__right">
-                    <li class="im-topbar__flag">@lang('Italian company') <span class="im-flag">🇮🇹</span></li>
-                    <li><i class="fas fa-headset"></i> @lang('Customer support')</li>
+                    <li>
+                        <a href="{{ route('front.contact') }}">
+                            <i class="fas fa-headset"></i> @lang('Customer support')
+                        </a>
+                    </li>
                     @if ($languges->count() > 1)
                         <li class="im-lang">
                             <button class="im-lang__btn" type="button">
@@ -96,12 +94,23 @@
                             <a class="im-nav__link" href="{{ route('front.categories') }}">@lang('Brands')</a>
                         </li>
 
-                        <li class="im-nav__item">
-                            <a class="im-nav__link" href="{{ route('front.vendor', $aboutSlug) }}">@lang('Company')</a>
+                        <li class="im-nav__item im-nav__item--mega {{ request()->routeIs('front.about') || request()->routeIs('front.quality') || request()->routeIs('front.faq') ? 'active' : '' }}">
+                            <a class="im-nav__link" href="{{ route('front.about') }}">
+                                @lang('Company') <i class="fas fa-chevron-down im-nav__chevron"></i>
+                            </a>
+                            <div class="im-mega im-mega--simple">
+                                <div class="im-mega__inner">
+                                    <div class="im-mega__grid">
+                                        <a class="im-mega__link" href="{{ route('front.about') }}">@lang('About Us')</a>
+                                        <a class="im-mega__link" href="{{ route('front.quality') }}">@lang('Quality Policy')</a>
+                                        <a class="im-mega__link" href="{{ route('front.faq') }}">@lang('Questions & Answers')</a>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
 
                         <li class="im-nav__item {{ request()->routeIs('front.contact') ? 'active' : '' }}">
-                            <a class="im-nav__link" href="{{ route('front.contact') }}">@lang('Contact')</a>
+                            <a class="im-nav__link" href="{{ route('front.contact') }}">@lang('Contacts')</a>
                         </li>
                     </ul>
                 </nav>

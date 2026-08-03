@@ -174,10 +174,11 @@
                         <h5 class="mb-0">@lang('Products Found:') {{ $prods->count() }}</h5>
                         <div class="filter-wrapper">
                             <div class="sort-wrapper d-flex align-items-center gap-2">
-                                <h5 class="mb-0">@lang('Ordina per:')</h5>
+                                <h5 class="mb-0">@lang('Sort by:')</h5>
                                 <select class="nice-select" id="sortby" name="sort">
-                                    <option value="date_desc">{{ __('Più recente') }}</option>
-                                    <option value="date_asc">{{ __('Meno recente') }}</option>
+                                    <option value="date_desc">{{ __('Most recent') }}</option>
+                                    <option value="date_asc">{{ __('Oldest first') }}</option>
+                                    <option value="views_desc">{{ __('Most viewed') }}</option>
                                 </select>
                             </div>
                             <div class="btn-wrapper nav d-none d-lg-inline-block" role="tablist">

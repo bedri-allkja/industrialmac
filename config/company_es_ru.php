@@ -1,0 +1,143 @@
+<?php
+
+/**
+ * Spanish + Russian company page content (About / Quality).
+ */
+return [
+    'es' => [
+        'about' => [
+            'page_title' => 'Sobre Industrialmac',
+            'headline' => 'Su socio global para el suministro industrial',
+            'intro' => [
+                'Industrialmac es un proveedor internacional de recambios industriales, componentes de automatización, productos MRO, herramientas y soluciones técnicas para fabricantes y empresas industriales en todo el mundo.',
+                'Nuestra misión es sencilla: ayudar a las empresas a mantener su producción en marcha ofreciendo productos fiables, experiencia técnica y un servicio rápido y eficiente.',
+                'Entendemos que cada línea de producción depende de la disponibilidad de los componentes correctos en el momento adecuado. Por eso trabajamos cada día para simplificar las compras, reducir los tiempos de inactividad y apoyar a nuestros clientes con soluciones adaptadas a sus necesidades operativas.',
+            ],
+            'experience_title' => 'Nuestra experiencia',
+            'experience' => [
+                'Industrialmac se construyó sobre años de experiencia en el sector industrial y un profundo conocimiento de los entornos de fabricación.',
+                'Nuestro equipo trabaja estrechamente con ingenieros de mantenimiento, departamentos de compras, responsables de producción y OEMs en múltiples industrias.',
+            ],
+            'what_we_do_title' => 'Qué hacemos',
+            'what_we_do_intro' => 'Nos especializamos en el sourcing y suministro internacional de:',
+            'what_we_do' => [
+                'Recambios industriales',
+                'Componentes de automatización',
+                'Productos MRO (Mantenimiento, Reparación y Operaciones)',
+                'Herramientas y equipos industriales',
+                'Componentes electrónicos',
+                'Productos neumáticos e hidráulicos',
+                'Soluciones de proceso y producción',
+            ],
+            'why_title' => 'Por qué elegir Industrialmac',
+            'why' => [
+                ['title' => 'Experiencia técnica', 'text' => 'Nuestro equipo combina experiencia comercial con conocimiento técnico para recomendar la solución correcta, no solo vender un producto.'],
+                ['title' => 'Red de suministro global', 'text' => 'Colaboramos con una amplia red de fabricantes y proveedores autorizados, ofreciendo acceso a miles de productos industriales de marcas líderes.'],
+                ['title' => 'Servicio rápido y flexible', 'text' => 'La producción industrial no puede esperar. Respondemos con rapidez y ofrecemos soluciones de sourcing fiables para minimizar el tiempo de inactividad.'],
+                ['title' => 'Enfoque centrado en el cliente', 'text' => 'Cada cliente tiene requisitos diferentes. Escuchamos, comprendemos y construimos asociaciones a largo plazo basadas en la confianza y la transparencia.'],
+                ['title' => 'Calidad y fiabilidad', 'text' => 'Seleccionamos cuidadosamente proveedores y socios para garantizar que cada producto cumpla los estándares de calidad de la industria moderna.'],
+            ],
+            'vision_title' => 'Nuestra visión',
+            'vision' => 'Convertirnos en una referencia global de confianza para el suministro industrial, conectando empresas con productos fiables, experiencia técnica y soluciones de sourcing innovadoras.',
+            'mission_title' => 'Nuestra misión',
+            'mission' => 'Apoyar a las empresas industriales con productos fiables, un servicio receptivo y asistencia técnica especializada.',
+            'values_title' => 'Nuestros valores',
+            'values' => [
+                ['title' => 'Fiabilidad', 'text' => 'Creemos que la confianza se gana con coherencia, transparencia y cumpliendo nuestros compromisos.'],
+                ['title' => 'Experiencia', 'text' => 'Desarrollamos continuamente nuestro conocimiento técnico para ofrecer soluciones prácticas.'],
+                ['title' => 'Colaboración', 'text' => 'Trabajamos junto a nuestros clientes, construyendo relaciones a largo plazo basadas en el éxito mutuo.'],
+                ['title' => 'Eficiencia', 'text' => 'Simplificamos el sourcing, reducimos la complejidad y respondemos con rapidez.'],
+                ['title' => 'Mejora continua', 'text' => 'La tecnología industrial evoluciona cada día, y nosotros también.'],
+            ],
+            'closing_title' => 'Más que un proveedor',
+            'closing' => 'En Industrialmac creemos que suministrar productos industriales es solo una parte de nuestro trabajo. Nuestro verdadero valor está en ayudar a los clientes a resolver problemas, encontrar alternativas y mantener su negocio en funcionamiento.',
+        ],
+        'quality' => [
+            'page_title' => 'Política de Calidad',
+            'headline' => 'Comprometidos con la calidad. Impulsados por la fiabilidad.',
+            'intro' => [
+                'En Industrialmac, la calidad es más que un proceso: es la base de todo lo que hacemos.',
+                'Cada producto que suministramos, cada proveedor que seleccionamos y cada cliente al que apoyamos refleja nuestro compromiso de ofrecer soluciones industriales fiables.',
+            ],
+            'commitment_title' => 'Nuestro compromiso',
+            'commitment' => 'Industrialmac se compromete a proporcionar productos y servicios que cumplan de forma consistente las expectativas del cliente mediante profesionalidad, experiencia técnica y mejora continua.',
+            'principles_title' => 'Nuestros principios de calidad',
+            'principles' => [
+                ['title' => 'Satisfacción del cliente', 'text' => 'Nuestros clientes están en el centro de cada decisión que tomamos.'],
+                ['title' => 'Suministro fiable', 'text' => 'Trabajamos con fabricantes y socios internacionales cuidadosamente seleccionados.'],
+                ['title' => 'Competencia técnica', 'text' => 'Ayudamos a los clientes a seleccionar los productos más adecuados para sus aplicaciones.'],
+                ['title' => 'Mejora continua', 'text' => 'Revisamos regularmente nuestros procesos, proveedores y feedback para elevar la calidad.'],
+            ],
+            'promise_title' => 'Nuestra promesa',
+            'promise' => 'En Industrialmac nos esforzamos cada día por ofrecer soluciones industriales en las que nuestros clientes puedan confiar, hoy y en el futuro.',
+        ],
+    ],
+    'ru' => [
+        'about' => [
+            'page_title' => 'О компании Industrialmac',
+            'headline' => 'Ваш глобальный партнёр в промышленных поставках',
+            'intro' => [
+                'Industrialmac — международный поставщик промышленных запасных частей, компонентов автоматизации, продукции MRO, инструментов и технических решений для производителей и промышленных компаний по всему миру.',
+                'Наша миссия проста: помогать компаниям поддерживать производство, предоставляя надёжную продукцию, техническую экспертизу и быстрый эффективный сервис.',
+                'Мы понимаем, что каждая производственная линия зависит от наличия нужных компонентов в нужное время. Поэтому мы каждый день упрощаем закупки, сокращаем простои и поддерживаем клиентов решениями, адаптированными к их задачам.',
+            ],
+            'experience_title' => 'Наш опыт',
+            'experience' => [
+                'Industrialmac создан на основе многолетнего опыта в промышленном секторе и глубокого понимания производственных сред.',
+                'Наша команда тесно работает с инженерами по обслуживанию, отделами закупок, руководителями производства и OEM в различных отраслях.',
+            ],
+            'what_we_do_title' => 'Чем мы занимаемся',
+            'what_we_do_intro' => 'Мы специализируемся на международном поиске и поставке:',
+            'what_we_do' => [
+                'Промышленные запасные части',
+                'Компоненты автоматизации',
+                'Продукция MRO (техническое обслуживание и ремонт)',
+                'Промышленные инструменты и оборудование',
+                'Электронные компоненты',
+                'Пневматические и гидравлические изделия',
+                'Решения для процессов и производства',
+            ],
+            'why_title' => 'Почему выбирают Industrialmac',
+            'why' => [
+                ['title' => 'Техническая экспертиза', 'text' => 'Наша команда сочетает коммерческий опыт с техническими знаниями, чтобы рекомендовать правильное решение, а не просто продавать товар.'],
+                ['title' => 'Глобальная сеть поставок', 'text' => 'Мы сотрудничаем с широкой сетью производителей и авторизованных поставщиков, давая доступ к тысячам промышленных продуктов ведущих мировых брендов.'],
+                ['title' => 'Быстрый и гибкий сервис', 'text' => 'Промышленное производство не может ждать. Мы быстро реагируем и предлагаем надёжные решения, чтобы минимизировать простои.'],
+                ['title' => 'Клиентоориентированный подход', 'text' => 'У каждого клиента свои требования. Мы слушаем, понимаем и строим долгосрочные партнёрства на основе доверия и прозрачности.'],
+                ['title' => 'Качество и надёжность', 'text' => 'Мы тщательно отбираем поставщиков и партнёров, чтобы каждый продукт соответствовал стандартам современной промышленности.'],
+            ],
+            'vision_title' => 'Наше видение',
+            'vision' => 'Стать надёжным глобальным ориентиром в промышленных поставках, соединяя бизнес с надёжной продукцией, технической экспертизой и инновационными решениями по sourcing.',
+            'mission_title' => 'Наша миссия',
+            'mission' => 'Поддерживать промышленные компании надёжной продукцией, оперативным сервисом и экспертной технической помощью.',
+            'values_title' => 'Наши ценности',
+            'values' => [
+                ['title' => 'Надёжность', 'text' => 'Мы считаем, что доверие зарабатывается последовательностью, прозрачностью и выполнением обязательств.'],
+                ['title' => 'Экспертиза', 'text' => 'Мы постоянно развиваем технические знания, чтобы предлагать практические решения.'],
+                ['title' => 'Партнёрство', 'text' => 'Мы работаем вместе с клиентами, выстраивая долгосрочные отношения на основе взаимного успеха.'],
+                ['title' => 'Эффективность', 'text' => 'Мы упрощаем sourcing, снижаем сложность и быстро отвечаем на запросы.'],
+                ['title' => 'Непрерывное улучшение', 'text' => 'Промышленные технологии развиваются каждый день — и мы вместе с ними.'],
+            ],
+            'closing_title' => 'Больше, чем поставщик',
+            'closing' => 'В Industrialmac мы считаем, что поставка промышленных товаров — лишь часть нашей работы. Настоящая ценность — помогать клиентам решать задачи, находить альтернативы и обеспечивать бесперебойную работу бизнеса.',
+        ],
+        'quality' => [
+            'page_title' => 'Политика качества',
+            'headline' => 'Приверженность качеству. Опора на надёжность.',
+            'intro' => [
+                'В Industrialmac качество — это больше, чем процесс: это основа всего, что мы делаем.',
+                'Каждый продукт, который мы поставляем, каждый поставщик, которого мы выбираем, и каждый клиент, которого мы поддерживаем, отражает наше стремление к надёжным промышленным решениям.',
+            ],
+            'commitment_title' => 'Наши обязательства',
+            'commitment' => 'Industrialmac стремится предоставлять продукты и услуги, которые стабильно соответствуют ожиданиям клиентов благодаря профессионализму, технической экспертизе и непрерывному улучшению.',
+            'principles_title' => 'Наши принципы качества',
+            'principles' => [
+                ['title' => 'Удовлетворённость клиентов', 'text' => 'Клиенты находятся в центре каждого нашего решения.'],
+                ['title' => 'Надёжные поставки', 'text' => 'Мы работаем с тщательно отобранными производителями и международными партнёрами.'],
+                ['title' => 'Техническая компетентность', 'text' => 'Мы помогаем клиентам выбирать наиболее подходящие продукты для их применений.'],
+                ['title' => 'Непрерывное улучшение', 'text' => 'Мы регулярно пересматриваем процессы, работу поставщиков и обратную связь для повышения качества.'],
+            ],
+            'promise_title' => 'Наше обещание',
+            'promise' => 'В Industrialmac мы каждый день стремимся предоставлять промышленные решения, которым клиенты могут доверять — сегодня и в будущем.',
+        ],
+    ],
+];

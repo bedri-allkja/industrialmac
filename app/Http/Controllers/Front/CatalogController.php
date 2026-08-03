@@ -25,9 +25,9 @@ class CatalogController extends FrontBaseController
             $query->where('name', 'like', '%' . $search . '%');
         }
 
+        // Load all brands so the client-side smart filter can match as the user types.
         $categoryList = $query->orderBy('name')
-            ->paginate($this->gs->page_count, ['id', 'name', 'slug', 'photo', 'image'])
-            ->appends(['q' => $search]);
+            ->get(['id', 'name', 'slug', 'photo', 'image']);
 
         return view('frontend.categories', compact('categoryList', 'search'));
     }
@@ -36,9 +36,26 @@ class CatalogController extends FrontBaseController
     // sidebar / mobile menu accordions. Keeps the initial page light.
     public function subcategories($id)
     {
-        $category = Category::with(['subs.childs'])
-            ->where('status', 1)
-            ->findOrFail($id);
+        // Only return sub/child rows that actually have products under THIS brand
+        // (category). Stops empty Turkish import leftovers (e.g. XECRO under every brand).
+        $category = Category::where('status', 1)->findOrFail($id);
+
+        $category->setRelation(
+            'subs',
+            Subcategory::query()
+                ->where('category_id', $category->id)
+                ->whereHas('products', function ($q) use ($category) {
+                    $q->where('status', 1)->where('category_id', $category->id);
+                })
+                ->with(['childs' => function ($q) use ($category) {
+                    $q->where('status', 1)
+                        ->whereHas('products', function ($p) use ($category) {
+                            $p->where('status', 1)->where('category_id', $category->id);
+                        });
+                }])
+                ->orderBy('name')
+                ->get()
+        );
 
         return view('frontend.ajax.category-subs', compact('category'))->render();
     }
@@ -76,11 +93,19 @@ class CatalogController extends FrontBaseController
         }
 
         if (!empty($slug1)) {
-            $subcat = Subcategory::where('slug', $slug1)->firstOrFail();
+            $subQuery = Subcategory::where('slug', $slug1);
+            if ($cat) {
+                $subQuery->where('category_id', $cat->id);
+            }
+            $subcat = $subQuery->firstOrFail();
             $data['subcat'] = $subcat;
         }
         if (!empty($slug2)) {
-            $childcat = Childcategory::where('slug', $slug2)->firstOrFail();
+            $childQuery = Childcategory::where('slug', $slug2);
+            if ($subcat) {
+                $childQuery->where('subcategory_id', $subcat->id);
+            }
+            $childcat = $childQuery->firstOrFail();
             $data['childcat'] = $childcat;
         }
 
@@ -139,10 +164,12 @@ class CatalogController extends FrontBaseController
                     return $query->latest('price');
                 } elseif ($sort == 'price_asc') {
                     return $query->oldest('price');
+                } elseif ($sort == 'views_desc') {
+                    return $query->orderByDesc('views')->orderByDesc('id');
                 }
             })
             ->when(empty($sort), function ($query, $sort) {
-                return $query->latest('id');
+                return $query->orderByDesc('views')->orderByDesc('id');
             })
             ->withCount('ratings')
             ->withAvg('ratings', 'rating');
