@@ -267,6 +267,14 @@
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane show active" id="description-tab-pane" role="tabpanel"
                                         aria-labelledby="description-tab" tabindex="0">
+                                        @php
+                                            $customDetails = trim(strip_tags((string) ($productt->details ?? '')));
+                                        @endphp
+                                        @if ($customDetails !== '' && strlen($customDetails) > 20)
+                                            <div class="product-custom-details mb-4">
+                                                {!! clean($productt->details, ['Attr.EnableID' => true]) !!}
+                                            </div>
+                                        @endif
                                         {!! product_quote_description($productt) !!}
                                     </div>
                                     <div class="tab-pane fade" id="buy-return-policy-tab-pane" role="tabpanel"

@@ -166,6 +166,10 @@
     <a href="{{ route('admin-prod-import') }}"><i class="fas fa-upload"></i>{{ __('Bulk Product Upload') }}</a>
 </li>
 
+<li>
+    <a href="{{ route('admin-prod-scraper') }}"><i class="fas fa-spider"></i>{{ __('Product Scraper') }}</a>
+</li>
+
 @endif
 
 @if(Auth::guard('admin')->user()->sectionCheck('product_discussion'))

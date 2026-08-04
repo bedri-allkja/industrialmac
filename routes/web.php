@@ -336,6 +336,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/products/import/files', 'Admin\ProductController@importFiles')->name('admin-prod-import-files');
         Route::post('/products/import-submit', 'Admin\ProductController@importSubmit')->name('admin-prod-importsubmit');
         Route::post('/products/import/start-file', 'Admin\ProductController@importStartFile')->name('admin-prod-import-start-file');
+
+        // Product scraper (URL → preview/edit → quote-only save)
+        Route::get('/products/scraper', 'Admin\ProductScraperController@index')->name('admin-prod-scraper');
+        Route::post('/products/scraper/discover', 'Admin\ProductScraperController@discover')->name('admin-prod-scraper-discover');
+        Route::post('/products/scraper/scrape', 'Admin\ProductScraperController@scrape')->name('admin-prod-scraper-scrape');
+        Route::post('/products/scraper/save', 'Admin\ProductScraperController@save')->name('admin-prod-scraper-save');
     });
 
     //------------ ADMIN CSV IMPORT SECTION ENDS ------------

@@ -76,6 +76,10 @@
 </li>
 
 <li>
+    <a href="{{ route('admin-prod-scraper') }}"><i class="fas fa-spider"></i>{{ __('Product Scraper') }}</a>
+</li>
+
+<li>
     <a href="#msg" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false">
         <i class="fas fa-fw fa-newspaper"></i>{{ __('Messages') }}
     </a>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['name','slug','photo','image','is_featured'];
+    protected $fillable = ['name','slug','photo','image','is_featured','status'];
     public $timestamps = false;
 
     public function subs()
