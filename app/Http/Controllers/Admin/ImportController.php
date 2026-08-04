@@ -314,7 +314,7 @@ class ImportController extends AdminBaseController
                     $prod->slug = Str::slug($data->name,'-').'-'.strtolower(Str::random(3).$data->id.Str::random(3));
                 }
                 else {
-                    $prod->slug = Str::slug($data->name,'-').'-'.strtolower($data->sku);               
+                    $prod->slug = product_make_slug($data->name, (string) $data->sku);               
                 }
                 $fimageData = public_path().'/assets/images/products/'.$prod->photo;
                 if(filter_var($prod->photo,FILTER_VALIDATE_URL)){
@@ -568,7 +568,7 @@ class ImportController extends AdminBaseController
          $input['price'] = $input['price'] / $sign->value;
          $input['previous_price'] = $input['previous_price'] / $sign->value; 
 
-         $data->slug = Str::slug($data->name,'-').'-'.strtolower($data->sku);    
+         $data->slug = product_make_slug($data->name, (string) $data->sku);    
          $data->update($input);
         //-- Logic Section Ends
 

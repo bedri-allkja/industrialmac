@@ -550,7 +550,7 @@ class ProductController extends VendorBaseController
             if ($prod->type != 'Physical') {
                 $prod->slug = Str::slug($data->name, '-') . '-' . strtolower(Str::random(3) . $data->id . Str::random(3));
             } else {
-                $prod->slug = Str::slug($data->name, '-') . '-' . strtolower($data->sku);
+                $prod->slug = product_make_slug($data->name, (string) $data->sku);
             }
             // Set Thumbnail
             $img = Image::make(public_path() . '/assets/images/products/' . $prod->photo)->resize(285, 285);
@@ -882,7 +882,7 @@ class ProductController extends VendorBaseController
             $input['attributes'] = $jsonAttr;
         }
 
-        $data->slug = Str::slug($data->name, '-') . '-' . strtolower($data->sku);
+        $data->slug = product_make_slug($data->name, (string) $data->sku);
 
         $data->update($input);
         //-- Logic Section Ends
@@ -1169,7 +1169,7 @@ class ProductController extends VendorBaseController
             if ($prod->type != 'Physical') {
                 $prod->slug = Str::slug($data->name, '-') . '-' . strtolower(Str::random(3) . $data->id . Str::random(3));
             } else {
-                $prod->slug = Str::slug($data->name, '-') . '-' . strtolower($data->sku);
+                $prod->slug = product_make_slug($data->name, (string) $data->sku);
             }
             $photo = $prod->photo;
             if ($request->is_photo == '0') {

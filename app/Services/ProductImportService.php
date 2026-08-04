@@ -669,7 +669,9 @@ class ProductImportService
             'affiliate_link' => $affiliateLink,
             'latest' => 1,
             'status' => 1,
-            'slug' => Str::slug($name, '-') . '-' . strtolower($sku),
+            'slug' => function_exists('product_make_slug')
+                ? product_make_slug($name, $sku)
+                : (Str::slug($name, '-') . '-' . Str::slug($sku, '-')),
         ];
     }
 }

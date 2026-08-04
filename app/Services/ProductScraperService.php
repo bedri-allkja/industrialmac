@@ -178,8 +178,9 @@ class ProductScraperService
                     ]));
                 }
 
-                $slugBase = Str::slug($name, '-') ?: 'product';
-                $slug = $slugBase . '-' . Str::slug($sku, '-');
+                $slug = function_exists('product_make_slug')
+                    ? product_make_slug($name, $sku)
+                    : (Str::slug($name, '-') . '-' . Str::slug($sku, '-'));
                 if (Product::where('slug', $slug)->exists()) {
                     $slug .= '-' . Str::lower(Str::random(4));
                 }

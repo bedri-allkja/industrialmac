@@ -1631,28 +1631,27 @@ Route::group(['middleware' => 'maintenance'], function () {
     // TAG SECTION ENDS
 
     // PRODCT SECTION
-
-    Route::get('/item/{slug}', 'Front\ProductDetailsController@product')->name('front.product');
+    // Specific /item/* routes MUST be registered before the product slug catch-all.
+    // Slug may contain "/" from legacy SKUs (e.g. EXT-3-PVC/PUR) until repaired.
     Route::get('/item/show/cross/products/{id}', 'Front\ProductDetailsController@showCrossProduct')->name('front.show.cross.product');
     Route::get('/afbuy/{slug}', 'Front\ProductDetailsController@affProductRedirect')->name('affiliate.product');
     Route::get('/item/quick/view/{id}/', 'Front\ProductDetailsController@quick')->name('product.quick');
     Route::post('/item/review', 'Front\ProductDetailsController@reviewsubmit')->name('front.review.submit');
     Route::get('/item/view/review/{id}', 'Front\ProductDetailsController@reviews')->name('front.reviews');
     Route::get('/item/view/side/review/{id}', 'Front\ProductDetailsController@sideReviews')->name('front.side.reviews');
-    // PRODCT SECTION ENDS
-
-    // COMMENT SECTION
     Route::post('/item/comment/store', 'Front\ProductDetailsController@comment')->name('product.comment');
     Route::post('/item/comment/edit/{id}', 'Front\ProductDetailsController@commentedit')->name('product.comment.edit');
     Route::get('/item/comment/delete/{id}', 'Front\ProductDetailsController@commentdelete')->name('product.comment.delete');
-    // COMMENT SECTION ENDS
-
-
-    // REPLY SECTION
     Route::post('/item/reply/{id}', 'Front\ProductDetailsController@reply')->name('product.reply');
     Route::post('/item/reply/edit/{id}', 'Front\ProductDetailsController@replyedit')->name('product.reply.edit');
     Route::get('/item/reply/delete/{id}', 'Front\ProductDetailsController@replydelete')->name('product.reply.delete');
-    // REPLY SECTION ENDS
+    Route::get('/item/compare/view', 'Front\CompareController@compare')->name('product.compare');
+    Route::get('/item/compare/add/{id}', 'Front\CompareController@addcompare')->name('product.compare.add');
+    Route::get('/item/compare/remove/{id}', 'Front\CompareController@removecompare')->name('product.compare.remove');
+    Route::get('/item/{slug}', 'Front\ProductDetailsController@product')
+        ->where('slug', '.*')
+        ->name('front.product');
+    // PRODCT SECTION ENDS
 
     // CART SECTION
     Route::get('/carts/view', 'Front\CartController@cartview');
@@ -1667,12 +1666,6 @@ Route::group(['middleware' => 'maintenance'], function () {
     Route::get('/removecart/{id}', 'Front\CartController@removecart')->name('product.cart.remove');
     Route::get('/carts/coupon', 'Front\CouponController@coupon');
     // CART SECTION ENDS
-
-    // COMPARE SECTION
-    Route::get('/item/compare/view', 'Front\CompareController@compare')->name('product.compare');
-    Route::get('/item/compare/add/{id}', 'Front\CompareController@addcompare')->name('product.compare.add');
-    Route::get('/item/compare/remove/{id}', 'Front\CompareController@removecompare')->name('product.compare.remove');
-    // COMPARE SECTION ENDS
 
     // CHECKOUT SECTION
     Route::get('/buy-now/{id}', 'Front\CheckoutController@buynow')->name('front.buynow');

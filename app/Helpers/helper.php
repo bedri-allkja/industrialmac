@@ -450,6 +450,14 @@ function wishlistCheck($product_id)
 
 }
 
+/**
+ * URL-safe product slug from name + SKU (never includes / or query chars).
+ */
+function product_make_slug(string $name, string $sku = ''): string
+{
+    return \App\Services\ProductSlugRepairService::make($name, $sku);
+}
+
 function addon($name)
 {
 

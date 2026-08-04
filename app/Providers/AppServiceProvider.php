@@ -22,6 +22,20 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
+        // One-time / batched repair of product slugs containing "/" (breaks URLs)
+        $slugRepairFlag = storage_path('app/fix_slash_slugs.pending');
+        if (! $this->app->runningInConsole() && is_file($slugRepairFlag)) {
+            try {
+                app(\App\Services\ProductSlugRepairService::class)->repair(1500);
+                $stillBroken = \App\Models\Product::where('slug', 'like', '%/%')->exists();
+                if (! $stillBroken) {
+                    @unlink($slugRepairFlag);
+                }
+            } catch (\Throwable $e) {
+                // keep flag for the next request
+            }
+        }
+
         // Settings shared with every view. Computed once per request (memoized)
         // instead of re-querying 7 tables for every partial/include that renders.
         view()->composer('*', function ($settings) {

@@ -46,7 +46,45 @@ class ProductDetailsController extends FrontBaseController
             }
         }
 
-        $productt = Product::with('user', 'galleries', 'brand')->where('slug', '=', $slug)->firstOrFail();
+        $slug = rawurldecode((string) $slug);
+        $productt = Product::with('user', 'galleries', 'brand')->where('slug', '=', $slug)->first();
+
+        // Legacy broken slugs that contained "/" from SKUs like PVC/PUR
+        if (!$productt && str_contains($slug, '/')) {
+            $productt = Product::with('user', 'galleries', 'brand')
+                ->where('slug', str_replace('/', '-', $slug))
+                ->first();
+        }
+        if (!$productt && str_contains($slug, '/')) {
+            $productt = Product::with('user', 'galleries', 'brand')
+                ->where('slug', $slug)
+                ->first();
+        }
+        if (!$productt) {
+            return response()->view('errors.404')->setStatusCode(404);
+        }
+
+        // Auto-heal unsafe slugs (e.g. SKU "2002-1311/1000-411") and 301 to clean URL
+        $slugIsUnsafe = static function (string $value): bool {
+            return str_contains($value, '/')
+                || str_contains($value, '?')
+                || str_contains($value, '#')
+                || str_contains($value, ' ')
+                || str_contains($value, '\\');
+        };
+
+        if ($slugIsUnsafe((string) $productt->slug)) {
+            $clean = product_make_slug((string) $productt->name, (string) $productt->sku);
+            $exists = Product::where('slug', $clean)->where('id', '!=', $productt->id)->exists();
+            if (!$exists && $clean !== '' && $clean !== $productt->slug) {
+                $productt->slug = $clean;
+                $productt->save();
+            }
+            if ($productt->slug !== $slug && !$slugIsUnsafe((string) $productt->slug)) {
+                return redirect(route('front.product', $productt->slug), 301);
+            }
+        }
+
         $vendor_products = Product::where('user_id', $productt->user_id)->where('id', '!=', $productt->id)->where('status', 1)->orderBy('id', 'desc')
             ->withCount('ratings')
             ->withAvg('ratings', 'rating')

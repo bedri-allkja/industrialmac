@@ -446,9 +446,9 @@ class ProductController extends AdminBaseController
         // Set SLug
         $prod = Product::find($data->id);
         if ($prod->type != 'Physical' || $request->type != "Listing") {
-            $prod->slug = Str::slug($data->name, '-') . '-' . strtolower(Str::random(3) . $data->id . Str::random(3));
+            $prod->slug = product_make_slug($data->name, Str::random(3) . $data->id . Str::random(3));
         } else {
-            $prod->slug = Str::slug($data->name, '-') . '-' . strtolower($data->sku);
+            $prod->slug = product_make_slug($data->name, (string) $data->sku);
         }
 
         // Set Thumbnail
@@ -991,7 +991,7 @@ class ProductController extends AdminBaseController
 
         $input['brand_id'] = $request->brand_id;
 
-        $data->slug = Str::slug($data->name, '-') . '-' . strtolower($data->sku);
+        $data->slug = product_make_slug($data->name, (string) $data->sku);
 
         $data->update($input);
         //-- Logic Section Ends
