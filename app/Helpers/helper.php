@@ -9,6 +9,69 @@ function site_brand_logo(): string
 }
 
 /**
+ * Product card / listing image URL (optimized for fast loading).
+ * Uses one shared compressed WebP/JPEG for catalog placeholder images so the
+ * browser caches a single small file across all product cards.
+ */
+function product_list_image_url($product): string
+{
+    $fallback = asset('assets/images/noimage.png');
+
+    if (!$product) {
+        return $fallback;
+    }
+
+    static $sharedCard = null;
+    static $placeholderPhotos = null;
+
+    if ($sharedCard === null) {
+        $sharedCard = is_file(public_path('assets/images/thumbnails/product-card.webp'))
+            ? asset('assets/images/thumbnails/product-card.webp')
+            : asset('assets/images/thumbnails/product-card.jpg');
+    }
+
+    if ($placeholderPhotos === null) {
+        $placeholderPhotos = [];
+        $cacheFile = storage_path('app/placeholder_product_photos.php');
+        if (is_file($cacheFile)) {
+            $loaded = include $cacheFile;
+            if (is_array($loaded)) {
+                $placeholderPhotos = $loaded;
+            }
+        }
+    }
+
+    $photo = trim((string) ($product->photo ?? ''));
+    $thumbnail = trim((string) ($product->thumbnail ?? ''));
+
+    if (in_array($thumbnail, ['product-card.webp', 'product-card.jpg', 'product-card-sm.webp', 'product-card-sm.jpg'], true)) {
+        return $sharedCard;
+    }
+
+    if ($photo !== '' && isset($placeholderPhotos[$photo])) {
+        return $sharedCard;
+    }
+
+    if ($thumbnail !== '' && $thumbnail !== 'noimage.png') {
+        if (filter_var($thumbnail, FILTER_VALIDATE_URL)) {
+            return $thumbnail;
+        }
+
+        return asset('assets/images/thumbnails/' . $thumbnail);
+    }
+
+    if ($photo !== '' && $photo !== 'noimage.png') {
+        if (filter_var($photo, FILTER_VALIDATE_URL)) {
+            return $photo;
+        }
+
+        return asset('assets/images/products/' . $photo);
+    }
+
+    return $fallback;
+}
+
+/**
  * Standard "request a quote" description shown on EVERY product page.
  *
  * The product name and brand name are injected dynamically and the copy is

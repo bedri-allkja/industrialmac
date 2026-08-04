@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+@php
+    $htmlLang = function_exists('site_content_locale') ? site_content_locale() : 'en';
+@endphp
+<html lang="{{ $htmlLang }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $gs->title }}</title>
     @php
         $__localTheme = file_exists(public_path('assets/front/css/bootstrap.min.css'));
     @endphp

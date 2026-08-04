@@ -589,12 +589,16 @@ class ProductImportService
 
             try {
                 $image = Image::make($productPath);
-                $image->resize(800, 800)->save($productPath);
+                $image->resize(1000, 1000, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->encode($extension === 'png' ? 'png' : 'jpg', 90)->save($productPath);
                 $image->destroy();
                 unset($image);
 
+                // Larger, higher-quality thumbs for retina / wide product cards
                 $thumbnailImage = Image::make($productPath);
-                $thumbnailImage->resize(285, 285)->save($thumbnailPath);
+                $thumbnailImage->fit(700, 700)->encode('jpg', 90)->save($thumbnailPath);
                 $thumbnailImage->destroy();
                 unset($thumbnailImage);
             } catch (\Throwable $imageError) {

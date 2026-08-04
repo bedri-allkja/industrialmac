@@ -1554,6 +1554,15 @@ Route::group(['middleware' => 'maintenance'], function () {
 
     // ************************************ FRONT SECTION **********************************************
 
+    // SEO: robots + sitemap index (products split across multiple files)
+    Route::get('/robots.txt', 'Front\SitemapController@robots')->name('front.robots');
+    Route::get('/sitemap.xml', 'Front\SitemapController@index')->name('front.sitemap');
+    Route::get('/sitemap-static.xml', 'Front\SitemapController@staticPages')->name('front.sitemap.static');
+    Route::get('/sitemap-categories.xml', 'Front\SitemapController@categories')->name('front.sitemap.categories');
+    Route::get('/sitemap-products-{page}.xml', 'Front\SitemapController@products')
+        ->whereNumber('page')
+        ->name('front.sitemap.products');
+
     Route::post('/item/report', 'Front\CatalogController@report')->name('product.report');
 
     Route::get('/', 'Front\FrontendController@index')->name('front.index');

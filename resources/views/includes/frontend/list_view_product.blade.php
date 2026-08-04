@@ -3,7 +3,9 @@
         <div class="img-wrapper">
             <a href="{{ route('front.product', $product->slug) }}">
                 <img class="product-img"
-                    src="{{ $product->thumbnail ? asset('assets/images/thumbnails/' . $product->thumbnail) : asset('assets/images/noimage.png') }}"
+                    src="{{ product_list_image_url($product) }}"
+                    width="700"
+                    height="700"
                     alt="{{ $product->showName() }}"
                     loading="lazy"
                     decoding="async">
